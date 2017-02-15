@@ -12,7 +12,7 @@ import com.mygdx.magicappgame.States.PlayScreen;
 
 public class MyGdxGame extends Game {
 	public SpriteBatch batch;
-	public static final int V_WIDTH = 208;
+	public static final int V_WIDTH = 400;
 	public static final int V_HEIGHT = 400;
 	
 	@Override
