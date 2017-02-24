@@ -52,7 +52,7 @@ public class GenericShape extends Sprite {
 
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
-        fdef.density = 0f;
+        fdef.density = 1f;
         fixture = bod.createFixture(fdef);
 
     }
@@ -69,7 +69,7 @@ public class GenericShape extends Sprite {
 
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
-        fdef.density = 0f;
+        fdef.density = 1f;
         fixture = bod.createFixture(fdef);
 
 

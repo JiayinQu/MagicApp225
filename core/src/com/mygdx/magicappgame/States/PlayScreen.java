@@ -62,7 +62,7 @@ public class PlayScreen implements Screen{
         shapeRenderer = new ShapeRenderer();
         gamecam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
 
-        world = new World(new Vector2(0,-19.6f),true);
+        world = new World(new Vector2(0,-50f),true);
         b2dr = new Box2DDebugRenderer();
 
         platform = new Platform(world);
@@ -76,7 +76,7 @@ public class PlayScreen implements Screen{
 
     @Override
     public void show() {
-        
+
     }
 
     public void handleInput(float dt){
@@ -97,11 +97,11 @@ public class PlayScreen implements Screen{
 
         // Moves the current falling shape to the left
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            currentShape.bod.applyForce(new Vector2(-100f, 0), currentShape.bod.getWorldCenter(), true);
+            currentShape.bod.applyForce(new Vector2(-300000f, 0), currentShape.bod.getWorldCenter(), true);
         }
         // Moves the current falling shape to the right
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            currentShape.bod.applyForce(new Vector2(100f, 0), currentShape.bod.getWorldCenter(), true);
+            currentShape.bod.applyForce(new Vector2(300000f, 0), currentShape.bod.getWorldCenter(), true);
         }
     }
 
