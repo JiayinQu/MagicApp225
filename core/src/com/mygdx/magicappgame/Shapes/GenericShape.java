@@ -3,9 +3,12 @@ package com.mygdx.magicappgame.Shapes;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -16,14 +19,16 @@ import com.badlogic.gdx.physics.box2d.World;
 public class GenericShape extends Sprite {
     public World world;
     public Body bod;
+    public Fixture fixture;
 
-    public GenericShape(World world, int identifier, float sideLen){
+
+    public GenericShape(World world, int identifier, float sideLen, Vector2 screenPos){
         this.world = world;
         if(identifier == 0){
-            defineSquare(104, 300, sideLen, sideLen);
+            defineSquare(screenPos, sideLen, sideLen);
         }
         else if (identifier == 1){
-            defineCircle(104, 300, sideLen);
+            defineCircle(screenPos, sideLen);
 
         }
         else if (identifier == 2){
@@ -35,27 +40,40 @@ public class GenericShape extends Sprite {
 
 
     }
-    public void defineSquare(float x, float y, float width, float height){
+    public void defineSquare(Vector2 screenPos, float width, float height){
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set(x, y);
+        def.position.set(screenPos);
+
         bod = world.createBody(def);
+
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width, height);
 
-        bod.createFixture(shape, 1.0f);
+        FixtureDef fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.density = 0f;
+        fixture = bod.createFixture(fdef);
 
     }
 
-    public void defineCircle(float x, float y, float radius){
+    public void defineCircle(Vector2 screenpos, float radius){
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set(x, y);
+        def.position.set(screenpos);
+
         bod = world.createBody(def);
+
         CircleShape shape = new CircleShape();
         shape.setRadius(radius);
 
-        bod.createFixture(shape, 1.0f);
+        FixtureDef fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.density = 0f;
+        fixture = bod.createFixture(fdef);
+
+
+
 
     }
 

@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Scenes.Hud;
+import com.mygdx.magicappgame.Shapes.GenericShape;
 import com.mygdx.magicappgame.Shapes.Platform;
 import com.mygdx.magicappgame.Shapes.Square;
 
@@ -31,7 +32,7 @@ import com.mygdx.magicappgame.Shapes.Square;
  */
 public class PlayScreen implements Screen{
     private MyGdxGame game;
-    private OrthographicCamera gamecam;
+    public OrthographicCamera gamecam;
     private Viewport gamePort;
     private Hud hud;
 
@@ -43,8 +44,9 @@ public class PlayScreen implements Screen{
     private World world;
     private Box2DDebugRenderer b2dr;
     private Platform platform;
-    private Square box;
-    private Square box2;
+    private GenericShape currentShape;
+
+    public Vector2 screenPos;
 
 
 
@@ -60,10 +62,12 @@ public class PlayScreen implements Screen{
         shapeRenderer = new ShapeRenderer();
         gamecam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
 
-        world = new World(new Vector2(0,-9.8f),true);
+        world = new World(new Vector2(0,-19.6f),true);
         b2dr = new Box2DDebugRenderer();
 
         platform = new Platform(world);
+
+        screenPos = new Vector2(104, 300);
 
 
 
@@ -72,25 +76,39 @@ public class PlayScreen implements Screen{
 
     @Override
     public void show() {
+        
     }
 
     public void handleInput(float dt){
-//        if(Gdx.input.isTouched())
-//            gamecam.position.y +=100 *dt;
-        if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
-            box = new Square(world);
-            box.defineSquare(104, 300, 30, 30);
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            screenPos.add(0, 1.75f);
+            gamecam.position.y += 100 * dt;
         }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
-            box = new Square(world);
-            box.defineSquare(64, 300, 30, 30);
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+            gamecam.position.y -= 100 * dt;
         }
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
+            currentShape = new GenericShape(world, 0, 30, screenPos);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
+            currentShape = new GenericShape(world, 1, 30, screenPos);
+        }
+
+        // Moves the current falling shape to the left
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+            currentShape.bod.applyForce(new Vector2(-100f, 0), currentShape.bod.getWorldCenter(), true);
+        }
+        // Moves the current falling shape to the right
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+            currentShape.bod.applyForce(new Vector2(100f, 0), currentShape.bod.getWorldCenter(), true);
+        }
     }
 
     public void update(float dt){
-        world.step(1/60f, 6, 2);
         handleInput(dt);
+        world.step(1/60f, 6, 2);
+
 
         gamecam.update();
         renderer.setView(gamecam);
