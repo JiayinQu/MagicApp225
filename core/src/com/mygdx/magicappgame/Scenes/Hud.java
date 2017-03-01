@@ -27,9 +27,6 @@ public class Hud {
         viewport = new FitViewport(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT,new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
-
-
-
         Table table = new Table();
         table.top();
         table.setFillParent(true);
