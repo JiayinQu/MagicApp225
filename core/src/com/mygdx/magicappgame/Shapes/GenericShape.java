@@ -23,7 +23,7 @@ import com.mygdx.magicappgame.States.PlayScreen;
  */
 
 public class GenericShape extends Sprite {
-    public World world;
+    private World world;
     public Body bod;
     public Fixture fixture;
     private Texture tex;
@@ -34,10 +34,10 @@ public class GenericShape extends Sprite {
         this.world = world;
 
         if(identifier == 0){
-            defineSquare(screenPos, sideLen, sideLen);
+            drawSquare(screenPos, sideLen, sideLen);
         }
         else if (identifier == 1){
-            defineCircle(screenPos, sideLen);
+            drawCircle(screenPos, sideLen);
 
         }
         else if (identifier == 2){
@@ -51,12 +51,12 @@ public class GenericShape extends Sprite {
     public void render(SpriteBatch batch){
         float posX = bod.getPosition().x - getWidth()/2;
         float posY = bod.getPosition().y - getHeight()/2;
-        sprite.setPosition(posX,posY);
+        //sprite.setPosition(posX,posY);
 
-        sprite.draw(batch);
+        //sprite.draw(batch);
     }
 
-    public void defineSquare(Vector2 screenPos, float width, float height){
+    public Body drawSquare(Vector2 screenPos, float width, float height){
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(screenPos);
@@ -69,11 +69,12 @@ public class GenericShape extends Sprite {
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.density = 1f;
-        fixture = bod.createFixture(fdef);
+        bod.createFixture(fdef);
 
+        return bod;
     }
 
-    public void defineCircle(Vector2 screenpos, float radius){
+    public void drawCircle(Vector2 screenpos, float radius){
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(screenpos);

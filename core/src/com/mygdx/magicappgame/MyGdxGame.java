@@ -28,8 +28,8 @@ public class MyGdxGame extends Game {
 		gameSkin = new Skin(Gdx.files.internal("skin/flat-earth-ui.json"));
 
 		batch = new SpriteBatch();
-		setScreen(new MenuState(this));
-		//setScreen(new PlayScreen(this));
+		//setScreen(new MenuState(this));
+		setScreen(new PlayScreen(this));
 	}
 
 	@Override

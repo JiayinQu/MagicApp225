@@ -11,11 +11,11 @@ import com.mygdx.magicappgame.States.PlayScreen;
  * Created by Jiayin Qu on 2017/2/27.
  */
 
-public class Circles extends GenericShape {
+public class Circle extends GenericShape {
     private Texture tex;
     private Sprite sprite = new Sprite (new Texture("WoodCircle.png"));
 
-    public Circles(World world, int identifier, float sideLen, Vector2 screenPos, PlayScreen screen) {
+    public Circle(World world, int identifier, float sideLen, Vector2 screenPos, PlayScreen screen) {
         super(world, identifier, sideLen, screenPos, screen);
         tex = new Texture("WoodCircle.png");
         setTexture(tex);

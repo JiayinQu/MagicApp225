@@ -9,18 +9,20 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Scenes.Hud;
-import com.mygdx.magicappgame.Shapes.Circles;
-import com.mygdx.magicappgame.Shapes.GenericShape;
-import com.mygdx.magicappgame.Shapes.Platform;
-import com.mygdx.magicappgame.Shapes.Squares;
+import com.mygdx.magicappgame.Shapes.BalancePlatform;
+
+import java.util.ArrayList;
 
 /**
  * Created by Jiayin Qu on 2017/2/11.
@@ -38,11 +40,11 @@ public class PlayScreen implements Screen{
 
     private World world;
     private Box2DDebugRenderer b2dr;
-    private Platform platform;
-    private GenericShape currentShape;
-    private Circles currentCircle;
 
-    public Vector2 screenPos;
+    private Body plat;
+    private Vector2 screenPos;
+    private ArrayList<Body> bodyList;
+
 
 
 
@@ -53,20 +55,19 @@ public class PlayScreen implements Screen{
         hud = new Hud(game.batch);
 
         maploader = new TmxMapLoader();
-        map = maploader.load("SkyBackG.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map);
+        //map = maploader.load("SkyBackG.tmx");
+        //renderer = new OrthogonalTiledMapRenderer(map);
         shapeRenderer = new ShapeRenderer();
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
         world = new World(new Vector2(0, -50f), true);
         b2dr = new Box2DDebugRenderer();
 
-        platform = new Platform(world);
+        BalancePlatform balancePlatform = new BalancePlatform(world);
+        plat = balancePlatform.bod1;
 
         screenPos = new Vector2(104, 300);
-        currentShape = new GenericShape(world, 0, 30, screenPos,this);
-        //currentShape = new Squares(world, 0, 30,screenPos,this);
-        //currentCircle = new Circles(world,1, 30, screenPos,this);
+        bodyList = new ArrayList<Body>();
 
 
     }
@@ -85,23 +86,23 @@ public class PlayScreen implements Screen{
             gamecam.position.y -= 100 * dt;
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
-            currentShape = new GenericShape(world, 0, 30, screenPos,this);
-            //currentShape = new Squares(world, 0, 30, screenPos,this);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
+            bodyList.add(drawSquare(screenPos, 30));
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
-            currentShape = new GenericShape(world, 1, 30, screenPos,this);
-            //currentCircle = new Circles(world, 1, 30, screenPos,this);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
+            //bodyList.add(drawCircle(screenPos, 30);
         }
 
         // Moves the current falling shape to the left
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            currentShape.bod.applyForce(new Vector2(-300000f, 0), currentShape.bod.getWorldCenter(), true);
+            Body moveBod = bodyList.get(bodyList.size()-1);
+            moveBod.applyForce(new Vector2(-300000f, 0), moveBod.getWorldCenter(), true);
         }
         // Moves the current falling shape to the right
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            currentShape.bod.applyForce(new Vector2(300000f, 0), currentShape.bod.getWorldCenter(), true);
+            Body moveBod = bodyList.get(bodyList.size()-1);
+            moveBod.applyForce(new Vector2(300000f, 0), moveBod.getWorldCenter(), true);
         }
     }
 
@@ -109,10 +110,10 @@ public class PlayScreen implements Screen{
         handleInput(dt);
         world.step(1/60f, 6, 2);
 
-        gamecam.position.y = currentShape.bod.getPosition().y;
+        endGame();
 
         gamecam.update();
-        renderer.setView(gamecam);
+        //renderer.setView(gamecam);
         b2dr.render(world, gamecam.combined);
 
     }
@@ -123,15 +124,41 @@ public class PlayScreen implements Screen{
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.render();
+        //renderer.render();
         b2dr.render(world,gamecam.combined);
 
         game.batch.begin();
-        currentShape.render(game.batch);
+        //currentShape.render(game.batch);
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+    }
+
+    private void endGame() {
+        for (Body aBodyList : bodyList) {
+            if (aBodyList.getWorldCenter().y < plat.getWorldCenter().y - 60) {
+                Gdx.app.exit(); // TODO: Replace this with a GAMEOVER and then remove all objects
+            }
+        }
+    }
+
+    public Body drawSquare(Vector2 screenPos, float sideLen) {
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+        def.position.set(screenPos);
+
+        Body bod = world.createBody(def);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(sideLen, sideLen);
+
+        FixtureDef fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.density = 1f;
+        bod.createFixture(fdef);
+
+        return bod;
     }
 
     @Override

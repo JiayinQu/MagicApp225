@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
  * Created by ahayes on 2/22/17.
  */
 
-public class ObjectSetup extends Sprite {
+public class BalancePlatform extends Sprite {
 
     public World world;
     public Body bod1;
@@ -24,7 +25,7 @@ public class ObjectSetup extends Sprite {
     private BodyDef def1;
     private BodyDef def2;
 
-    public ObjectSetup(World world){
+    public BalancePlatform(World world){
         this.world = world;
         vectorList = new Vector2[3];
         vectorList[0] = new Vector2(0, 10);
@@ -36,7 +37,7 @@ public class ObjectSetup extends Sprite {
 
     }
 
-    private void definePlatform(float x, float y, float width, float height){
+    private Body definePlatform(float x, float y, float width, float height){
         def1 = new BodyDef();
         def1.type = BodyDef.BodyType.DynamicBody;
         def1.position.set(x, y);
@@ -46,6 +47,7 @@ public class ObjectSetup extends Sprite {
 
         bod1.createFixture(shape, 1f);
 
+        return bod1;
     }
 
     private void definePivot(float x, float y) {
@@ -53,6 +55,7 @@ public class ObjectSetup extends Sprite {
         def2.type = BodyDef.BodyType.StaticBody;
         def2.position.set(x, y);
         bod2 = world.createBody(def2);
+        //CircleShape shape = new CircleShape();
         PolygonShape shape = new PolygonShape();
         shape.set(vectorList);
 
@@ -66,8 +69,8 @@ public class ObjectSetup extends Sprite {
         rjdef.bodyB = bod2;
         rjdef.collideConnected = false;
 
-        rjdef.lowerAngle = -0.125f * MathUtils.PI;
-        rjdef.upperAngle = 0.125f * MathUtils.PI;
+        rjdef.lowerAngle = -0.125f * MathUtils.PI; // how far it can tilt to the left
+        rjdef.upperAngle = 0.125f * MathUtils.PI;  // how far it can tilt to the right
 
         rjdef.enableLimit = true;
         rjdef.maxMotorTorque = 1.0f;

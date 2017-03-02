@@ -17,8 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
-import com.sun.glass.ui.EventLoop;
-import com.sun.glass.ui.Menu;
+
 
 import javax.swing.plaf.ViewportUI;
 import javax.swing.plaf.nimbus.State;
