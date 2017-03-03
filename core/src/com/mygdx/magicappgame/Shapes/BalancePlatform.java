@@ -34,7 +34,6 @@ public class BalancePlatform extends Sprite {
         definePlatform(104, 120, 80, 10);
         definePivot(104, 70);
         defineJoint();
-
     }
 
     private Body definePlatform(float x, float y, float width, float height){
@@ -69,8 +68,8 @@ public class BalancePlatform extends Sprite {
         rjdef.bodyB = bod2;
         rjdef.collideConnected = false;
 
-        rjdef.lowerAngle = -0.125f * MathUtils.PI; // how far it can tilt to the left
-        rjdef.upperAngle = 0.125f * MathUtils.PI;  // how far it can tilt to the right
+        rjdef.lowerAngle = -0.05f * MathUtils.PI; // how far it can tilt to the left
+        rjdef.upperAngle = 0.05f * MathUtils.PI;  // how far it can tilt to the right
 
         rjdef.enableLimit = true;
         rjdef.maxMotorTorque = 1.0f;

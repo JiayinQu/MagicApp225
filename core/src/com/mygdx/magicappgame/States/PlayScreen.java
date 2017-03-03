@@ -28,6 +28,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Scenes.Hud;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
+import com.mygdx.magicappgame.levels.Level1;
 
 
 import java.util.ArrayList;
@@ -54,6 +55,8 @@ public class PlayScreen implements Screen{
     private ArrayList<Body> bodyList;
     private ArrayList<Sprite> squareTexList;
 
+    private Level1 level1;
+
     public PlayScreen(MyGdxGame game) {
         this.game = game;
         gamecam = new OrthographicCamera();
@@ -66,7 +69,7 @@ public class PlayScreen implements Screen{
         shapeRenderer = new ShapeRenderer();
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        world = new World(new Vector2(0, -50f), true);
+        world = new World(new Vector2(0, -40f), true);
         b2dr = new Box2DDebugRenderer();
 
         BalancePlatform balancePlatform = new BalancePlatform(world);
@@ -75,6 +78,8 @@ public class PlayScreen implements Screen{
         screenPos = new Vector2(104, 300);
         bodyList = new ArrayList<Body>();
         squareTexList = new ArrayList<Sprite>();
+
+        level1 = new Level1(this);
 
     }
 
@@ -94,7 +99,7 @@ public class PlayScreen implements Screen{
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
             squareTexList.add(drawSquareTex());
-            bodyList.add(drawSquare(screenPos, 30));
+            bodyList.add(level1.getNextBod());
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
@@ -113,7 +118,7 @@ public class PlayScreen implements Screen{
         }
     }
 
-    public void update(float dt){
+    private void update(float dt){
         handleInput(dt);
         world.step(1/60f, 6, 2);
 
@@ -150,7 +155,7 @@ public class PlayScreen implements Screen{
         }
     }
 
-    public Body drawSquare(Vector2 screenPos, float sideLen) {
+    public Body drawSquare(float width, float height) {
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(screenPos);
@@ -158,7 +163,7 @@ public class PlayScreen implements Screen{
         Body bod = world.createBody(def);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(sideLen, sideLen);
+        shape.setAsBox(width, height);
 
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
@@ -167,7 +172,7 @@ public class PlayScreen implements Screen{
 
         if(squareTexList.size()!=0){
             squareTexList.get(squareTexList.size()-1).setBounds(0,0,drawSquareTex().getWidth(),drawSquareTex().getHeight());
-            squareTexList.get(squareTexList.size()-1).setSize(sideLen * 2,sideLen * 2);
+            squareTexList.get(squareTexList.size()-1).setSize(width * 2,height * 2);
             squareTexList.get(squareTexList.size()-1).setOrigin(drawSquareTex().getWidth()/2, drawSquareTex().getHeight()/2);
         }
         shape.dispose();
