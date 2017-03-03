@@ -1,6 +1,5 @@
 package com.mygdx.magicappgame.levels;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.magicappgame.States.PlayScreen;
@@ -9,15 +8,17 @@ import java.util.ArrayList;
 
 /**
  * Created by Ansel on 3/2/2017.
+ * This Level1 class contains information about the first level and it also
+ * contains a function that gets the next Body.
  */
 
 public class Level1 {
     private int count;
     private ArrayList<Vector2> level1Coord;
     private Body bod;
-    PlayScreen playScreen;
+    private PlayScreen playScreen;
 
-    public final static int NUM_BODIES = 9;
+    private final static int NUM_BODIES = 10;
 
     public Level1(PlayScreen playScreen) {
         level1Coord = new ArrayList<Vector2>();
@@ -27,6 +28,11 @@ public class Level1 {
         initializeCoord();
     }
 
+    /**
+     * Sets up the heights and widths for the Bodies in
+     * the first level
+     * @return an ArrayList of the heights and widths (given as Vector2's)
+     */
     private ArrayList<Vector2> initializeCoord(){
         level1Coord = new ArrayList<Vector2>();
 
@@ -44,8 +50,13 @@ public class Level1 {
         return level1Coord;
     }
 
+    /**
+     * Calls the drawSquare method in PlayScreen and increments a count to
+     * tell when the shapes have run out
+     * @return
+     */
     public Body getNextBod() {
-        if (count == NUM_BODIES){
+        if (count+1 == NUM_BODIES){
             playScreen.levelComplete = true;
         }
         bod = playScreen.drawSquare(initializeCoord().get(count).x, initializeCoord().get(count).y);

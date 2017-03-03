@@ -39,13 +39,16 @@ import java.util.ArrayList;
 
 /**
  * Created by Jiayin Qu on 2017/2/11.
+ * This PlayScreen class is passed the Gdx game and is in control when the game is in "play."
  */
 public class PlayScreen implements Screen{
     private MyGdxGame game;
     public OrthographicCamera gamecam;
     private Viewport gamePort;
     private Hud hud;
+    private Stage stage;
 
+    // Backgrounds
     private TmxMapLoader maploader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
@@ -56,13 +59,19 @@ public class PlayScreen implements Screen{
 
     private Body plat;
     private Vector2 screenPos;
+
+    // The ArrayLists that contain Bodies and matching Sprites
     private ArrayList<Body> bodyList;
     private ArrayList<Sprite> squareTexList;
-    private Stage stage;
-    private Level1 level1;
 
+    // Level setups
+    private Level1 level1;
     public Boolean levelComplete;
 
+    /**
+     * This constructor simply initializes everything.
+     * @param game the main game
+     */
     public PlayScreen(MyGdxGame game) {
         this.game = game;
         gamecam = new OrthographicCamera();
@@ -75,7 +84,7 @@ public class PlayScreen implements Screen{
         shapeRenderer = new ShapeRenderer();
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        world = new World(new Vector2(0, -40f), true);
+        world = new World(new Vector2(0, -40f), true); // The game's gravity
         b2dr = new Box2DDebugRenderer();
 
         BalancePlatform balancePlatform = new BalancePlatform(world);
@@ -95,15 +104,24 @@ public class PlayScreen implements Screen{
 
     }
 
-    public void handleInput(float dt){
+    /**
+     * Handles all of the input for the game
+     * @param dt delta time
+     */
+    private void handleInput(float dt){
+        // Moves the camera up - just for testing
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             screenPos.add(0, 1.75f);
             gamecam.position.y += 100 * dt;
         }
+
+        // Moves the camera down - just for testing
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             gamecam.position.y -= 100 * dt;
         }
 
+        // Draws the next shape when 1 is pressed, if all the shapes have been
+        // used it calls endGame();
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
             //squareTexList.add(drawSquareTex());
             if (!levelComplete) {
@@ -111,10 +129,6 @@ public class PlayScreen implements Screen{
             } else {
                 endGame();
             }
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
-            //bodyList.add(drawCircle(screenPos, 30);
         }
 
         // Moves the current falling shape to the left
@@ -129,18 +143,26 @@ public class PlayScreen implements Screen{
         }
     }
 
+    /**
+     * Updating the game and "stepping"
+     * @param dt delta time
+     */
     private void update(float dt){
         handleInput(dt);
         world.step(1/60f, 6, 2);
 
-        checkEndGame();
+        checkEndGame(); // Checks if the game is over
 
         gamecam.update();
-        //renderer.setView(gamecam);
+        //renderer.setView(gamecam); // used for the background
         b2dr.render(world, gamecam.combined);
 
     }
 
+    /**
+     * Clears the screen and then draws everything again
+     * @param delta delta time
+     */
     @Override
     public void render(float delta) {
         update(delta);
@@ -158,22 +180,21 @@ public class PlayScreen implements Screen{
 
     }
 
+    /**
+     * If any Bodies are below the platform, call endGame()
+     */
     private void checkEndGame() {
         for (Body aBodyList : bodyList) {
             if (aBodyList.getWorldCenter().y < plat.getWorldCenter().y - 60) {
                 endGame();
-
-                     /*if(exitButton.isPressed())
-                        game.setScreen(new MenuState(game));*/
-
-
-                //Gdx.app.exit();
-
             }
-
         }
     }
 
+    /**
+     * The function that ends the current game and brings up the exit screen
+     * TODO: Move this to a separate exitScreen Class
+     */
     private void endGame() {
 
         gamePort = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
@@ -200,11 +221,15 @@ public class PlayScreen implements Screen{
         if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
             game.setScreen(new MenuState(game));
             //bodyList.clear(); //We can remove all the objects from the screen
-            //Gdx.app.exit(); // TODO: Replace this with a GAMEOVER and then remove all objects
         }
 
-
-
+    /**
+     * The function that draws a square shaped object
+     *
+     * @param width of the rectangle
+     * @param height of the rectangle
+     * @return the Body that was just drawn on the screen
+     */
     public Body drawSquare(float width, float height) {
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
@@ -218,8 +243,10 @@ public class PlayScreen implements Screen{
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.density = 1f;
+        fdef.friction = .2f;
         bod.createFixture(fdef);
 
+        // Textures -- needs to be fixed
         /*
         if(squareTexList.size()!=0){
             squareTexList.get(squareTexList.size()-1).setBounds(0,0,drawSquareTex().getWidth(),drawSquareTex().getHeight());
@@ -232,6 +259,10 @@ public class PlayScreen implements Screen{
         return bod;
     }
 
+    /**
+     * Puts a Texture with a Sprite
+     * @return the Sprite
+     */
     public Sprite drawSquareTex(){
         Texture squareTex = new Texture("StoneSquare.png");
         Sprite squareSprite = new Sprite(squareTex);
@@ -239,7 +270,11 @@ public class PlayScreen implements Screen{
         return squareSprite;
     }
 
-    public void draw(Batch batch){
+    /**
+     * Draws all of the Sprites
+     * @param batch the main Sprite batch
+     */
+    private void draw(Batch batch){
         game.batch.begin();
         for(int i = 0; i< squareTexList.size();i++){
             squareTexList.get(i).setPosition(bodyList.get(i).getPosition().x - 30,bodyList.get(i).getPosition().y - 30);
@@ -250,7 +285,11 @@ public class PlayScreen implements Screen{
 
     }
 
-
+    /**
+     * Resizes the window
+     * @param width of the screen
+     * @param height of the screen
+     */
     @Override
     public void resize(int width, int height) {
         gamePort.update(width, height);
