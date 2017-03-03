@@ -3,6 +3,7 @@ package com.mygdx.magicappgame.States;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,6 +24,9 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
@@ -54,7 +58,7 @@ public class PlayScreen implements Screen{
     private Vector2 screenPos;
     private ArrayList<Body> bodyList;
     private ArrayList<Sprite> squareTexList;
-
+    private Stage stage;
     private Level1 level1;
 
     public PlayScreen(MyGdxGame game) {
@@ -149,11 +153,44 @@ public class PlayScreen implements Screen{
 
     private void endGame() {
         for (Body aBodyList : bodyList) {
+
+            gamePort = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
+            stage = new Stage(gamePort, game.batch);
+
+            Label gameOverLabel = new Label("Game Over", MyGdxGame.gameSkin);
+            gameOverLabel.setFontScale(1.5f);
+
+            gameOverLabel.setColor(Color.RED);
+
+            gameOverLabel.setWidth(Gdx.graphics.getWidth() / 16);
+            gameOverLabel.setPosition(35, 250);
+
+            TextButton exitButton = new TextButton("Exit", MyGdxGame.gameSkin);
+            exitButton.getLabel().setFontScale(1f);
+            exitButton.setColor(Color.RED);
+
+            exitButton.setWidth(Gdx.graphics.getWidth() / 16);
+            exitButton.setPosition(70, 150);
+
+
+
             if (aBodyList.getWorldCenter().y < plat.getWorldCenter().y - 60) {
-                Gdx.app.exit(); // TODO: Replace this with a GAMEOVER and then remove all objects
+                    hud.stage.addActor(gameOverLabel);
+                    hud.stage.addActor(exitButton);
+
+                     /*if(exitButton.isPressed())
+                        game.setScreen(new MenuState(game));*/
+
+                    if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
+                        game.setScreen(new MenuState(game));
+                        Gdx.app.exit();
+
+                }
+                //bodyList.clear(); //We can remove all the objects from the screen
+                //Gdx.app.exit(); // TODO: Replace this with a GAMEOVER and then remove all objects
             }
+
         }
-    }
 
     public Body drawSquare(float width, float height) {
         BodyDef def = new BodyDef();
