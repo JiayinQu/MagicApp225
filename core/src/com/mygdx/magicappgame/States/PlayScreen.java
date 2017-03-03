@@ -67,6 +67,7 @@ public class PlayScreen implements Screen{
     // Level setups
     private Level1 level1;
     public Boolean levelComplete;
+    private Boolean somethingOnScreen;
 
     /**
      * This constructor simply initializes everything.
@@ -96,6 +97,7 @@ public class PlayScreen implements Screen{
 
         level1 = new Level1(this);
         levelComplete = false;
+        somethingOnScreen = false;
 
     }
 
@@ -125,6 +127,7 @@ public class PlayScreen implements Screen{
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
             //squareTexList.add(drawSquareTex());
             if (!levelComplete) {
+                somethingOnScreen = true;
                 bodyList.add(level1.getNextBod());
             } else {
                 endGame();
@@ -132,12 +135,12 @@ public class PlayScreen implements Screen{
         }
 
         // Moves the current falling shape to the left
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)&& somethingOnScreen){
             Body moveBod = bodyList.get(bodyList.size()-1);
             moveBod.applyForce(new Vector2(-300000f, 0), moveBod.getWorldCenter(), true);
         }
         // Moves the current falling shape to the right
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)&& somethingOnScreen){
             Body moveBod = bodyList.get(bodyList.size()-1);
             moveBod.applyForce(new Vector2(300000f, 0), moveBod.getWorldCenter(), true);
         }
