@@ -46,7 +46,7 @@ public class Level1 {
 
     public Body getNextBod() {
         if (count == NUM_BODIES){
-            Gdx.app.exit();
+            playScreen.levelComplete = true;
         }
         bod = playScreen.drawSquare(initializeCoord().get(count).x, initializeCoord().get(count).y);
         count++;

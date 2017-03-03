@@ -61,6 +61,8 @@ public class PlayScreen implements Screen{
     private Stage stage;
     private Level1 level1;
 
+    public Boolean levelComplete;
+
     public PlayScreen(MyGdxGame game) {
         this.game = game;
         gamecam = new OrthographicCamera();
@@ -84,6 +86,7 @@ public class PlayScreen implements Screen{
         squareTexList = new ArrayList<Sprite>();
 
         level1 = new Level1(this);
+        levelComplete = false;
 
     }
 
@@ -102,8 +105,12 @@ public class PlayScreen implements Screen{
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
-            squareTexList.add(drawSquareTex());
-            bodyList.add(level1.getNextBod());
+            //squareTexList.add(drawSquareTex());
+            if (!levelComplete) {
+                bodyList.add(level1.getNextBod());
+            } else {
+                endGame();
+            }
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
@@ -126,7 +133,7 @@ public class PlayScreen implements Screen{
         handleInput(dt);
         world.step(1/60f, 6, 2);
 
-        endGame();
+        checkEndGame();
 
         gamecam.update();
         //renderer.setView(gamecam);
@@ -151,46 +158,52 @@ public class PlayScreen implements Screen{
 
     }
 
-    private void endGame() {
+    private void checkEndGame() {
         for (Body aBodyList : bodyList) {
-
-            gamePort = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
-            stage = new Stage(gamePort, game.batch);
-
-            Label gameOverLabel = new Label("Game Over", MyGdxGame.gameSkin);
-            gameOverLabel.setFontScale(1.5f);
-
-            gameOverLabel.setColor(Color.RED);
-
-            gameOverLabel.setWidth(Gdx.graphics.getWidth() / 16);
-            gameOverLabel.setPosition(35, 250);
-
-            TextButton exitButton = new TextButton("Exit", MyGdxGame.gameSkin);
-            exitButton.getLabel().setFontScale(1f);
-            exitButton.setColor(Color.RED);
-
-            exitButton.setWidth(Gdx.graphics.getWidth() / 16);
-            exitButton.setPosition(70, 150);
-
-
-
             if (aBodyList.getWorldCenter().y < plat.getWorldCenter().y - 60) {
-                    hud.stage.addActor(gameOverLabel);
-                    hud.stage.addActor(exitButton);
+                endGame();
 
                      /*if(exitButton.isPressed())
                         game.setScreen(new MenuState(game));*/
 
-                    if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
-                        game.setScreen(new MenuState(game));
-                        Gdx.app.exit();
 
-                }
-                //bodyList.clear(); //We can remove all the objects from the screen
-                //Gdx.app.exit(); // TODO: Replace this with a GAMEOVER and then remove all objects
+                //Gdx.app.exit();
+
             }
 
         }
+    }
+
+    private void endGame() {
+
+        gamePort = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
+        stage = new Stage(gamePort, game.batch);
+
+        Label gameOverLabel = new Label("Game Over", MyGdxGame.gameSkin);
+        gameOverLabel.setFontScale(1.5f);
+
+        gameOverLabel.setColor(Color.RED);
+
+        gameOverLabel.setWidth(Gdx.graphics.getWidth() / 16);
+        gameOverLabel.setPosition(35, 250);
+
+        TextButton exitButton = new TextButton("Exit", MyGdxGame.gameSkin);
+        exitButton.getLabel().setFontScale(1f);
+        exitButton.setColor(Color.RED);
+
+        exitButton.setWidth(Gdx.graphics.getWidth() / 16);
+        exitButton.setPosition(70, 150);
+
+        hud.stage.addActor(gameOverLabel);
+        hud.stage.addActor(exitButton);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
+            game.setScreen(new MenuState(game));
+            //bodyList.clear(); //We can remove all the objects from the screen
+            //Gdx.app.exit(); // TODO: Replace this with a GAMEOVER and then remove all objects
+        }
+
+
 
     public Body drawSquare(float width, float height) {
         BodyDef def = new BodyDef();
@@ -207,11 +220,13 @@ public class PlayScreen implements Screen{
         fdef.density = 1f;
         bod.createFixture(fdef);
 
+        /*
         if(squareTexList.size()!=0){
             squareTexList.get(squareTexList.size()-1).setBounds(0,0,drawSquareTex().getWidth(),drawSquareTex().getHeight());
             squareTexList.get(squareTexList.size()-1).setSize(width * 2,height * 2);
             squareTexList.get(squareTexList.size()-1).setOrigin(drawSquareTex().getWidth()/2, drawSquareTex().getHeight()/2);
         }
+        */
         shape.dispose();
 
         return bod;
