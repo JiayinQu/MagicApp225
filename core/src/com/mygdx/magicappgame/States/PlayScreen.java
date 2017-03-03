@@ -5,10 +5,17 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -21,6 +28,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Scenes.Hud;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
+
 
 import java.util.ArrayList;
 
@@ -44,9 +52,7 @@ public class PlayScreen implements Screen{
     private Body plat;
     private Vector2 screenPos;
     private ArrayList<Body> bodyList;
-
-
-
+    private ArrayList<Sprite> squareTexList;
 
     public PlayScreen(MyGdxGame game) {
         this.game = game;
@@ -68,7 +74,7 @@ public class PlayScreen implements Screen{
 
         screenPos = new Vector2(104, 300);
         bodyList = new ArrayList<Body>();
-
+        squareTexList = new ArrayList<Sprite>();
 
     }
 
@@ -87,6 +93,7 @@ public class PlayScreen implements Screen{
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
+            squareTexList.add(drawSquareTex());
             bodyList.add(drawSquare(screenPos, 30));
         }
 
@@ -126,13 +133,13 @@ public class PlayScreen implements Screen{
 
         //renderer.render();
         b2dr.render(world,gamecam.combined);
-
-        game.batch.begin();
-        //currentShape.render(game.batch);
-        game.batch.end();
+        if(bodyList.size()!=0){
+            draw(game.batch);
+        }
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+
     }
 
     private void endGame() {
@@ -158,8 +165,34 @@ public class PlayScreen implements Screen{
         fdef.density = 1f;
         bod.createFixture(fdef);
 
+        if(squareTexList.size()!=0){
+            squareTexList.get(squareTexList.size()-1).setBounds(0,0,drawSquareTex().getWidth(),drawSquareTex().getHeight());
+            squareTexList.get(squareTexList.size()-1).setSize(sideLen * 2,sideLen * 2);
+            squareTexList.get(squareTexList.size()-1).setOrigin(drawSquareTex().getWidth()/2, drawSquareTex().getHeight()/2);
+        }
+        shape.dispose();
+
         return bod;
     }
+
+    public Sprite drawSquareTex(){
+        Texture squareTex = new Texture("StoneSquare.png");
+        Sprite squareSprite = new Sprite(squareTex);
+
+        return squareSprite;
+    }
+
+    public void draw(Batch batch){
+        game.batch.begin();
+        for(int i = 0; i< squareTexList.size();i++){
+            squareTexList.get(i).setPosition(bodyList.get(i).getPosition().x - 30,bodyList.get(i).getPosition().y - 30);
+            squareTexList.get(i).setRotation(bodyList.get(i).getAngle() * MathUtils.radiansToDegrees);
+            squareTexList.get(i).draw(batch);
+        }
+        game.batch.end();
+
+    }
+
 
     @Override
     public void resize(int width, int height) {
