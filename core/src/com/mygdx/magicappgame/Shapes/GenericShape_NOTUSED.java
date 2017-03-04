@@ -22,7 +22,7 @@ import com.mygdx.magicappgame.States.PlayScreen;
  * Created by ahayes on 2/22/17.
  */
 
-public class GenericShape extends Sprite {
+public class GenericShape_NOTUSED extends Sprite {
     private World world;
     public Body bod;
     public Fixture fixture;
@@ -30,7 +30,7 @@ public class GenericShape extends Sprite {
     private Sprite sprite = new Sprite (new Texture("StoneSquare.png"));
 
 
-    public GenericShape(World world, int identifier, float sideLen, Vector2 screenPos, PlayScreen screen){
+    public GenericShape_NOTUSED(World world, int identifier, float sideLen, Vector2 screenPos, PlayScreen screen){
         this.world = world;
 
         if(identifier == 0){

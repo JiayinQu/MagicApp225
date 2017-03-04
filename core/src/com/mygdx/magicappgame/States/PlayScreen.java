@@ -9,12 +9,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -32,7 +29,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Scenes.Hud;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
+import com.mygdx.magicappgame.levels.Level;
 import com.mygdx.magicappgame.levels.Level1;
+import com.mygdx.magicappgame.levels.Level2;
 
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ import java.util.ArrayList;
  */
 public class PlayScreen implements Screen{
     private MyGdxGame game;
-    public OrthographicCamera gamecam;
+    private OrthographicCamera gamecam;
     private Viewport gamePort;
     private Hud hud;
     private Stage stage;
@@ -65,9 +64,14 @@ public class PlayScreen implements Screen{
     private ArrayList<Sprite> squareTexList;
 
     // Level setups
+    private ArrayList<Level> levels;
+    private Level currentLevel;
     private Level1 level1;
-    public Boolean levelComplete;
+    private Level2 level2;
+    private int levelCount;
+
     private Boolean somethingOnScreen;
+    private Boolean gameOver;
 
     /**
      * This constructor simply initializes everything.
@@ -95,9 +99,12 @@ public class PlayScreen implements Screen{
         bodyList = new ArrayList<Body>();
         squareTexList = new ArrayList<Sprite>();
 
-        level1 = new Level1(this);
-        levelComplete = false;
+        // Setup all of the levels and the array of levels
+        setUpLevels();
+
+
         somethingOnScreen = false;
+        gameOver = false;
 
     }
 
@@ -116,7 +123,6 @@ public class PlayScreen implements Screen{
             screenPos.add(0, 1.75f);
             gamecam.position.y += 100 * dt;
         }
-
         // Moves the camera down - just for testing
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             gamecam.position.y -= 100 * dt;
@@ -126,10 +132,11 @@ public class PlayScreen implements Screen{
         // used it calls endGame();
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
             //squareTexList.add(drawSquareTex());
-            if (!levelComplete) {
+            if (!currentLevel.levelComplete) {
                 somethingOnScreen = true;
-                bodyList.add(level1.getNextBod());
+                bodyList.add(currentLevel.getNextBod());
             } else {
+
                 endGame();
             }
         }
@@ -144,6 +151,22 @@ public class PlayScreen implements Screen{
             Body moveBod = bodyList.get(bodyList.size()-1);
             moveBod.applyForce(new Vector2(300000f, 0), moveBod.getWorldCenter(), true);
         }
+
+        if (gameOver && Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+            gameOver = false;
+            levelCount++;
+            currentLevel.clearLevel();
+            clearBodyList();
+            currentLevel = levels.get(levelCount-1);
+            game.setScreen(new MenuState(game, this));
+        }
+    }
+
+    private void clearBodyList() {
+        for (Body body :bodyList) {
+            world.destroyBody(body);
+        }
+        bodyList.clear();
     }
 
     /**
@@ -200,31 +223,29 @@ public class PlayScreen implements Screen{
      */
     private void endGame() {
 
-        gamePort = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
-        stage = new Stage(gamePort, game.batch);
+//        gamePort = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
+//        stage = new Stage(gamePort, game.batch);
+//
+//        Label gameOverLabel = new Label("Game Over", MyGdxGame.gameSkin);
+//        gameOverLabel.setFontScale(1.5f);
+//
+//        gameOverLabel.setColor(Color.RED);
+//
+//        gameOverLabel.setWidth(Gdx.graphics.getWidth() / 16);
+//        gameOverLabel.setPosition(35, 250);
+//
+//        TextButton exitButton = new TextButton("Exit", MyGdxGame.gameSkin);
+//        exitButton.getLabel().setFontScale(1f);
+//        exitButton.setColor(Color.RED);
+//
+//        exitButton.setWidth(Gdx.graphics.getWidth() / 16);
+//        exitButton.setPosition(70, 150);
+//
+//        hud.stage.addActor(gameOverLabel);
+//        hud.stage.addActor(exitButton);
 
-        Label gameOverLabel = new Label("Game Over", MyGdxGame.gameSkin);
-        gameOverLabel.setFontScale(1.5f);
-
-        gameOverLabel.setColor(Color.RED);
-
-        gameOverLabel.setWidth(Gdx.graphics.getWidth() / 16);
-        gameOverLabel.setPosition(35, 250);
-
-        TextButton exitButton = new TextButton("Exit", MyGdxGame.gameSkin);
-        exitButton.getLabel().setFontScale(1f);
-        exitButton.setColor(Color.RED);
-
-        exitButton.setWidth(Gdx.graphics.getWidth() / 16);
-        exitButton.setPosition(70, 150);
-
-        hud.stage.addActor(gameOverLabel);
-        hud.stage.addActor(exitButton);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
-            game.setScreen(new MenuState(game));
-            //bodyList.clear(); //We can remove all the objects from the screen
-        }
+        gameOver = true;
+    }
 
     /**
      * The function that draws a square shaped object
@@ -233,34 +254,6 @@ public class PlayScreen implements Screen{
      * @param height of the rectangle
      * @return the Body that was just drawn on the screen
      */
-    public Body drawSquare(float width, float height) {
-        BodyDef def = new BodyDef();
-        def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set(screenPos);
-
-        Body bod = world.createBody(def);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width, height);
-
-        FixtureDef fdef = new FixtureDef();
-        fdef.shape = shape;
-        fdef.density = 1f;
-        fdef.friction = .2f;
-        bod.createFixture(fdef);
-
-        // Textures -- needs to be fixed
-        /*
-        if(squareTexList.size()!=0){
-            squareTexList.get(squareTexList.size()-1).setBounds(0,0,drawSquareTex().getWidth(),drawSquareTex().getHeight());
-            squareTexList.get(squareTexList.size()-1).setSize(width * 2,height * 2);
-            squareTexList.get(squareTexList.size()-1).setOrigin(drawSquareTex().getWidth()/2, drawSquareTex().getHeight()/2);
-        }
-        */
-        shape.dispose();
-
-        return bod;
-    }
 
     /**
      * Puts a Texture with a Sprite
@@ -286,6 +279,19 @@ public class PlayScreen implements Screen{
         }
         game.batch.end();
 
+    }
+
+    private void setUpLevels() {
+        levels = new ArrayList<Level>();
+        levelCount = 1;
+
+        level1 = new Level1(world, screenPos);
+        level2 = new Level2(world, screenPos);
+
+        levels.add(level1);
+        levels.add(level2);
+
+        currentLevel = level1;
     }
 
     /**

@@ -1,40 +1,31 @@
 package com.mygdx.magicappgame.States;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 
 
-import javax.swing.plaf.ViewportUI;
-import javax.swing.plaf.nimbus.State;
-
 /**
  * Created by Jiayin Qu on 2017/2/26.
+ *
  */
 
 public class MenuState implements Screen{
-    private Viewport viewport;
     private Stage stage;
 
     private MyGdxGame game;
 
-    public MenuState(MyGdxGame BalanceGame){
+    MenuState(MyGdxGame BalanceGame, final PlayScreen playScreen){
         game = BalanceGame;
-        viewport = new FitViewport(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT,new OrthographicCamera());
+        Viewport viewport = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
 
         TextButton playButton = new TextButton("Start",MyGdxGame.gameSkin);
@@ -45,7 +36,7 @@ public class MenuState implements Screen{
         playButton.addListener(new InputListener(){
             @Override
             public void touchUp(InputEvent event,float x, float y, int pointer, int button ){
-                game.setScreen(new PlayScreen(game));
+                game.setScreen(playScreen);
             }
 
             @Override
