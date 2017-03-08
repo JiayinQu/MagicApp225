@@ -131,7 +131,7 @@ public class PlayScreen implements Screen{
             } else {
                 currentLevel.levelComplete = true;
                 System.out.println("LEVEL COMPLETE");
-                endGame();
+                //endGame();
             }
         }
 
@@ -180,7 +180,7 @@ public class PlayScreen implements Screen{
         handleInput(dt);
         world.step(1/60f, 6, 2);
 
-        checkEndGame(); // Checks if the game is over
+        //checkEndGame(); // Checks if the game is over
 
         gamecam.update();
         //renderer.setView(gamecam); // used for the background
@@ -207,48 +207,30 @@ public class PlayScreen implements Screen{
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
+        if(gameOver()){
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
+
+
     }
 
-    /**
-     * If any Bodies are below the platform, call endGame()
-     */
-    private void checkEndGame() {
-        for (Body aBodyList : bodyList) {
-            if (aBodyList.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60) {
-                endGame();
-            }
-        }
-    }
 
     /**
      * The function that ends the current game and brings up the exit screen
-     * TODO: Move this to a separate exitScreen Class
      */
-    private void endGame() {
-
-//        gamePort = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
-//        stage = new Stage(gamePort, game.batch);
-//
-//        Label gameOverLabel = new Label("Game Over", MyGdxGame.gameSkin);
-//        gameOverLabel.setFontScale(1.5f);
-//
-//        gameOverLabel.setColor(Color.RED);
-//
-//        gameOverLabel.setWidth(Gdx.graphics.getWidth() / 16);
-//        gameOverLabel.setPosition(35, 250);
-//
-//        TextButton exitButton = new TextButton("Exit", MyGdxGame.gameSkin);
-//        exitButton.getLabel().setFontScale(1f);
-//        exitButton.setColor(Color.RED);
-//
-//        exitButton.setWidth(Gdx.graphics.getWidth() / 16);
-//        exitButton.setPosition(70, 150);
-//
-//        hud.stage.addActor(gameOverLabel);
-//        hud.stage.addActor(exitButton);
-
-        gameOver = true;
+    public boolean gameOver(){
+        for(Body aBodyList : bodyList) {
+            if (aBodyList.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60) {
+                ;return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
     }
+
 
     /**
      * The function that draws a square shaped object
