@@ -3,7 +3,6 @@ package com.mygdx.magicappgame.States;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,14 +15,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
@@ -56,7 +50,7 @@ public class PlayScreen implements Screen{
     private World world;
     private Box2DDebugRenderer b2dr;
 
-    private Body plat;
+    private BalancePlatform plat;
     private Vector2 screenPos;
 
     // The ArrayLists that contain Bodies and matching Sprites
@@ -92,8 +86,8 @@ public class PlayScreen implements Screen{
         world = new World(new Vector2(0, -40f), true); // The game's gravity
         b2dr = new Box2DDebugRenderer();
 
-        BalancePlatform balancePlatform = new BalancePlatform(world);
-        plat = balancePlatform.bod1;
+        plat = new BalancePlatform(world);
+
 
         screenPos = new Vector2(104, 300);
         bodyList = new ArrayList<Body>();
@@ -136,7 +130,6 @@ public class PlayScreen implements Screen{
                 somethingOnScreen = true;
                 bodyList.add(currentLevel.getNextBod());
             } else {
-
                 endGame();
             }
         }
@@ -154,10 +147,13 @@ public class PlayScreen implements Screen{
 
         if (gameOver && Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             gameOver = false;
-            levelCount++;
             currentLevel.clearLevel();
             clearBodyList();
-            currentLevel = levels.get(levelCount-1);
+            if (currentLevel.levelComplete) {
+                levelCount++;
+                currentLevel = levels.get(levelCount - 1);
+                System.out.println("Level Up!");
+            }
             game.setScreen(new MenuState(game, this));
         }
     }
@@ -167,6 +163,11 @@ public class PlayScreen implements Screen{
             world.destroyBody(body);
         }
         bodyList.clear();
+        setUpLevels();
+        world.destroyBody(plat.bod1);
+        world.destroyBody(plat.bod2);
+        plat = new BalancePlatform(world);
+
     }
 
     /**
@@ -211,7 +212,7 @@ public class PlayScreen implements Screen{
      */
     private void checkEndGame() {
         for (Body aBodyList : bodyList) {
-            if (aBodyList.getWorldCenter().y < plat.getWorldCenter().y - 60) {
+            if (aBodyList.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60) {
                 endGame();
             }
         }
