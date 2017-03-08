@@ -33,8 +33,8 @@ public class BalancePlatform extends Sprite {
         vectorList[0] = new Vector2(0, 10);
         vectorList[1] = new Vector2(-5, -10);
         vectorList[2] = new Vector2(5, -10);
-        definePlatform(104, 120, 80, 10);
-        definePivot(104, 105, 15, 5);
+        definePlatform(104, 40, 80, 10);
+        definePivot(104, 25, 15, 5);
         //defineJoint(); 10 20 30 35 37.5 40 42.5 45 50 60 70
     }
 

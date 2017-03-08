@@ -88,14 +88,13 @@ public class PlayScreen implements Screen{
 
         plat = new BalancePlatform(world);
 
-
         screenPos = new Vector2(104, 300);
         bodyList = new ArrayList<Body>();
         squareTexList = new ArrayList<Sprite>();
 
         // Setup all of the levels and the array of levels
+        levelCount = 1;
         setUpLevels();
-
 
         somethingOnScreen = false;
         gameOver = false;
@@ -130,6 +129,8 @@ public class PlayScreen implements Screen{
                 somethingOnScreen = true;
                 bodyList.add(currentLevel.getNextBod());
             } else {
+                currentLevel.levelComplete = true;
+                System.out.println("LEVEL COMPLETE");
                 endGame();
             }
         }
@@ -148,12 +149,13 @@ public class PlayScreen implements Screen{
         if (gameOver && Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             gameOver = false;
             currentLevel.clearLevel();
-            clearBodyList();
             if (currentLevel.levelComplete) {
                 levelCount++;
                 currentLevel = levels.get(levelCount - 1);
+                System.out.print(levelCount);
                 System.out.println("Level Up!");
             }
+            clearBodyList();
             game.setScreen(new MenuState(game, this));
         }
     }
@@ -284,7 +286,6 @@ public class PlayScreen implements Screen{
 
     private void setUpLevels() {
         levels = new ArrayList<Level>();
-        levelCount = 1;
 
         level1 = new Level1(world, screenPos);
         level2 = new Level2(world, screenPos);
@@ -292,7 +293,7 @@ public class PlayScreen implements Screen{
         levels.add(level1);
         levels.add(level2);
 
-        currentLevel = level1;
+        currentLevel = levels.get(levelCount-1);
     }
 
     /**
