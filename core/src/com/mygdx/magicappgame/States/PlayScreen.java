@@ -65,7 +65,6 @@ public class PlayScreen implements Screen{
     private int levelCount;
 
     private Boolean somethingOnScreen;
-    private Boolean gameOver;
 
     /**
      * This constructor simply initializes everything.
@@ -97,7 +96,6 @@ public class PlayScreen implements Screen{
         setUpLevels();
 
         somethingOnScreen = false;
-        gameOver = false;
 
     }
 
@@ -128,10 +126,6 @@ public class PlayScreen implements Screen{
             if (!currentLevel.levelComplete) {
                 somethingOnScreen = true;
                 bodyList.add(currentLevel.getNextBod());
-            } else {
-                currentLevel.levelComplete = true;
-                System.out.println("LEVEL COMPLETE");
-                //endGame();
             }
         }
 
@@ -146,26 +140,28 @@ public class PlayScreen implements Screen{
             moveBod.applyForce(new Vector2(300000f, 0), moveBod.getWorldCenter(), true);
         }
 
-        if (gameOver && Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-            gameOver = false;
+        if (currentLevel.levelComplete && Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             currentLevel.clearLevel();
-            if (currentLevel.levelComplete) {
-                levelCount++;
-                currentLevel = levels.get(levelCount - 1);
-                System.out.print(levelCount);
-                System.out.println("Level Up!");
-            }
-            clearBodyList();
+            levelCount++;
+            currentLevel = levels.get(levelCount - 1);
+            refreshBodies();
             game.setScreen(new MenuState(game, this));
         }
     }
 
-    private void clearBodyList() {
+    /**
+     * Removes the bodies from bodyList from the World,
+     * clears bodyList,
+     * updates the current level,
+     * removes the bodies created by the BalancePlatform,
+     * and makes a new BalancePlatform
+     */
+    private void refreshBodies() {
         for (Body body :bodyList) {
             world.destroyBody(body);
         }
         bodyList.clear();
-        setUpLevels();
+        currentLevel = levels.get(levelCount-1);
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
         plat = new BalancePlatform(world);
@@ -211,34 +207,20 @@ public class PlayScreen implements Screen{
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
-
-
     }
 
 
     /**
      * The function that ends the current game and brings up the exit screen
      */
-    public boolean gameOver(){
+    private boolean gameOver(){
         for(Body aBodyList : bodyList) {
-            if (aBodyList.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60) {
-                ;return true;
-            }
-            else{
-                return false;
-            }
+            if (aBodyList.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60)
+                return true;
         }
         return false;
     }
 
-
-    /**
-     * The function that draws a square shaped object
-     *
-     * @param width of the rectangle
-     * @param height of the rectangle
-     * @return the Body that was just drawn on the screen
-     */
 
     /**
      * Puts a Texture with a Sprite
@@ -275,7 +257,7 @@ public class PlayScreen implements Screen{
         levels.add(level1);
         levels.add(level2);
 
-        currentLevel = levels.get(levelCount-1);
+        currentLevel = level1;
     }
 
     /**
