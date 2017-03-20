@@ -145,7 +145,7 @@ public class PlayScreen implements Screen{
             levelCount++;
             currentLevel = levels.get(levelCount - 1);
             refreshBodies();
-            game.setScreen(new MenuState(game, this));
+            game.setScreen(new MainMenu(game));
         }
     }
 
