@@ -1,8 +1,11 @@
 package com.mygdx.magicappgame.levels;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -23,6 +26,8 @@ public class Level {
     private int count;
     ArrayList<Vector2> levelCoord;
     public BalancePlatform plat;
+
+    protected Fixture fixture;
 
     private final static int NUM_BODIES = 10;
 
@@ -57,6 +62,13 @@ public class Level {
         fdef.density = 1f;
         fdef.friction = .2f;
         bod.createFixture(fdef);
+
+        EdgeShape balanceObject = new EdgeShape();
+        balanceObject.set(new Vector2( -10, 30), new Vector2(10, 30));
+        fdef.shape = balanceObject;
+        fdef.isSensor = true;
+
+        bod.createFixture(fdef).setUserData("balanceObject");
 
         // Textures -- needs to be fixed
         /*

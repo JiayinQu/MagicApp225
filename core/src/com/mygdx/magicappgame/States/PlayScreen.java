@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Scenes.Hud;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
+import com.mygdx.magicappgame.Tools.WorldContactListener;
 import com.mygdx.magicappgame.levels.Level;
 import com.mygdx.magicappgame.levels.Level1;
 import com.mygdx.magicappgame.levels.Level2;
@@ -85,9 +86,11 @@ public class PlayScreen implements Screen{
         world = new World(new Vector2(0, -40f), true); // The game's gravity
         b2dr = new Box2DDebugRenderer();
 
+        world.setContactListener(new WorldContactListener());
+
         plat = new BalancePlatform(world);
 
-        screenPos = new Vector2(104, 300);
+        screenPos = new Vector2(104, gamePort.getWorldHeight());
         bodyList = new ArrayList<Body>();
         squareTexList = new ArrayList<Sprite>();
 
@@ -126,6 +129,7 @@ public class PlayScreen implements Screen{
             if (!currentLevel.levelComplete) {
                 somethingOnScreen = true;
                 bodyList.add(currentLevel.getNextBod());
+                hud.addScore(200);
             }
         }
 
@@ -143,6 +147,7 @@ public class PlayScreen implements Screen{
         if (currentLevel.levelComplete && Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             currentLevel.clearLevel();
             levelCount++;
+            hud.addLevel();
             currentLevel = levels.get(levelCount - 1);
             refreshBodies();
             game.setScreen(new MainMenu(game));
