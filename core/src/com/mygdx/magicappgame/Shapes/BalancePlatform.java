@@ -59,6 +59,8 @@ public class BalancePlatform extends Sprite {
         fdef.density = 1.0f;
         bod1.createFixture(fdef);
 
+        bod1.createFixture(fdef).setUserData(this);
+
         return bod1;
     }
 
@@ -104,5 +106,9 @@ public class BalancePlatform extends Sprite {
 
     }
     */
+
+    public void hit(){
+        System.out.println("I've been hit");
+    }
 
 }

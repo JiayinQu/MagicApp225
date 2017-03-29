@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
+import com.mygdx.magicappgame.Tools.WorldContactListener;
 
 import java.util.ArrayList;
 
@@ -23,9 +26,14 @@ public class Level {
     private World world;
     private Vector2 screenPos;
     public Boolean levelComplete;
+    public long lastObjectTime;
     private int count;
     ArrayList<Vector2> levelCoord;
     public BalancePlatform plat;
+    private Body bod;
+    private WorldContactListener objectContactListener;
+
+    public boolean Contacted;
 
     protected Fixture fixture;
 
@@ -63,12 +71,7 @@ public class Level {
         fdef.friction = .2f;
         bod.createFixture(fdef);
 
-        EdgeShape balanceObject = new EdgeShape();
-        balanceObject.set(new Vector2( -10, 30), new Vector2(10, 30));
-        fdef.shape = balanceObject;
-        fdef.isSensor = true;
-
-        bod.createFixture(fdef).setUserData("balanceObject");
+        bod.createFixture(fdef).setUserData(this);
 
         // Textures -- needs to be fixed
         /*
@@ -87,7 +90,7 @@ public class Level {
         if (count+1 == NUM_BODIES){
             levelComplete = true;
         }
-        Body bod = drawSquare(levelCoord.get(count).x, levelCoord.get(count).y);
+        bod = drawSquare(levelCoord.get(count).x, levelCoord.get(count).y);
         count++;
         return bod;
     }
@@ -96,5 +99,9 @@ public class Level {
         levelCoord.clear();
     }
 
+    public void hit(){
+        Contacted = true;
+        System.out.println("I've been hit");
+    }
 
 }

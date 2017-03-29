@@ -20,7 +20,6 @@ public class Level1 extends Level{
     public Level1(World world, Vector2 screenPos) {
         super(world, screenPos);
         initializeCoord();
-
     }
 
     /**
