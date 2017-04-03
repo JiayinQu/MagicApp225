@@ -32,8 +32,7 @@ public class Level {
     private Body bod;
 
 
-    public boolean Contacted;
-    public boolean isTouched;
+    //private boolean isTouched;
 
     protected Fixture fixture;
 
@@ -46,7 +45,7 @@ public class Level {
         levelCoord = new ArrayList<Vector2>();
         count = 0;
         levelComplete = false;
-        isTouched = false;
+        //isTouched = false;
     }
 
     /**
@@ -55,7 +54,7 @@ public class Level {
      * @param height of the square
      * @return the body that was drawn on the screen
      */
-    Body drawSquare(float width, float height) {
+    private Body drawSquare(float width, float height) {
 
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
@@ -99,7 +98,7 @@ public class Level {
     }
 
     public void hit(){
-        Contacted = true;
+        //boolean contacted = true;
         System.out.println("I've been hit");
     }
 

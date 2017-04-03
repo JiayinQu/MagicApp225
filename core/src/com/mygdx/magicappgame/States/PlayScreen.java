@@ -55,6 +55,7 @@ public class PlayScreen implements Screen{
 
     private BalancePlatform plat;
     private Vector2 screenPos;
+    private Body currentBod;
 
     // The ArrayLists that contain Bodies and matching Sprites
     private ArrayList<Body> bodyList;
@@ -131,9 +132,13 @@ public class PlayScreen implements Screen{
         }
 
         if(Gdx.input.justTouched()){
-            if(!currentLevel.levelComplete && (bodyList.size() == 0 || bodyList.get(bodyList.size()-1).getLinearVelocity().y == 0)){
+            if((!currentLevel.levelComplete && (bodyList.size() == 0))
+                    || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5))){
+                if (somethingOnScreen)
+                    System.out.println(currentBod.getLinearVelocity().y);
                 somethingOnScreen = true;
-                bodyList.add(currentLevel.getNextBod());
+                currentBod = currentLevel.getNextBod();
+                bodyList.add(currentBod);
             }
         }
 
@@ -150,14 +155,14 @@ public class PlayScreen implements Screen{
 
 
         // Moves the current falling shape to the left
+
+
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)&& somethingOnScreen){
-            Body moveBod = bodyList.get(bodyList.size()-1);
-            moveBod.applyForce(new Vector2(-300000f, 0), moveBod.getWorldCenter(), true);
+            currentBod.applyForce(new Vector2(-250000f, 0), currentBod.getWorldCenter(), true);
         }
         // Moves the current falling shape to the right
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)&& somethingOnScreen){
-            Body moveBod = bodyList.get(bodyList.size()-1);
-            moveBod.applyForce(new Vector2(300000f, 0), moveBod.getWorldCenter(), true);
+            currentBod.applyForce(new Vector2(250000f, 0), currentBod.getWorldCenter(), true);
         }
 
 
