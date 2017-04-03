@@ -19,17 +19,20 @@ public class Hud {
 
     public Stage stage;
 
-    private static Integer score;
     private static Integer level;
+    private Integer worldTimer;
+    private float timeCount;
 
     private static Label scoreLabel;
     private static Label levelLabel;
     private Label worldLabel;
-    private Label objectLabel;
+    private Label countdownLabel;
+    private Label timeLabel;
 
 
     public Hud(SpriteBatch sb) {
-        score = 0;
+        worldTimer = 300;
+        timeCount = 0;
         level = 1;
 
         Viewport viewport = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
@@ -39,29 +42,42 @@ public class Hud {
         table.top();
         table.setFillParent(true);
 
-        scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        //scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        countdownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         levelLabel = new Label(String.format("%02d", level), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         worldLabel = new Label("LEVEL", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        objectLabel = new Label("SCORE", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-        table.add(objectLabel).expand().padTop(10);
-        table.add(worldLabel).expandX().padTop(10);
+        table.add(timeLabel).expand().padTop(10f);
+        table.add(worldLabel).expandX().padTop(10f);
         table.row();
-        table.add(scoreLabel).expandX();
+        table.add(countdownLabel).expandX();
         table.add(levelLabel).expandX();
 
         stage.addActor(table);
     }
 
 
-    public static void addScore(int value){
-        score +=value;
-        scoreLabel.setText(String.format("%06d", score));
+    public void update (float dt){
+        timeCount += dt;
+        if(timeCount >=1){
+            worldTimer --;
+            countdownLabel.setText(String.format("%03d",worldTimer));
+            timeCount = 0;
+        }
     }
 
     public static void addLevel(){
         level ++;
         levelLabel.setText(String.format("%02d", level));
     }
+
+    public boolean timeOver(){
+        if(worldTimer == 0){
+            return true;
+        }
+        return false;
+    }
+
 
 }

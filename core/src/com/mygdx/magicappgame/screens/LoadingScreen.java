@@ -48,7 +48,7 @@ public class LoadingScreen implements Screen {
         loadingLabel.setFontScale(1);
         loadingLabel.setPosition(0, 15);
 
-        this.progress = 0f;
+        this.progress = 1f;
         queueAssets();
 
         stage.addActor(loadingLabel);

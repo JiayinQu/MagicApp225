@@ -1,6 +1,7 @@
 package com.mygdx.magicappgame.levels;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -26,14 +27,13 @@ public class Level {
     private World world;
     private Vector2 screenPos;
     public Boolean levelComplete;
-    public long lastObjectTime;
     private int count;
     ArrayList<Vector2> levelCoord;
-    public BalancePlatform plat;
     private Body bod;
-    private WorldContactListener objectContactListener;
+
 
     public boolean Contacted;
+    public boolean isTouched;
 
     protected Fixture fixture;
 
@@ -45,8 +45,8 @@ public class Level {
 
         levelCoord = new ArrayList<Vector2>();
         count = 0;
-        //plat = new BalancePlatform(world);
         levelComplete = false;
+        isTouched = false;
     }
 
     /**
@@ -56,6 +56,7 @@ public class Level {
      * @return the body that was drawn on the screen
      */
     Body drawSquare(float width, float height) {
+
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(screenPos);
@@ -71,16 +72,8 @@ public class Level {
         fdef.friction = .2f;
         bod.createFixture(fdef);
 
-        bod.createFixture(fdef).setUserData(this);
+        //bod.createFixture(fdef).setUserData(this);
 
-        // Textures -- needs to be fixed
-        /*
-        if(squareTexList.size()!=0){
-            squareTexList.get(squareTexList.size()-1).setBounds(0,0,drawSquareTex().getWidth(),drawSquareTex().getHeight());
-            squareTexList.get(squareTexList.size()-1).setSize(width * 2,height * 2);
-            squareTexList.get(squareTexList.size()-1).setOrigin(drawSquareTex().getWidth()/2, drawSquareTex().getHeight()/2);
-        }
-        */
         shape.dispose();
 
         return bod;
@@ -94,6 +87,12 @@ public class Level {
         count++;
         return bod;
     }
+
+    public void setImage(Sprite sprite){
+        bod.setUserData(sprite);
+
+    }
+
 
     public void clearLevel() {
         levelCoord.clear();

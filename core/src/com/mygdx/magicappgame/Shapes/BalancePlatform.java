@@ -59,7 +59,7 @@ public class BalancePlatform extends Sprite {
         fdef.density = 1.0f;
         bod1.createFixture(fdef);
 
-        bod1.createFixture(fdef).setUserData(this);
+        //bod1.createFixture(fdef).setUserData(this);
 
         return bod1;
     }

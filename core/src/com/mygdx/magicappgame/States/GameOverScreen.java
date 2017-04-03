@@ -77,9 +77,8 @@ public class GameOverScreen implements Screen {
 
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log("my app", "Released");
-                game.setScreen(new LoadingScreen(game));
+                game.setScreen(new MainMenu(game));
                 dispose();
-
             }
         });
 

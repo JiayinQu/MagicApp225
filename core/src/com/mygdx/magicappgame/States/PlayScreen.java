@@ -1,41 +1,34 @@
 package com.mygdx.magicappgame.States;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Scenes.Hud;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
-import com.mygdx.magicappgame.Tools.WorldContactListener;
+import com.mygdx.magicappgame.Tools.MyInputProcessor;
 import com.mygdx.magicappgame.levels.Level;
 import com.mygdx.magicappgame.levels.Level1;
 import com.mygdx.magicappgame.levels.Level2;
 
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by Jiayin Qu on 2017/2/11.
@@ -76,6 +69,9 @@ public class PlayScreen implements Screen{
 
     private Boolean somethingOnScreen;
 
+    private MyInputProcessor newInputProcessor;
+
+
     /**
      * This constructor simply initializes everything.
      * @param game the main game
@@ -87,15 +83,15 @@ public class PlayScreen implements Screen{
         hud = new Hud(game.batch);
 
         maploader = new TmxMapLoader();
-        //map = maploader.load("SkyBackG.tmx");
-        //renderer = new OrthogonalTiledMapRenderer(map);
         shapeRenderer = new ShapeRenderer();
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
         world = new World(new Vector2(0, -40f), true); // The game's gravity
         b2dr = new Box2DDebugRenderer();
 
-        world.setContactListener(new WorldContactListener());
+        //world.setContactListener(new WorldContactListener());
+        Gdx.input.setInputProcessor(newInputProcessor);
+
 
         plat = new BalancePlatform(world);
 
@@ -108,7 +104,9 @@ public class PlayScreen implements Screen{
         setUpLevels();
 
         somethingOnScreen = false;
+
         lifeTime = System.currentTimeMillis();
+
 
     }
 
@@ -130,6 +128,13 @@ public class PlayScreen implements Screen{
         // Moves the camera down - just for testing
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             gamecam.position.y -= 100 * dt;
+        }
+
+        if(Gdx.input.justTouched()){
+            if(!currentLevel.levelComplete && (bodyList.size() == 0 || bodyList.get(bodyList.size()-1).getLinearVelocity().y == 0)){
+                somethingOnScreen = true;
+                bodyList.add(currentLevel.getNextBod());
+            }
         }
 
         // Draws the next shape when 1 is pressed, if all the shapes have been
@@ -195,6 +200,8 @@ public class PlayScreen implements Screen{
         handleInput(dt);
         world.step(1/60f, 6, 2);
 
+        hud.update(dt);
+
         //checkEndGame(); // Checks if the game is over
 
         gamecam.update();
@@ -219,20 +226,6 @@ public class PlayScreen implements Screen{
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
-        lifeTime += (long) Gdx.graphics.getDeltaTime();
-        if (lifeTime > delay) {
-            if(!currentLevel.levelComplete){
-                if(bodyList.size() == 0 || currentLevel.Contacted){
-                    System.out.print(currentLevel.Contacted);
-                    somethingOnScreen = true;
-                    bodyList.add(currentLevel.getNextBod());
-                    hud.addScore(200);
-                    currentLevel.Contacted = false;
-                    System.out.print(currentLevel.Contacted);
-                }
-            }
-        }
-
         if(gameOver()){
             game.setScreen(new GameOverScreen(game));
             dispose();
@@ -244,6 +237,9 @@ public class PlayScreen implements Screen{
      * The function that ends the current game and brings up the exit screen
      */
     private boolean gameOver(){
+        if(hud.timeOver()){
+            return true;
+        }
         for(Body aBodyList : bodyList) {
             if (aBodyList.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60)
                 return true;
@@ -263,6 +259,12 @@ public class PlayScreen implements Screen{
         return squareSprite;
     }
 
+    //if(squareTexList.size()!=0){
+    //squareTexList.get(squareTexList.size()-1).setBounds(0,0,drawSquareTex().getWidth(),drawSquareTex().getHeight());
+    //squareTexList.get(squareTexList.size()-1).setSize(bodyList.get(bodyList.size()-1).* 2,height * 2);
+    //squareTexList.get(squareTexList.size()-1).setOrigin(drawSquareTex().getWidth()/2, drawSquareTex().getHeight()/2);
+    //}
+
 
 
     private void setUpLevels() {
@@ -276,6 +278,7 @@ public class PlayScreen implements Screen{
 
         currentLevel = level1;
     }
+
 
     /**
      * Resizes the window
