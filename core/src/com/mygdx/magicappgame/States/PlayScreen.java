@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
@@ -89,6 +92,7 @@ public class PlayScreen implements Screen{
 
         world = new World(new Vector2(0, -40f), true); // The game's gravity
         b2dr = new Box2DDebugRenderer();
+        stage = new Stage(gamePort);
 
         //world.setContactListener(new WorldContactListener());
         Gdx.input.setInputProcessor(newInputProcessor);
@@ -131,14 +135,14 @@ public class PlayScreen implements Screen{
             gamecam.position.y -= 100 * dt;
         }
 
-        if(Gdx.input.justTouched()){
-            if((!currentLevel.levelComplete && (bodyList.size() == 0))
-                    || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5))){
-                if (somethingOnScreen)
-                    System.out.println(currentBod.getLinearVelocity().y);
+        if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            if(!currentLevel.levelComplete && ((bodyList.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
                 somethingOnScreen = true;
+
                 currentBod = currentLevel.getNextBod();
                 bodyList.add(currentBod);
+            } else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
+                nextLevelLabel();
             }
         }
 
@@ -166,17 +170,29 @@ public class PlayScreen implements Screen{
         }
 
 
-        if (currentLevel.levelComplete && Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+
+        if (currentLevel.levelComplete && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             currentLevel.clearLevel();
             levelCount++;
-            hud.addLevel();
+            Hud.addLevel();
             currentLevel = levels.get(levelCount - 1);
             refreshBodies();
-            game.setScreen(new MainMenu(game));
         }
+
     }
 
-
+    private void nextLevelLabel() {
+        Label nextLevel = new Label("CONGRATULATIONS!\n\n\n" +
+                "You beat the level!\n" +
+                "Press ENTER to move on \n" +
+                "to the next level", MyGdxGame.gameSkin);
+        nextLevel.setFontScale(1);
+        nextLevel.setColor(Color.GREEN);
+        nextLevel.setWidth(Gdx.graphics.getWidth() / 10);
+        nextLevel.setPosition(80, 300);
+        nextLevel.setAlignment(1);
+        stage.addActor(nextLevel);
+    }
 
     /**
      * Removes the bodies from bodyList from the World,
@@ -190,6 +206,7 @@ public class PlayScreen implements Screen{
             world.destroyBody(body);
         }
         bodyList.clear();
+        stage.clear();
         currentLevel = levels.get(levelCount-1);
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
@@ -229,6 +246,8 @@ public class PlayScreen implements Screen{
         b2dr.render(world,gamecam.combined);
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        stage.act(delta);
+        stage.draw();
         hud.stage.draw();
 
         if(gameOver()){

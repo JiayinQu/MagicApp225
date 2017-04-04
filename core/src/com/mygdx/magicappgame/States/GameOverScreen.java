@@ -55,11 +55,15 @@ public class GameOverScreen implements Screen {
 
         style.font = font;
 
+
+
         Label gameOverLabel = new Label("Game Over", MyGdxGame.gameSkin);
         gameOverLabel.setFontScale(2);
         gameOverLabel.setColor(Color.RED);
         gameOverLabel.setWidth(Gdx.graphics.getWidth() / 10);
-        gameOverLabel.setPosition(Gdx.graphics.getWidth() / 2, game.V_HEIGHT / 2);
+        gameOverLabel.setPosition(Gdx.graphics.getWidth() / 2, MyGdxGame.V_HEIGHT / 2);
+
+
 
         playAgainButton = new TextButton("Play Again", style);
         //** Button text and style **//
