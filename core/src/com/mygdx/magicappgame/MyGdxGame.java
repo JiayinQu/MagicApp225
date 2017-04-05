@@ -5,7 +5,12 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.magicappgame.States.GameOverScreen;
+import com.mygdx.magicappgame.States.Instructions;
+import com.mygdx.magicappgame.States.MainMenu;
+import com.mygdx.magicappgame.States.PlayScreen;
 import com.mygdx.magicappgame.screens.LoadingScreen;
+
+import java.util.ArrayList;
 
 public class MyGdxGame extends Game {
 
@@ -14,6 +19,11 @@ public class MyGdxGame extends Game {
 	public static final int V_HEIGHT = 400;
 	public static final float PPM = 100;
     public AssetManager assets;
+
+	public PlayScreen playScreen;
+	public Instructions instructions;
+	public GameOverScreen gameOverScreen;
+	public MainMenu mainMenu;
 
 	static public Skin gameSkin;
 	//skin licence: http://creativecommons.org/licenses/by/4.0/
@@ -24,12 +34,21 @@ public class MyGdxGame extends Game {
 
         assets = new AssetManager();
 		batch = new SpriteBatch();
+		setupStates();
 		setScreen(new LoadingScreen(this));
 	}
 
 	@Override
 	public void render () {
 		super.render();
+	}
+
+	private void setupStates() {
+		playScreen = new PlayScreen(this);
+		instructions = new Instructions(this);
+		gameOverScreen = new GameOverScreen(this);
+		mainMenu = new MainMenu(this);
+
 	}
 
 }

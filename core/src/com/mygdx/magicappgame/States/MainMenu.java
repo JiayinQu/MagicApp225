@@ -79,8 +79,7 @@ public class MainMenu implements Screen{
 
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log("my app", "Released");
-                game.setScreen(new PlayScreen(game));
-                dispose();
+                game.setScreen(game.playScreen);
 
             }
         });
@@ -93,7 +92,6 @@ public class MainMenu implements Screen{
 
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log("my app", "Instructions");
-                dispose();
 
             }
         });
@@ -109,7 +107,6 @@ public class MainMenu implements Screen{
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log("my app", "Exited");
                 Gdx.app.exit();
-                dispose();
 
             }
         });

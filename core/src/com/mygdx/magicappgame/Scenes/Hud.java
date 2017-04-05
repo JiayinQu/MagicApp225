@@ -73,10 +73,7 @@ public class Hud {
     }
 
     public boolean timeOver(){
-        if(worldTimer == 0){
-            return true;
-        }
-        return false;
+        return worldTimer == 0;
     }
 
 

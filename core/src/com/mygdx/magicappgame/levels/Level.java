@@ -31,11 +31,6 @@ public class Level {
     ArrayList<Vector2> levelCoord;
     private Body bod;
 
-
-    //private boolean isTouched;
-
-    protected Fixture fixture;
-
     private final static int NUM_BODIES = 10;
 
     Level (World world, Vector2 screenPos) {
@@ -71,8 +66,6 @@ public class Level {
         fdef.friction = .2f;
         bod.createFixture(fdef);
 
-        //bod.createFixture(fdef).setUserData(this);
-
         shape.dispose();
 
         return bod;
@@ -89,7 +82,6 @@ public class Level {
 
     public void setImage(Sprite sprite){
         bod.setUserData(sprite);
-
     }
 
 
@@ -99,7 +91,6 @@ public class Level {
 
     public void hit(){
         //boolean contacted = true;
-        System.out.println("I've been hit");
     }
 
 }
