@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -20,6 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
+
+import java.awt.TextField;
 
 import static com.badlogic.gdx.scenes.scene2d.InputEvent.Type.touchDown;
 import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.actor;
@@ -51,8 +54,9 @@ public class Hud {
         Viewport viewport = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
+
         Table table = new Table();
-        table.top();
+        //table.top();
         table.setFillParent(true);
 
         //scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -61,11 +65,14 @@ public class Hud {
         worldLabel = new Label("LEVEL", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-        table.add(timeLabel).expand().padTop(10f);
-        table.add(worldLabel).expandX().padTop(10f);
-        table.row();
+        //table.add(timeLabel).expand();
+        table.columnDefaults(0).width(150);
+        table.add(timeLabel);
         table.add(countdownLabel).expandX();
+        table.row();
+        table.add(worldLabel);
         table.add(levelLabel).expandX();
+        //table.setDebug(true);
         table.setPosition(0, 160);
 
         stage.addActor(table);
