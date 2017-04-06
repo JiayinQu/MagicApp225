@@ -3,12 +3,15 @@ package com.mygdx.magicappgame.States;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -17,9 +20,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
@@ -71,6 +80,9 @@ public class PlayScreen implements Screen{
 
     private Boolean somethingOnScreen;
 
+    public Image pauseImage;
+    public boolean pauseTouched;
+
     private MyInputProcessor newInputProcessor;
 
 
@@ -92,7 +104,8 @@ public class PlayScreen implements Screen{
         stage = new Stage(gamePort);
 
         //world.setContactListener(new WorldContactListener());
-        Gdx.input.setInputProcessor(newInputProcessor);
+        //Gdx.input.setInputProcessor(newInputProcessor);
+
 
         plat = new BalancePlatform(world);
 
@@ -100,10 +113,12 @@ public class PlayScreen implements Screen{
         bodyList = new ArrayList<Body>();
         squareTexList = new ArrayList<Sprite>();
 
+
         // Setup all of the levels and the array of levels
         setUpLevels();
 
         somethingOnScreen = false;
+        pauseTouched = false;
 
         lifeTime = System.currentTimeMillis();
 
@@ -112,6 +127,27 @@ public class PlayScreen implements Screen{
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
+
+        final Texture pauseButton =  new Texture("PauseButton.png");
+        Drawable pauseDrawable = new TextureRegionDrawable(new TextureRegion(pauseButton));
+        pauseImage = new Image(pauseDrawable);
+        pauseImage.setHeight(25);
+        pauseImage.setWidth(25);
+        pauseImage.setPosition(90, 350);
+
+        pauseImage.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log("pause", "Pressed");
+                return true;
+            }
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                pauseTouched =true;
+                pausePopUp();
+            }
+        });
+
+        stage.addActor(pauseImage);
     }
 
     /**
@@ -157,6 +193,7 @@ public class PlayScreen implements Screen{
             refreshBodies();
         }
 
+
     }
 
     /**
@@ -175,6 +212,7 @@ public class PlayScreen implements Screen{
         nextLevel.setAlignment(1);
         stage.addActor(nextLevel);
     }
+
 
     /**
      * Removes the bodies from bodyList from the World,
@@ -201,15 +239,16 @@ public class PlayScreen implements Screen{
      * @param dt delta time
      */
     private void update(float dt){
-        handleInput(dt);
-        world.step(1/60f, 6, 2);
+        if(!pauseTouched){
+            handleInput(dt);
+            world.step(1/60f, 6, 2);
 
-        hud.update(dt);
+            hud.update(dt);
 
-        gamecam.update();
-        //renderer.setView(gamecam); // used for the background
-        b2dr.render(world, gamecam.combined);
-
+            gamecam.update();
+            //renderer.setView(gamecam); // used for the background
+            b2dr.render(world, gamecam.combined);
+        }
     }
 
     /**
@@ -269,7 +308,9 @@ public class PlayScreen implements Screen{
     //}
 
 
-
+    /**
+     * Change Levels based on levelCount
+     */
     private void setUpLevels() {
         levelCount = 1;
 
@@ -284,6 +325,55 @@ public class PlayScreen implements Screen{
         levels.add(level3);
 
         currentLevel = level1;
+    }
+
+
+    /**
+     * The pop up screen used when users press "pause button")
+     */
+    private void pausePopUp(){
+        final Label resume = new Label("RESUME", MyGdxGame.gameSkin);
+        resume.setFontScale(1);
+        resume.setColor(Color.GREEN);
+        resume.setWidth(Gdx.graphics.getWidth()/10);
+        resume.setPosition(80,200);
+        resume.setAlignment(1);
+
+
+        final Label BackToMenu = new Label("Back to Menu", MyGdxGame.gameSkin);
+        BackToMenu.setFontScale(1);
+        BackToMenu.setColor(Color.GREEN);
+        BackToMenu.setWidth(Gdx.graphics.getWidth()/10);
+        BackToMenu.setPosition(80,160);
+        BackToMenu.setAlignment(1);
+
+        resume.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log("resume", "Pressed");
+                return true;
+            }
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                pauseTouched = false;
+                resume.remove();
+                BackToMenu.remove();
+            }
+        });
+        BackToMenu.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log("backtomenu", "Pressed");
+                return true;
+            }
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                pauseTouched = false;
+                game.setScreen(game.mainMenu);
+                refreshBodies();
+                resume.remove();
+                BackToMenu.remove();
+            }
+        });
+
+        stage.addActor(resume);
+        stage.addActor(BackToMenu);
     }
 
 

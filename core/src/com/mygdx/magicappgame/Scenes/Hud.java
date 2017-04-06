@@ -1,15 +1,28 @@
 package com.mygdx.magicappgame.Scenes;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
+
+import static com.badlogic.gdx.scenes.scene2d.InputEvent.Type.touchDown;
+import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.actor;
 
 /**
  * Created by Jiayin Qu on 2017/2/12.
@@ -53,6 +66,7 @@ public class Hud {
         table.row();
         table.add(countdownLabel).expandX();
         table.add(levelLabel).expandX();
+        table.setPosition(0, 160);
 
         stage.addActor(table);
     }
@@ -75,6 +89,5 @@ public class Hud {
     public boolean timeOver(){
         return worldTimer == 0;
     }
-
 
 }
