@@ -65,7 +65,6 @@ public class Hud {
         worldLabel = new Label("LEVEL", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-        //table.add(timeLabel).expand();
         table.columnDefaults(0).width(150);
         table.add(timeLabel);
         table.add(countdownLabel).expandX();
