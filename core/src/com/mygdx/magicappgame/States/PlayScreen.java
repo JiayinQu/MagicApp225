@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -83,6 +84,8 @@ public class PlayScreen implements Screen{
     public Image pauseImage;
     public boolean pauseTouched;
 
+    private Sound startSound, loosingSound, winnigSound;
+
     private MyInputProcessor newInputProcessor;
 
 
@@ -90,6 +93,7 @@ public class PlayScreen implements Screen{
      * This constructor simply initializes everything.
      * @param game the main game
      */
+
     public PlayScreen(MyGdxGame game) {
         this.game = game;
         gamecam = new OrthographicCamera();
@@ -99,7 +103,7 @@ public class PlayScreen implements Screen{
         shapeRenderer = new ShapeRenderer();
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        world = new World(new Vector2(0, -40f), true); // The game's gravity
+        world = new World(new Vector2(0, -40f), true); //The game's gravity
         b2dr = new Box2DDebugRenderer();
         stage = new Stage(gamePort);
 
@@ -121,6 +125,10 @@ public class PlayScreen implements Screen{
         pauseTouched = false;
 
         lifeTime = System.currentTimeMillis();
+
+        startSound = Gdx.audio.newSound(Gdx.files.internal("sound/Hearbeat.mp3"));
+        loosingSound = Gdx.audio.newSound(Gdx.files.internal("sound/SadMale.mp3"));
+        winnigSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
 
 
     }
@@ -166,13 +174,17 @@ public class PlayScreen implements Screen{
 //        }
 
         if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            startSound.play(1.0f);
             if(!currentLevel.levelComplete && ((bodyList.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
                 somethingOnScreen = true;
-
                 currentBod = currentLevel.getNextBod();
                 bodyList.add(currentBod);
-            } else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
+            }
+            else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
                 nextLevelLabel();
+                winnigSound.play(2.0f);
+
+
             }
         }
 
@@ -285,6 +297,8 @@ public class PlayScreen implements Screen{
         for(Body aBodyList : bodyList) {
             if (aBodyList.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60)
                 return true;
+                loosingSound.play(1.0f);
+
         }
         return false;
     }
@@ -295,10 +309,11 @@ public class PlayScreen implements Screen{
      * @return the Sprite
      */
     public Sprite drawSquareTex(){
+
         Texture squareTex = new Texture("StoneSquare.png");
         Sprite squareSprite = new Sprite(squareTex);
-
         return squareSprite;
+
     }
 
     //if(squareTexList.size()!=0){
