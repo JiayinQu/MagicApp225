@@ -81,10 +81,11 @@ public class PlayScreen implements Screen{
 
     private Boolean somethingOnScreen;
 
-    public Image pauseImage;
-    public boolean pauseTouched;
+    private Image pauseImage;
+    private boolean pauseTouched;
+    private boolean moveAllowed;
 
-    private Sound startSound, loosingSound, winnigSound;
+    private Sound startSound, loosingSound, winningSound;
 
     private MyInputProcessor newInputProcessor;
 
@@ -123,12 +124,13 @@ public class PlayScreen implements Screen{
 
         somethingOnScreen = false;
         pauseTouched = false;
+        moveAllowed = true;
 
         lifeTime = System.currentTimeMillis();
 
         startSound = Gdx.audio.newSound(Gdx.files.internal("sound/Hearbeat.mp3"));
         loosingSound = Gdx.audio.newSound(Gdx.files.internal("sound/SadMale.mp3"));
-        winnigSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
+        winningSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
 
 
     }
@@ -150,7 +152,7 @@ public class PlayScreen implements Screen{
                 return true;
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                pauseTouched =true;
+                pauseTouched = true;
                 pausePopUp();
             }
         });
@@ -181,19 +183,20 @@ public class PlayScreen implements Screen{
                 bodyList.add(currentBod);
             }
             else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
+                moveAllowed = false;
                 nextLevelLabel();
-                winnigSound.play(2.0f);
+                winningSound.play(2.0f);
 
 
             }
         }
 
         // Moves the current falling shape to the left
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)&& somethingOnScreen){
+        if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.LEFT)&& somethingOnScreen){
             currentBod.applyForce(new Vector2(-250000f, 0), currentBod.getWorldCenter(), true);
         }
         // Moves the current falling shape to the right
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)&& somethingOnScreen){
+        if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.RIGHT)&& somethingOnScreen){
             currentBod.applyForce(new Vector2(250000f, 0), currentBod.getWorldCenter(), true);
         }
 
@@ -202,6 +205,7 @@ public class PlayScreen implements Screen{
             levelCount++;
             Hud.addLevel();
             currentLevel = levels.get(levelCount - 1);
+            moveAllowed = true;
             refreshBodies();
         }
 
