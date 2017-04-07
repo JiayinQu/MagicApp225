@@ -239,7 +239,10 @@ public class PlayScreen implements Screen{
         }
         bodyList.clear();
         stage.clear();
-        currentLevel = levels.get(levelCount-1);
+        currentLevel.count = 0;
+        if (currentLevel.levelComplete) {
+            currentLevel = levels.get(levelCount - 1);
+        }
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
         plat = new BalancePlatform(world);

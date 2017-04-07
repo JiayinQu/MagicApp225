@@ -27,7 +27,7 @@ public class Level {
     private World world;
     private Vector2 screenPos;
     public Boolean levelComplete;
-    private int count;
+    public int count;
     ArrayList<Vector2> levelCoord;
     private Body bod;
 
