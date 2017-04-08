@@ -11,12 +11,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -72,7 +74,7 @@ public class PlayScreen implements Screen{
 
     // The ArrayLists that contain Bodies and matching Sprites
     private ArrayList<Body> bodyList;
-    private ArrayList<Sprite> squareTexList;
+    public ArrayList<Sprite> squareTexList;
 
     // Level setups
     private ArrayList<Level> levels;
@@ -157,7 +159,6 @@ public class PlayScreen implements Screen{
             }
         });
 
-        stage.addActor(pauseImage);
     }
 
     /**
@@ -181,6 +182,8 @@ public class PlayScreen implements Screen{
                 somethingOnScreen = true;
                 currentBod = currentLevel.getNextBod();
                 bodyList.add(currentBod);
+                squareTexList.add(drawSquareTex());
+
             }
             else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
                 moveAllowed = false;
@@ -242,6 +245,7 @@ public class PlayScreen implements Screen{
             world.destroyBody(body);
         }
         bodyList.clear();
+        squareTexList.clear();
         stage.clear();
         currentLevel.count = 0;
         if (currentLevel.levelComplete) {
@@ -283,9 +287,15 @@ public class PlayScreen implements Screen{
         //renderer.render();
         b2dr.render(world,gamecam.combined);
 
+        if(bodyList.size()!=0){
+            draw(game.batch);
+        }
+
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         stage.draw();
         hud.stage.draw();
+
+        stage.addActor(pauseImage);
 
         if(gameOver()){
             refreshBodies();
@@ -323,11 +333,17 @@ public class PlayScreen implements Screen{
 
     }
 
-    //if(squareTexList.size()!=0){
-    //squareTexList.get(squareTexList.size()-1).setBounds(0,0,drawSquareTex().getWidth(),drawSquareTex().getHeight());
-    //squareTexList.get(squareTexList.size()-1).setSize(bodyList.get(bodyList.size()-1).* 2,height * 2);
-    //squareTexList.get(squareTexList.size()-1).setOrigin(drawSquareTex().getWidth()/2, drawSquareTex().getHeight()/2);
-    //}
+    public void draw(Batch batch){
+        game.batch.begin();
+        for(int i = 0; i< squareTexList.size();i++){
+            //squareTexList.get(i).setSize(currentLevel.getWidth(),currentLevel.getHeight());
+            squareTexList.get(i).setPosition(bodyList.get(i).getPosition().x - 30,bodyList.get(i).getPosition().y - 30);
+            squareTexList.get(i).setRotation(bodyList.get(i).getAngle() * MathUtils.radiansToDegrees);
+            squareTexList.get(i).draw(batch);
+        }
+        game.batch.end();
+
+    }
 
 
     /**

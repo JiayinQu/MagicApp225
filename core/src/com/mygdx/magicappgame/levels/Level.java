@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
+import com.mygdx.magicappgame.States.PlayScreen;
 import com.mygdx.magicappgame.Tools.WorldContactListener;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 
 public class Level {
     private World world;
+    private PlayScreen playScreen;
     private Vector2 screenPos;
     public Boolean levelComplete;
     public int count;
@@ -91,6 +93,17 @@ public class Level {
 
     public void hit(){
         //boolean contacted = true;
+    }
+
+    public float getWidth(){
+        float width = levelCoord.get(count-1).x;
+        return width;
+
+    }
+
+    public float getHeight(){
+        float height = levelCoord.get(count-1).y;
+        return height;
     }
 
 }
