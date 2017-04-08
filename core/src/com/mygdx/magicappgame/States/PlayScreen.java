@@ -287,13 +287,13 @@ public class PlayScreen implements Screen{
         //renderer.render();
         b2dr.render(world,gamecam.combined);
 
-        if(bodyList.size()!=0){
-            draw(game.batch);
-        }
-
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         stage.draw();
         hud.stage.draw();
+
+        if(bodyList.size()!=0){
+            draw(game.batch);
+        }
 
         stage.addActor(pauseImage);
 
@@ -335,9 +335,9 @@ public class PlayScreen implements Screen{
 
     public void draw(Batch batch){
         game.batch.begin();
+        squareTexList.get(squareTexList.size()-1).setSize(currentLevel.getWidth() * (float) 2.5,currentLevel.getHeight() * (float) 2.5);
         for(int i = 0; i< squareTexList.size();i++){
-            //squareTexList.get(i).setSize(currentLevel.getWidth(),currentLevel.getHeight());
-            squareTexList.get(i).setPosition(bodyList.get(i).getPosition().x - 30,bodyList.get(i).getPosition().y - 30);
+            squareTexList.get(i).setPosition(bodyList.get(i).getPosition().x - squareTexList.get(i).getWidth()/2,bodyList.get(i).getPosition().y - squareTexList.get(i).getHeight()/2);
             squareTexList.get(i).setRotation(bodyList.get(i).getAngle() * MathUtils.radiansToDegrees);
             squareTexList.get(i).draw(batch);
         }
@@ -362,7 +362,7 @@ public class PlayScreen implements Screen{
         levels.add(level2);
         levels.add(level3);
 
-        currentLevel = level1;
+        currentLevel = level2;
     }
 
 
