@@ -91,6 +91,8 @@ public class PlayScreen implements Screen{
 
     private MyInputProcessor newInputProcessor;
 
+    final float PIXELS_TO_METERS = 100f;
+
 
     /**
      * This constructor simply initializes everything.
@@ -189,8 +191,6 @@ public class PlayScreen implements Screen{
                 moveAllowed = false;
                 nextLevelLabel();
                 winningSound.play(2.0f);
-
-
             }
         }
 
@@ -270,7 +270,6 @@ public class PlayScreen implements Screen{
 
             gamecam.update();
             //renderer.setView(gamecam); // used for the background
-            b2dr.render(world, gamecam.combined);
         }
     }
 
@@ -284,7 +283,6 @@ public class PlayScreen implements Screen{
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //renderer.render();
         b2dr.render(world,gamecam.combined);
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
@@ -325,23 +323,29 @@ public class PlayScreen implements Screen{
      * Puts a Texture with a Sprite
      * @return the Sprite
      */
-    public Sprite drawSquareTex(){
-
-        Texture squareTex = new Texture("StoneSquare.png");
-        Sprite squareSprite = new Sprite(squareTex);
-        return squareSprite;
+    private Sprite drawSquareTex(){
+        return new Sprite(new Texture("StoneSquare.png"));
 
     }
 
-    public void draw(Batch batch){
-        game.batch.begin();
-        squareTexList.get(squareTexList.size()-1).setSize(currentLevel.getWidth() * (float) 2.5,currentLevel.getHeight() * (float) 2.5);
-        for(int i = 0; i< squareTexList.size();i++){
-            squareTexList.get(i).setPosition(bodyList.get(i).getPosition().x - squareTexList.get(i).getWidth()/2,bodyList.get(i).getPosition().y - squareTexList.get(i).getHeight()/2);
-            squareTexList.get(i).setRotation(bodyList.get(i).getAngle() * MathUtils.radiansToDegrees);
-            squareTexList.get(i).draw(batch);
+    
+    private void draw(Batch batch){
+        batch.begin();
+        Sprite sprite;
+        Body body;
+        squareTexList.get(squareTexList.size()-1).setSize(currentLevel.getWidth() * 2.5f, currentLevel.getHeight() * 2.5f);
+        for(int i = 0; i < squareTexList.size(); i++){
+            sprite = squareTexList.get(i);
+            body = bodyList.get(i);
+
+            sprite.setRotation((float)Math.toDegrees(body.getAngle()));
+            sprite.setPosition(body.getPosition().x - (sprite.getWidth()/2),
+                    body.getPosition().y - (sprite.getHeight()/2)+1);
+            sprite.setOriginCenter();
+
+            sprite.draw(batch);
         }
-        game.batch.end();
+        batch.end();
 
     }
 
