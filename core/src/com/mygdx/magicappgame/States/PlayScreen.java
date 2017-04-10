@@ -168,15 +168,7 @@ public class PlayScreen implements Screen{
      * @param dt delta time
      */
     private void handleInput(float dt){
-//        // Moves the camera up - just for testing
-//        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-//            screenPos.add(0, 1.75f);
-//            gamecam.position.y += 100 * dt;
-//        }
-//        // Moves the camera down - just for testing
-//        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-//            gamecam.position.y -= 100 * dt;
-//        }
+
 
         if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             startSound.play(1.0f);
@@ -328,19 +320,19 @@ public class PlayScreen implements Screen{
 
     }
 
-    
+
     private void draw(Batch batch){
         batch.begin();
         Sprite sprite;
         Body body;
-        squareTexList.get(squareTexList.size()-1).setSize(currentLevel.getWidth() * 2.5f, currentLevel.getHeight() * 2.5f);
+        squareTexList.get(squareTexList.size()-1).setSize(currentLevel.getWidth() * 2.55f, currentLevel.getHeight() * 2.55f);
         for(int i = 0; i < squareTexList.size(); i++){
             sprite = squareTexList.get(i);
             body = bodyList.get(i);
 
             sprite.setRotation((float)Math.toDegrees(body.getAngle()));
             sprite.setPosition(body.getPosition().x - (sprite.getWidth()/2),
-                    body.getPosition().y - (sprite.getHeight()/2)+1);
+                    body.getPosition().y - (sprite.getHeight()/2)+3);
             sprite.setOriginCenter();
 
             sprite.draw(batch);
