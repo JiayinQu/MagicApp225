@@ -169,14 +169,21 @@ public class PlayScreen implements Screen{
      */
     private void handleInput(float dt){
 
-
         if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             startSound.play(1.0f);
             if(!currentLevel.levelComplete && ((bodyList.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
                 somethingOnScreen = true;
                 currentBod = currentLevel.getNextBod();
                 bodyList.add(currentBod);
-                squareTexList.add(drawSquareTex());
+                if (currentLevel.getWidth()/currentLevel.getHeight()>2){
+                    squareTexList.add(drawHorizRectTex());
+                } else if (currentLevel.getHeight()/currentLevel.getWidth()>2){
+                    squareTexList.add(drawRectTex());
+                }else if (currentLevel.getHeight()> currentLevel.getWidth() && currentLevel.getHeight()/currentLevel.getWidth()<2){
+                    squareTexList.add(drawBigRectTex());
+                }else {
+                    squareTexList.add(drawSquareTex());
+                }
 
             }
             else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
@@ -316,7 +323,20 @@ public class PlayScreen implements Screen{
      * @return the Sprite
      */
     private Sprite drawSquareTex(){
-        return new Sprite(new Texture("StoneSquare.png"));
+        return new Sprite(new Texture("blueSquare.png"));
+
+    }
+
+    private Sprite drawRectTex(){
+        return new Sprite(new Texture("blueRectangle.png"));
+
+    }
+    private Sprite drawBigRectTex(){
+        return new Sprite(new Texture("blueBigRect.png"));
+
+    }
+    private Sprite drawHorizRectTex(){
+        return new Sprite(new Texture("blueRectangleSideways.png"));
 
     }
 

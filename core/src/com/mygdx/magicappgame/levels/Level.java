@@ -74,6 +74,8 @@ public class Level {
     }
 
     public Body getNextBod() {
+        float width = levelCoord.get(count).x;
+        float height = levelCoord.get(count).y;
         if (count+1 == NUM_BODIES){
             levelComplete = true;
         }
@@ -85,7 +87,6 @@ public class Level {
     public void setImage(Sprite sprite){
         bod.setUserData(sprite);
     }
-
 
     public void clearLevel() {
         levelCoord.clear();
