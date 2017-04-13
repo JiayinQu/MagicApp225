@@ -1,5 +1,7 @@
 package com.mygdx.magicappgame.Shapes;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -15,12 +17,17 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
  * This Class contains all of the parts that make up the moving platform
  */
 
-public class BalancePlatform extends Sprite {
+public class BalancePlatform extends Sprite{
 
     private World world;
     public Body bod1; // The platform
     public Body bod2; // The Body the platform rotates around
     private Vector2[] vectorList;
+
+    private Sprite platSprite;
+
+    private static final float WIDTH = 80;
+    private static final float HEIGHT = 10;
 
     /**
      * Initializes the world, creates the triangle's points, and calls
@@ -29,37 +36,29 @@ public class BalancePlatform extends Sprite {
      */
     public BalancePlatform(World world){
         this.world = world;
-        vectorList = new Vector2[3];
-        vectorList[0] = new Vector2(0, 10);
-        vectorList[1] = new Vector2(-5, -10);
-        vectorList[2] = new Vector2(5, -10);
-        definePlatform(104, 40, 80, 10);
+        definePlatform(104, 40);
         definePivot(104, 25, 15, 5);
-        //defineJoint(); 10 20 30 35 37.5 40 42.5 45 50 60 70
     }
 
     /**
      * Creates the platform
      * @param x coordinate for the platform's position on screen
      * @param y coordinate for the platform's position on screen
-     * @param width of the platform
-     * @param height of the platform
      * @return the Body of the platform
      */
-    private Body definePlatform(float x, float y, float width, float height){
+    private Body definePlatform(float x, float y){
         BodyDef def1 = new BodyDef();
         def1.type = BodyDef.BodyType.DynamicBody;
         def1.position.set(x, y);
         bod1 = world.createBody(def1);
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width, height);
+        shape.setAsBox(WIDTH, HEIGHT);
         FixtureDef fdef = new FixtureDef();
         fdef.friction = .2f;
         fdef.shape = shape;
         fdef.density = 1.0f;
         bod1.createFixture(fdef);
 
-        //bod1.createFixture(fdef).setUserData(this);
 
         return bod1;
     }
@@ -82,33 +81,23 @@ public class BalancePlatform extends Sprite {
 
     }
 
-
-    /**
-     * Creates the joint between the platform and pivot
-     */
-    /*
-    private void defineJoint() {
-        RevoluteJointDef rjdef = new RevoluteJointDef();
-        rjdef.bodyA = bod1;
-        rjdef.bodyB = bod2;
-        rjdef.collideConnected = false;
-
-        rjdef.lowerAngle = -0.05f * MathUtils.PI; // how far it can tilt to the left
-        rjdef.upperAngle = 0.05f * MathUtils.PI;  // how far it can tilt to the right
-
-        // These lines simulate the friction of the tilting
-        rjdef.enableLimit = true;
-        rjdef.maxMotorTorque = 1.0f;
-        rjdef.motorSpeed = 0f;
-        rjdef.enableMotor = true;
-
-        world.createJoint(rjdef);
-
-    }
-    */
-
     public void hit(){
         System.out.println("I've been hit");
+    }
+
+    public void render(Batch batch) {
+        platSprite.setPosition(bod1.getPosition().x - (HEIGHT/2), bod1.getPosition().y - (HEIGHT/2));
+        platSprite.setRotation((float)Math.toDegrees(bod1.getAngle()));
+        platSprite.setOriginCenter();
+        platSprite.draw(batch);
+    }
+
+    public float getWidth(){
+        return WIDTH;
+    }
+
+    public float getHeight(){
+        return HEIGHT;
     }
 
 }
