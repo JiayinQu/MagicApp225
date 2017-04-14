@@ -36,34 +36,36 @@ public class Hud {
     public Stage stage;
 
     private static Integer level;
+    private static Integer boxLeft;
     private Integer worldTimer;
     private float timeCount;
 
-    private static Label scoreLabel;
+
     private static Label levelLabel;
+    private static Label boxLabel;
+    private Label boxLeftLabel;
     private Label worldLabel;
     private Label countdownLabel;
     private Label timeLabel;
 
-
     public Hud(SpriteBatch sb) {
-        worldTimer = 300;
+        worldTimer = 0;
         timeCount = 0;
         level = 1;
+        boxLeft = 10;
 
         Viewport viewport = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
-
         Table table = new Table();
-        //table.top();
         table.setFillParent(true);
 
-        //scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         countdownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         levelLabel = new Label(String.format("%02d", level), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        boxLabel = new Label(String.format("%02d", boxLeft), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
         worldLabel = new Label("LEVEL", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        boxLeftLabel = new Label("BOX LEFT", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
 
         table.columnDefaults(0).width(150);
         table.add(timeLabel);
@@ -71,7 +73,9 @@ public class Hud {
         table.row();
         table.add(worldLabel);
         table.add(levelLabel).expandX();
-        //table.setDebug(true);
+        table.row();
+        table.add(boxLeftLabel);
+        table.add(boxLabel).expandX();
         table.setPosition(0, 160);
 
         stage.addActor(table);
@@ -81,7 +85,7 @@ public class Hud {
     public void update (float dt){
         timeCount += dt;
         if(timeCount >=1){
-            worldTimer --;
+            worldTimer ++;
             countdownLabel.setText(String.format("%03d",worldTimer));
             timeCount = 0;
         }
@@ -92,8 +96,28 @@ public class Hud {
         levelLabel.setText(String.format("%02d", level));
     }
 
-    public boolean timeOver(){
-        return worldTimer == 0;
+    public static void minusBox(){
+        boxLeft --;
+        boxLabel.setText(String.format("%02d", boxLeft));
+    }
+
+    public void resetTime(){
+        worldTimer = 0;
+        countdownLabel.setText(String.format("%03d",worldTimer));
+    }
+
+    public void resetLevel(){
+        level = 1;
+        levelLabel.setText(String.format("%02d", level));
+    }
+
+    public void resetBox(){
+        boxLeft = 10;
+        boxLabel.setText(String.format("%02d",boxLeft));
+    }
+
+    public Integer getTime(){
+        return worldTimer;
     }
 
 }

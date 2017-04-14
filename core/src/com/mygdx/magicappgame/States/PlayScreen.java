@@ -87,6 +87,8 @@ public class PlayScreen implements Screen{
     private boolean moveAllowed;
     private boolean firstDraw;
 
+    private Integer levelTime;
+
     private Sound startSound, loosingSound, winningSound;
 
     private MyInputProcessor newInputProcessor;
@@ -173,6 +175,7 @@ public class PlayScreen implements Screen{
             startSound.play(1.0f);
             if(!currentLevel.levelComplete && ((bodyMap.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
                 somethingOnScreen = true;
+                hud.minusBox();
                 if (!firstDraw)
                     bodyMap.get(currentBod).setColor(Color.GRAY);
                 currentBod = currentLevel.getNextBod();
@@ -182,9 +185,12 @@ public class PlayScreen implements Screen{
                 bodyMap.put(currentBod, sprite);
                 bodyMap.get(currentBod).setColor(Color.WHITE);
                 firstDraw = false;
+
+                //hud.minusBox();
             }
             else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
                 moveAllowed = false;
+                levelTime = hud.getTime();
                 nextLevelLabel();
                 winningSound.play(2.0f);
             }
@@ -203,6 +209,8 @@ public class PlayScreen implements Screen{
             currentLevel.clearLevel();
             levelCount++;
             Hud.addLevel();
+            hud.resetTime();
+            hud.resetBox();
             currentLevel = levels.get(levelCount - 1);
             moveAllowed = true;
             refreshBodies();
@@ -218,6 +226,7 @@ public class PlayScreen implements Screen{
     private void nextLevelLabel() {
         Label nextLevel = new Label("CONGRATULATIONS!\n\n\n" +
                 "You beat the level!\n" +
+                "in " + levelTime + " seconds\n"+
                 "Press ENTER to move on \n" +
                 "to the next level", MyGdxGame.gameSkin);
         nextLevel.setFontScale(1);
@@ -279,10 +288,7 @@ public class PlayScreen implements Screen{
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        b2dr.render(world, gamecam.combined);
-
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        stage.draw();
         hud.stage.draw();
 
         if(bodyMap.size()!=0){
@@ -291,8 +297,14 @@ public class PlayScreen implements Screen{
 
         stage.addActor(pauseImage);
 
+        b2dr.render(world, gamecam.combined);
+        stage.draw();
+
         if(gameOver()){
             refreshBodies();
+            hud.resetTime();
+            hud.resetLevel();
+            hud.resetBox();
             game.setScreen(game.gameOverScreen);
         }
     }
@@ -302,9 +314,6 @@ public class PlayScreen implements Screen{
      * The function that ends the current game and brings up the exit screen
      */
     private boolean gameOver(){
-        if(hud.timeOver()){
-            return true;
-        }
         for(Body aBody : bodyMap.keySet()) {
             if (aBody.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60)
                 return true;
@@ -363,7 +372,7 @@ public class PlayScreen implements Screen{
         levels.add(level2);
         levels.add(level3);
 
-        currentLevel = level2;
+        currentLevel = level1;
     }
 
 
