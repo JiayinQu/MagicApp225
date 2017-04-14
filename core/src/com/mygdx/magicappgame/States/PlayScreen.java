@@ -87,6 +87,9 @@ public class PlayScreen implements Screen{
     private boolean moveAllowed;
     private boolean firstDraw;
 
+    private Sprite platformSprite;
+    private Sprite pivotSprite;
+
     private Integer levelTime;
 
     private Sound startSound, loosingSound, winningSound;
@@ -119,6 +122,8 @@ public class PlayScreen implements Screen{
 
 
         plat = new BalancePlatform(world);
+        platformSprite = drawPlatformTex();
+        pivotSprite = drawPivot();
         screenPos = new Vector2(104, gamePort.getWorldHeight());
         bodyMap = new HashMap<Body, Sprite>();
 
@@ -180,9 +185,9 @@ public class PlayScreen implements Screen{
                     bodyMap.get(currentBod).setColor(Color.GRAY);
                 currentBod = currentLevel.getNextBod();
 
-                Sprite sprite = drawSquareTex();
-                sprite.setSize(currentLevel.getWidth() * 2.55f, currentLevel.getHeight() * 2.55f);
-                bodyMap.put(currentBod, sprite);
+                Sprite squareSprite = drawSquareTex();
+                squareSprite.setSize(currentLevel.getWidth() * 2f, currentLevel.getHeight() * 2f);
+                bodyMap.put(currentBod, squareSprite);
                 bodyMap.get(currentBod).setColor(Color.WHITE);
                 firstDraw = false;
 
@@ -290,6 +295,8 @@ public class PlayScreen implements Screen{
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+        drawPlatform(game.batch);
+        drawPivot(game.batch);
 
         if(bodyMap.size()!=0){
             draw(game.batch);
@@ -329,8 +336,16 @@ public class PlayScreen implements Screen{
      * @return the Sprite
      */
     private Sprite drawSquareTex(){
-        return new Sprite(new Texture("StoneSquare.png"));
+        return new Sprite(new Texture("BlueSquare.png"));
 
+    }
+
+    private Sprite drawPlatformTex(){
+        return new Sprite(new Texture("Platform.jpg"));
+    }
+
+    private Sprite drawPivot(){
+        return new Sprite(new Texture("Pivot.jpg"));
     }
 
 
@@ -345,7 +360,7 @@ public class PlayScreen implements Screen{
 
             sprite.setRotation((float)Math.toDegrees(body.getAngle()));
             sprite.setPosition(body.getPosition().x - (sprite.getWidth()/2),
-                    body.getPosition().y - (sprite.getHeight()/2)+3);
+                    body.getPosition().y - (sprite.getHeight()/2));
             sprite.setOriginCenter();
 
             sprite.draw(batch);
@@ -353,6 +368,26 @@ public class PlayScreen implements Screen{
 
         batch.end();
 
+    }
+
+    private void drawPlatform(Batch batch){
+        batch.begin();
+        platformSprite.setSize(plat.getWidth() *2f,plat.getHeight()*2f);
+        platformSprite.setRotation((float)Math.toDegrees(plat.bod1.getAngle()));
+        platformSprite.setPosition(plat.bod1.getPosition().x-(platformSprite.getWidth()/2),plat.bod1.getPosition().y - (platformSprite.getHeight()/2));
+        platformSprite.setOriginCenter();
+        platformSprite.draw(batch);
+        batch.end();
+    }
+
+    private void drawPivot(Batch batch){
+        batch.begin();
+        pivotSprite.setSize(15 *2f,5 *2f);
+        pivotSprite.setRotation((float)Math.toDegrees(plat.bod2.getAngle()));
+        pivotSprite.setPosition(plat.bod2.getPosition().x-(pivotSprite.getWidth()/2),plat.bod2.getPosition().y - (pivotSprite.getHeight()/2));
+        pivotSprite.setOriginCenter();
+        pivotSprite.draw(batch);
+        batch.end();
     }
 
 
