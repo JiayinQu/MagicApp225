@@ -176,10 +176,11 @@ public class PlayScreen implements Screen{
                 if (!firstDraw)
                     bodyMap.get(currentBod).setColor(Color.GRAY);
                 currentBod = currentLevel.getNextBod();
+
                 Sprite sprite = drawSquareTex();
                 sprite.setSize(currentLevel.getWidth() * 2.55f, currentLevel.getHeight() * 2.55f);
                 bodyMap.put(currentBod, sprite);
-                bodyMap.get(currentBod).setColor(Color.RED);
+                bodyMap.get(currentBod).setColor(Color.WHITE);
                 firstDraw = false;
             }
             else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
@@ -242,6 +243,7 @@ public class PlayScreen implements Screen{
         bodyMap.clear();
         stage.clear();
         currentLevel.count = 0;
+        firstDraw = true;
         if (currentLevel.levelComplete) {
             currentLevel = levels.get(levelCount - 1);
         }
@@ -277,7 +279,7 @@ public class PlayScreen implements Screen{
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        b2dr.render(world,gamecam.combined);
+        b2dr.render(world, gamecam.combined);
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         stage.draw();
