@@ -180,18 +180,19 @@ public class PlayScreen implements Screen{
             startSound.play(1.0f);
             if(!currentLevel.levelComplete && ((bodyMap.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
                 somethingOnScreen = true;
-                hud.minusBox();
+                Hud.minusBox();
                 if (!firstDraw)
                     bodyMap.get(currentBod).setColor(Color.GRAY);
+                else
+                    firstDraw = false;
+
                 currentBod = currentLevel.getNextBod();
 
                 Sprite squareSprite = drawSquareTex();
                 squareSprite.setSize(currentLevel.getWidth() * 2f, currentLevel.getHeight() * 2f);
                 bodyMap.put(currentBod, squareSprite);
                 bodyMap.get(currentBod).setColor(Color.WHITE);
-                firstDraw = false;
 
-                //hud.minusBox();
             }
             else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
                 moveAllowed = false;
