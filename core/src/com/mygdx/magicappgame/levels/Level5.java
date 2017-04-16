@@ -20,9 +20,9 @@ public class Level5 extends Level {
      */
     private void initializeCoord(){
 
-        levelCoord.add(new Vector2(5, 5));
+        levelCoord.add(new Vector2(10, 10));
         levelCoord.add(new Vector2(100, 10));
-        levelCoord.add(new Vector2(5, 5));
+        levelCoord.add(new Vector2(10, 10));
         levelCoord.add(new Vector2(100, 10));
         levelCoord.add(new Vector2(20, 20));
         levelCoord.add(new Vector2(20, 20));

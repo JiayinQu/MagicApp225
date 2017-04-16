@@ -414,7 +414,7 @@ public class PlayScreen implements Screen{
         levels.add(level4);
         levels.add(level5);
 
-        currentLevel = level4;
+        currentLevel = level5;
     }
 
 
