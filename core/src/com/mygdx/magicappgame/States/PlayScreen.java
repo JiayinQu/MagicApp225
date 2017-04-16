@@ -45,6 +45,8 @@ import com.mygdx.magicappgame.levels.Level3;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by Jiayin Qu on 2017/2/11.
@@ -71,10 +73,7 @@ public class PlayScreen implements Screen{
     private BalancePlatform plat;
     private Vector2 screenPos;
     private Body currentBod;
-
-    // The ArrayLists that contain Bodies and matching Sprites
-    private ArrayList<Body> bodyList;
-    public ArrayList<Sprite> squareTexList;
+    private HashMap<Body, Sprite> bodyMap;
 
     // Level setups
     private ArrayList<Level> levels;
@@ -86,6 +85,12 @@ public class PlayScreen implements Screen{
     private Image pauseImage;
     private boolean pauseTouched;
     private boolean moveAllowed;
+    private boolean firstDraw;
+
+    private Sprite platformSprite;
+    private Sprite pivotSprite;
+
+    private Integer levelTime;
 
     private Sound startSound, loosingSound, winningSound;
 
@@ -117,15 +122,16 @@ public class PlayScreen implements Screen{
 
 
         plat = new BalancePlatform(world);
-
+        platformSprite = drawPlatformTex();
+        pivotSprite = drawPivot();
         screenPos = new Vector2(104, gamePort.getWorldHeight());
-        bodyList = new ArrayList<Body>();
-        squareTexList = new ArrayList<Sprite>();
+        bodyMap = new HashMap<Body, Sprite>();
 
 
         // Setup all of the levels and the array of levels
         setUpLevels();
 
+        firstDraw = true;
         somethingOnScreen = false;
         pauseTouched = false;
         moveAllowed = true;
@@ -169,25 +175,27 @@ public class PlayScreen implements Screen{
      */
     private void handleInput(float dt){
 
+
         if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             startSound.play(1.0f);
-            if(!currentLevel.levelComplete && ((bodyList.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
+            if(!currentLevel.levelComplete && ((bodyMap.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
                 somethingOnScreen = true;
+                hud.minusBox();
+                if (!firstDraw)
+                    bodyMap.get(currentBod).setColor(Color.GRAY);
                 currentBod = currentLevel.getNextBod();
-                bodyList.add(currentBod);
-                if (currentLevel.getWidth()/currentLevel.getHeight()>2){
-                    squareTexList.add(drawHorizRectTex());
-                } else if (currentLevel.getHeight()/currentLevel.getWidth()>2){
-                    squareTexList.add(drawRectTex());
-                }else if (currentLevel.getHeight()> currentLevel.getWidth() && currentLevel.getHeight()/currentLevel.getWidth()<2){
-                    squareTexList.add(drawBigRectTex());
-                }else {
-                    squareTexList.add(drawSquareTex());
-                }
 
+                Sprite squareSprite = drawSquareTex();
+                squareSprite.setSize(currentLevel.getWidth() * 2f, currentLevel.getHeight() * 2f);
+                bodyMap.put(currentBod, squareSprite);
+                bodyMap.get(currentBod).setColor(Color.WHITE);
+                firstDraw = false;
+
+                //hud.minusBox();
             }
             else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
                 moveAllowed = false;
+                levelTime = hud.getTime();
                 nextLevelLabel();
                 winningSound.play(2.0f);
             }
@@ -206,6 +214,8 @@ public class PlayScreen implements Screen{
             currentLevel.clearLevel();
             levelCount++;
             Hud.addLevel();
+            hud.resetTime();
+            hud.resetBox();
             currentLevel = levels.get(levelCount - 1);
             moveAllowed = true;
             refreshBodies();
@@ -221,6 +231,7 @@ public class PlayScreen implements Screen{
     private void nextLevelLabel() {
         Label nextLevel = new Label("CONGRATULATIONS!\n\n\n" +
                 "You beat the level!\n" +
+                "in " + levelTime + " seconds\n"+
                 "Press ENTER to move on \n" +
                 "to the next level", MyGdxGame.gameSkin);
         nextLevel.setFontScale(1);
@@ -233,20 +244,20 @@ public class PlayScreen implements Screen{
 
 
     /**
-     * Removes the bodies from bodyList from the World,
-     * clears bodyList,
+     * Removes the bodies from the map from the World,
+     * clears bodyMap,
      * updates the current level,
      * removes the bodies created by the BalancePlatform,
      * and makes a new BalancePlatform
      */
     private void refreshBodies() {
-        for (Body body :bodyList) {
-            world.destroyBody(body);
+        for (Body key :bodyMap.keySet()) {
+            world.destroyBody(key);
         }
-        bodyList.clear();
-        squareTexList.clear();
+        bodyMap.clear();
         stage.clear();
         currentLevel.count = 0;
+        firstDraw = true;
         if (currentLevel.levelComplete) {
             currentLevel = levels.get(levelCount - 1);
         }
@@ -282,20 +293,25 @@ public class PlayScreen implements Screen{
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        b2dr.render(world,gamecam.combined);
-
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        stage.draw();
         hud.stage.draw();
+        drawPlatform(game.batch);
+        drawPivot(game.batch);
 
-        if(bodyList.size()!=0){
+        if(bodyMap.size()!=0){
             draw(game.batch);
         }
 
         stage.addActor(pauseImage);
 
+        b2dr.render(world, gamecam.combined);
+        stage.draw();
+
         if(gameOver()){
             refreshBodies();
+            hud.resetTime();
+            hud.resetLevel();
+            hud.resetBox();
             game.setScreen(game.gameOverScreen);
         }
     }
@@ -305,11 +321,8 @@ public class PlayScreen implements Screen{
      * The function that ends the current game and brings up the exit screen
      */
     private boolean gameOver(){
-        if(hud.timeOver()){
-            return true;
-        }
-        for(Body aBodyList : bodyList) {
-            if (aBodyList.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60)
+        for(Body aBody : bodyMap.keySet()) {
+            if (aBody.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60)
                 return true;
                 loosingSound.play(1.0f);
 
@@ -323,21 +336,16 @@ public class PlayScreen implements Screen{
      * @return the Sprite
      */
     private Sprite drawSquareTex(){
-        return new Sprite(new Texture("blueSquare.png"));
+        return new Sprite(new Texture("BlueSquare.png"));
 
     }
 
-    private Sprite drawRectTex(){
-        return new Sprite(new Texture("blueRectangle.png"));
-
+    private Sprite drawPlatformTex(){
+        return new Sprite(new Texture("Platform.jpg"));
     }
-    private Sprite drawBigRectTex(){
-        return new Sprite(new Texture("blueBigRect.png"));
 
-    }
-    private Sprite drawHorizRectTex(){
-        return new Sprite(new Texture("blueRectangleSideways.png"));
-
+    private Sprite drawPivot(){
+        return new Sprite(new Texture("Pivot.jpg"));
     }
 
 
@@ -345,20 +353,41 @@ public class PlayScreen implements Screen{
         batch.begin();
         Sprite sprite;
         Body body;
-        squareTexList.get(squareTexList.size()-1).setSize(currentLevel.getWidth() * 2.55f, currentLevel.getHeight() * 2.55f);
-        for(int i = 0; i < squareTexList.size(); i++){
-            sprite = squareTexList.get(i);
-            body = bodyList.get(i);
+
+        for (HashMap.Entry<Body, Sprite> entry: bodyMap.entrySet()) {
+            body = entry.getKey();
+            sprite = entry.getValue();
 
             sprite.setRotation((float)Math.toDegrees(body.getAngle()));
             sprite.setPosition(body.getPosition().x - (sprite.getWidth()/2),
-                    body.getPosition().y - (sprite.getHeight()/2)+3);
+                    body.getPosition().y - (sprite.getHeight()/2));
             sprite.setOriginCenter();
 
             sprite.draw(batch);
         }
+
         batch.end();
 
+    }
+
+    private void drawPlatform(Batch batch){
+        batch.begin();
+        platformSprite.setSize(plat.getWidth() *2f,plat.getHeight()*2f);
+        platformSprite.setRotation((float)Math.toDegrees(plat.bod1.getAngle()));
+        platformSprite.setPosition(plat.bod1.getPosition().x-(platformSprite.getWidth()/2),plat.bod1.getPosition().y - (platformSprite.getHeight()/2));
+        platformSprite.setOriginCenter();
+        platformSprite.draw(batch);
+        batch.end();
+    }
+
+    private void drawPivot(Batch batch){
+        batch.begin();
+        pivotSprite.setSize(15 *2f,5 *2f);
+        pivotSprite.setRotation((float)Math.toDegrees(plat.bod2.getAngle()));
+        pivotSprite.setPosition(plat.bod2.getPosition().x-(pivotSprite.getWidth()/2),plat.bod2.getPosition().y - (pivotSprite.getHeight()/2));
+        pivotSprite.setOriginCenter();
+        pivotSprite.draw(batch);
+        batch.end();
     }
 
 
@@ -378,7 +407,7 @@ public class PlayScreen implements Screen{
         levels.add(level2);
         levels.add(level3);
 
-        currentLevel = level2;
+        currentLevel = level1;
     }
 
 
