@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.magicappgame.States.GameOverScreen;
 import com.mygdx.magicappgame.States.Instructions;
+import com.mygdx.magicappgame.States.LevelSelect;
 import com.mygdx.magicappgame.States.MainMenu;
 import com.mygdx.magicappgame.States.PlayScreen;
 import com.mygdx.magicappgame.screens.LoadingScreen;
@@ -24,6 +25,7 @@ public class MyGdxGame extends Game {
 	public Instructions instructions;
 	public GameOverScreen gameOverScreen;
 	public MainMenu mainMenu;
+	public LevelSelect levelSelect;
 
 	static public Skin gameSkin;
 	//skin licence: http://creativecommons.org/licenses/by/4.0/
@@ -48,6 +50,7 @@ public class MyGdxGame extends Game {
 		instructions = new Instructions(this);
 		gameOverScreen = new GameOverScreen(this);
 		mainMenu = new MainMenu(this);
+		levelSelect = new LevelSelect(this);
 
 	}
 

@@ -17,6 +17,7 @@ import com.mygdx.magicappgame.States.PlayScreen;
 import com.mygdx.magicappgame.Tools.WorldContactListener;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Ansel on 3/4/2017.
@@ -52,10 +53,12 @@ public class Level {
      * @return the body that was drawn on the screen
      */
     private Body drawSquare(float width, float height) {
+        Random rand = new Random();
+        int variance = rand.nextInt(40) - 20;
 
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set(screenPos);
+        def.position.set(screenPos.x + variance, screenPos.y);
 
         Body bod = world.createBody(def);
 
@@ -74,8 +77,6 @@ public class Level {
     }
 
     public Body getNextBod() {
-        float width = levelCoord.get(count).x;
-        float height = levelCoord.get(count).y;
         if (count+1 == NUM_BODIES){
             levelComplete = true;
         }
@@ -87,6 +88,7 @@ public class Level {
     public void setImage(Sprite sprite){
         bod.setUserData(sprite);
     }
+
 
     public void clearLevel() {
         levelCoord.clear();

@@ -65,7 +65,7 @@ public class Hud {
         boxLabel = new Label(String.format("%02d", boxLeft), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
         worldLabel = new Label("LEVEL", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        boxLeftLabel = new Label("BOX LEFT", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
+        boxLeftLabel = new Label("BOXES LEFT", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
 
         table.columnDefaults(0).width(150);
         table.add(timeLabel);
