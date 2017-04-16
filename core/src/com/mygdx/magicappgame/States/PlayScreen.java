@@ -42,6 +42,8 @@ import com.mygdx.magicappgame.levels.Level;
 import com.mygdx.magicappgame.levels.Level1;
 import com.mygdx.magicappgame.levels.Level2;
 import com.mygdx.magicappgame.levels.Level3;
+import com.mygdx.magicappgame.levels.Level4;
+import com.mygdx.magicappgame.levels.Level5;
 
 
 import java.util.ArrayList;
@@ -305,7 +307,7 @@ public class PlayScreen implements Screen{
 
         stage.addActor(pauseImage);
 
-        b2dr.render(world, gamecam.combined);
+        //b2dr.render(world, gamecam.combined);
         stage.draw();
 
         if(gameOver()){
@@ -403,12 +405,16 @@ public class PlayScreen implements Screen{
         Level1 level1 = new Level1(world, screenPos);
         Level2 level2 = new Level2(world, screenPos);
         Level3 level3 = new Level3(world, screenPos);
+        Level4 level4 = new Level4(world, screenPos);
+        Level5 level5 = new Level5(world, screenPos);
 
         levels.add(level1);
         levels.add(level2);
         levels.add(level3);
+        levels.add(level4);
+        levels.add(level5);
 
-        currentLevel = level1;
+        currentLevel = level4;
     }
 
 
