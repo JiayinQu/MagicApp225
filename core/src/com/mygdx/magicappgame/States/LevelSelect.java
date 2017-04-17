@@ -4,10 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.levels.Level;
 import com.mygdx.magicappgame.levels.Level1;
@@ -20,6 +23,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Ansel on 4/15/2017.
+ *
  */
 
 public class LevelSelect implements Screen {
@@ -29,13 +33,23 @@ public class LevelSelect implements Screen {
     private int count;
     private Label selectedLevel;
 
-    private static final int XPOS = 300;
-    private static final int YPOS = 50;
+    private OrthographicCamera camera;
+    private Viewport viewport;
+    private float xPos;
+    private float yPos;
+
 
 
     public LevelSelect(MyGdxGame game) {
         this.game = game;
-        stage = new Stage();
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT);
+        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+        stage = new Stage(viewport);
+
+        xPos = (viewport.getWorldWidth() / 2) - 25;
+        yPos = viewport.getWorldHeight() / 7;
+
         levelList = new ArrayList<Label>();
         setUpLevels();
         count = 1;
@@ -43,7 +57,7 @@ public class LevelSelect implements Screen {
     }
 
         private void setUpLevels() {
-            Label level1 = new Label("Level 1        ", MyGdxGame.gameSkin);
+            Label level1 = new Label("Level 1", MyGdxGame.gameSkin);
             Label level2 = new Label("Level 2", MyGdxGame.gameSkin);
             Label level3 = new Label("Level 3", MyGdxGame.gameSkin);
             Label level4 = new Label("Level 4", MyGdxGame.gameSkin);
@@ -56,7 +70,7 @@ public class LevelSelect implements Screen {
 
             for (final Label level:
                  levelList) {
-                level.setPosition(XPOS, 150 + YPOS*count);
+                level.setPosition(xPos, yPos*count + 75);
                 level.setWidth(50);
                 level.setHeight(40);
                 stage.addActor(level);
@@ -103,6 +117,7 @@ public class LevelSelect implements Screen {
             Gdx.gl.glClearColor(0,0,0,1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             stage.draw();
+            camera.update();
         }
 
         private void checkSwitch() {
@@ -121,7 +136,7 @@ public class LevelSelect implements Screen {
 
         @Override
         public void resize(int width, int height) {
-
+            viewport.update(width, height);
         }
 
         @Override
