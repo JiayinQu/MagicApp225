@@ -38,6 +38,7 @@ import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Scenes.Hud;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
 import com.mygdx.magicappgame.Tools.MyInputProcessor;
+import com.mygdx.magicappgame.Tools.MyTextInputListener;
 import com.mygdx.magicappgame.levels.Level;
 import com.mygdx.magicappgame.levels.Level1;
 import com.mygdx.magicappgame.levels.Level2;
@@ -96,6 +97,7 @@ public class PlayScreen implements Screen{
     private Integer levelTime;
 
     private Sound startSound, loosingSound, winningSound;
+    MyTextInputListener listener;
 
     private MyInputProcessor newInputProcessor;
 
@@ -137,8 +139,11 @@ public class PlayScreen implements Screen{
 
         lifeTime = System.currentTimeMillis();
 
-        startSound = Gdx.audio.newSound(Gdx.files.internal("sound/Hearbeat.mp3"));
-        loosingSound = Gdx.audio.newSound(Gdx.files.internal("sound/SadMale.mp3"));
+        listener = new MyTextInputListener();
+
+        startSound = Gdx.audio.newSound(Gdx.files.internal("sound/TheStart.mp3"));
+        startSound.play(1.0f);
+        loosingSound = Gdx.audio.newSound(Gdx.files.internal("sound/FailSoundMix.mp3"));
         winningSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
     }
 
@@ -174,7 +179,6 @@ public class PlayScreen implements Screen{
 
 
         if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            startSound.play(1.0f);
             if(!currentLevel.levelComplete && ((bodyMap.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
                 somethingOnScreen = true;
                 Hud.minusBox();
@@ -194,8 +198,9 @@ public class PlayScreen implements Screen{
             else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
                 moveAllowed = false;
                 levelTime = hud.getTime();
+                winningSound.play(1.0f);
                 nextLevelLabel();
-                winningSound.play(2.0f);
+
             }
         }
 
@@ -306,10 +311,13 @@ public class PlayScreen implements Screen{
         stage.draw();
 
         if(gameOver()){
+            startSound.dispose();
             refreshBodies();
             hud.resetTime();
             hud.resetLevel();
             hud.resetBox();
+            loosingSound.play(1.0f);
+            Gdx.input.getTextInput(listener, "Player's Name", "", "Enter your name");
             game.setScreen(game.gameOverScreen);
         }
     }
@@ -322,7 +330,6 @@ public class PlayScreen implements Screen{
         for(Body aBody : bodyMap.keySet()) {
             if (aBody.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60)
                 return true;
-                loosingSound.play(1.0f);
 
         }
         return false;
