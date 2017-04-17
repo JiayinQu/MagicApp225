@@ -12,7 +12,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
+import com.mygdx.magicappgame.States.MainMenu;
 import com.mygdx.magicappgame.States.PlayScreen;
 import com.mygdx.magicappgame.Tools.WorldContactListener;
 
@@ -27,23 +29,27 @@ import java.util.Random;
 
 public class Level {
     private World world;
-    private PlayScreen playScreen;
     private Vector2 screenPos;
     public Boolean levelComplete;
     public int count;
     ArrayList<Vector2> levelCoord;
     private Body bod;
+    private MyGdxGame game;
 
     private final static int NUM_BODIES = 10;
 
-    Level (World world, Vector2 screenPos) {
-        this.world = world;
-        this.screenPos = screenPos;
+    Level (MyGdxGame game) {
+        this.game = game;
+        setup();
+        //isTouched = false;
+    }
 
+    private void setup() {
+        world = game.playScreen.getWorld();
+        screenPos = game.playScreen.getScreenPos();
         levelCoord = new ArrayList<Vector2>();
         count = 0;
         levelComplete = false;
-        //isTouched = false;
     }
 
     /**

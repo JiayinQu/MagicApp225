@@ -79,6 +79,7 @@ public class PlayScreen implements Screen{
 
     // Level setups
     private ArrayList<Level> levels;
+
     private Level currentLevel;
     private int levelCount;
 
@@ -129,10 +130,6 @@ public class PlayScreen implements Screen{
         screenPos = new Vector2(104, gamePort.getWorldHeight());
         bodyMap = new HashMap<Body, Sprite>();
 
-
-        // Setup all of the levels and the array of levels
-        setUpLevels();
-
         firstDraw = true;
         somethingOnScreen = false;
         pauseTouched = false;
@@ -143,8 +140,6 @@ public class PlayScreen implements Screen{
         startSound = Gdx.audio.newSound(Gdx.files.internal("sound/Hearbeat.mp3"));
         loosingSound = Gdx.audio.newSound(Gdx.files.internal("sound/SadMale.mp3"));
         winningSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
-
-
     }
 
     @Override
@@ -397,16 +392,16 @@ public class PlayScreen implements Screen{
     /**
      * Change Levels based on levelCount
      */
-    private void setUpLevels() {
+    public void setUpLevels() {
         levelCount = 1;
 
         levels = new ArrayList<Level>();
 
-        Level1 level1 = new Level1(world, screenPos);
-        Level2 level2 = new Level2(world, screenPos);
-        Level3 level3 = new Level3(world, screenPos);
-        Level4 level4 = new Level4(world, screenPos);
-        Level5 level5 = new Level5(world, screenPos);
+        Level1 level1 = new Level1(game);
+        Level2 level2 = new Level2(game);
+        Level3 level3 = new Level3(game);
+        Level4 level4 = new Level4(game);
+        Level5 level5 = new Level5(game);
 
         levels.add(level1);
         levels.add(level2);
@@ -414,7 +409,7 @@ public class PlayScreen implements Screen{
         levels.add(level4);
         levels.add(level5);
 
-        currentLevel = level5;
+        currentLevel = level1;
     }
 
 
@@ -466,6 +461,17 @@ public class PlayScreen implements Screen{
         stage.addActor(BackToMenu);
     }
 
+    void setCurrentLevel(Level currentLevel) {
+        this.currentLevel = currentLevel;
+    }
+
+    public Vector2 getScreenPos() {
+        return screenPos;
+    }
+
+    public World getWorld() {
+        return world;
+    }
 
     /**
      * Resizes the window
@@ -475,7 +481,6 @@ public class PlayScreen implements Screen{
     @Override
     public void resize(int width, int height) {
         gamePort.update(width, height);
-
     }
 
     @Override

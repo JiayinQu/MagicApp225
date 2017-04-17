@@ -46,12 +46,12 @@ public class MyGdxGame extends Game {
 	}
 
 	private void setupStates() {
-		playScreen = new PlayScreen(this);
 		instructions = new Instructions(this);
 		gameOverScreen = new GameOverScreen(this);
 		mainMenu = new MainMenu(this);
 		levelSelect = new LevelSelect(this);
-
+		playScreen = new PlayScreen(this);
+		playScreen.setUpLevels();
 	}
 
 }

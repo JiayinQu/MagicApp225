@@ -2,6 +2,7 @@ package com.mygdx.magicappgame.levels;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.magicappgame.MyGdxGame;
 
 
 /**
@@ -11,8 +12,8 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Level3 extends Level{
 
-    public Level3(World world, Vector2 screenPos) {
-        super(world, screenPos);
+    public Level3(MyGdxGame game) {
+        super(game);
         initializeCoord();
     }
 
