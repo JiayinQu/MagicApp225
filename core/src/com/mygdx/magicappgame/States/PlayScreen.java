@@ -451,6 +451,9 @@ public class PlayScreen implements Screen{
                 pauseTouched = false;
                 game.setScreen(game.newMainMenu);
                 refresh();
+                hud.resetBox();
+                hud.resetLevel();
+                hud.resetTime();
                 resume.remove();
                 BackToMenu.remove();
             }
