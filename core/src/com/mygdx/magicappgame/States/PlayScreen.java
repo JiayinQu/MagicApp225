@@ -1,10 +1,7 @@
 package com.mygdx.magicappgame.States;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -16,9 +13,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -28,8 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -49,7 +42,6 @@ import com.mygdx.magicappgame.levels.Level5;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Created by Jiayin Qu on 2017/2/11.
@@ -96,7 +88,7 @@ public class PlayScreen implements Screen{
 
     private Integer levelTime;
 
-    private Sound startSound, loosingSound, winningSound;
+    private Sound startSound, losingSound, winningSound;
     MyTextInputListener listener;
 
     private MyInputProcessor newInputProcessor;
@@ -129,7 +121,7 @@ public class PlayScreen implements Screen{
         plat = new BalancePlatform(world);
         platformSprite = drawPlatformTex();
         pivotSprite = drawPivot();
-        screenPos = new Vector2(104, gamePort.getWorldHeight());
+        screenPos = new Vector2(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight());
         bodyMap = new HashMap<Body, Sprite>();
 
         firstDraw = true;
@@ -143,7 +135,7 @@ public class PlayScreen implements Screen{
 
         startSound = Gdx.audio.newSound(Gdx.files.internal("sound/TheStart.mp3"));
         startSound.play(1.0f);
-        loosingSound = Gdx.audio.newSound(Gdx.files.internal("sound/FailSoundMix.mp3"));
+        losingSound = Gdx.audio.newSound(Gdx.files.internal("sound/FailSoundMix.mp3"));
         winningSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
     }
 
@@ -156,7 +148,7 @@ public class PlayScreen implements Screen{
         pauseImage = new Image(pauseDrawable);
         pauseImage.setHeight(25);
         pauseImage.setWidth(25);
-        pauseImage.setPosition(90, 350);
+        pauseImage.setPosition((gamePort.getWorldWidth() / 2) - pauseImage.getWidth() / 2, 350);
 
         pauseImage.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -168,6 +160,8 @@ public class PlayScreen implements Screen{
                 pausePopUp();
             }
         });
+
+        stage.addActor(pauseImage);
 
     }
 
@@ -221,7 +215,7 @@ public class PlayScreen implements Screen{
             hud.resetBox();
             currentLevel = levels.get(levelCount - 1);
             moveAllowed = true;
-            refreshBodies();
+            refresh();
         }
 
 
@@ -253,7 +247,7 @@ public class PlayScreen implements Screen{
      * removes the bodies created by the BalancePlatform,
      * and makes a new BalancePlatform
      */
-    private void refreshBodies() {
+    private void refresh() {
         for (Body key :bodyMap.keySet()) {
             world.destroyBody(key);
         }
@@ -268,6 +262,10 @@ public class PlayScreen implements Screen{
         world.destroyBody(plat.bod2);
         plat = new BalancePlatform(world);
 
+        startSound.dispose();
+        hud.resetTime();
+        hud.resetLevel();
+        hud.resetBox();
     }
 
     /**
@@ -305,18 +303,12 @@ public class PlayScreen implements Screen{
             draw(game.batch);
         }
 
-        stage.addActor(pauseImage);
-
         //b2dr.render(world, gamecam.combined);
         stage.draw();
 
         if(gameOver()){
-            startSound.dispose();
-            refreshBodies();
-            hud.resetTime();
-            hud.resetLevel();
-            hud.resetBox();
-            loosingSound.play(1.0f);
+            refresh();
+            losingSound.play(1.0f);
             Gdx.input.getTextInput(listener, "Player's Name", "", "Enter your name");
             game.setScreen(game.gameOverScreen);
         }
@@ -457,8 +449,8 @@ public class PlayScreen implements Screen{
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 pauseTouched = false;
-                game.setScreen(game.mainMenu);
-                refreshBodies();
+                game.setScreen(game.newMainMenu);
+                refresh();
                 resume.remove();
                 BackToMenu.remove();
             }

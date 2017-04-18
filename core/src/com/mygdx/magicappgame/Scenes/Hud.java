@@ -76,7 +76,7 @@ public class Hud {
         table.row();
         table.add(boxLeftLabel);
         table.add(boxLabel).expandX();
-        table.setPosition(0, 160);
+        table.setPosition(60, 160);
 
         stage.addActor(table);
     }
