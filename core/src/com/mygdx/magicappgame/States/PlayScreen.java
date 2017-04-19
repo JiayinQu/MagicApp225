@@ -200,11 +200,11 @@ public class PlayScreen implements Screen{
 
         // Moves the current falling shape to the left
         if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.LEFT)&& somethingOnScreen){
-            currentBod.applyForce(new Vector2(-250000f, 0), currentBod.getWorldCenter(), true);
+            currentBod.applyForce(new Vector2(currentBod.getMass() * -125, 0), currentBod.getWorldCenter(), true);
         }
         // Moves the current falling shape to the right
         if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.RIGHT)&& somethingOnScreen){
-            currentBod.applyForce(new Vector2(250000f, 0), currentBod.getWorldCenter(), true);
+            currentBod.applyForce(new Vector2(currentBod.getMass() * 125, 0), currentBod.getWorldCenter(), true);
         }
 
         if (currentLevel.levelComplete && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
