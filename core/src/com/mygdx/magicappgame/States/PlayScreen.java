@@ -79,6 +79,7 @@ public class PlayScreen implements Screen{
     private Boolean somethingOnScreen;
 
     private Image pauseImage;
+    final Label instruction = new Label("Touch anywhere to start", MyGdxGame.gameSkin);
     private boolean pauseTouched;
     private boolean moveAllowed;
     private boolean firstDraw;
@@ -163,6 +164,15 @@ public class PlayScreen implements Screen{
 
         stage.addActor(pauseImage);
 
+
+        instruction.setFontScale((float)1.5);
+        instruction.setColor(Color.BLUE);
+        instruction.setWidth(Gdx.graphics.getWidth()/10);
+        instruction.setPosition(200,200);
+        instruction.setAlignment(1);
+
+        stage.addActor(instruction);
+
     }
 
     /**
@@ -173,6 +183,7 @@ public class PlayScreen implements Screen{
 
 
         if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            instruction.remove();
             if(!currentLevel.levelComplete && ((bodyMap.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
                 somethingOnScreen = true;
                 Hud.minusBox();
@@ -410,6 +421,7 @@ public class PlayScreen implements Screen{
 
         currentLevel = level1;
     }
+
 
 
     /**
