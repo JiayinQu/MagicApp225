@@ -2,6 +2,7 @@ package com.mygdx.magicappgame.States;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,16 +30,16 @@ public class NewMainMenu implements Screen {
     private Viewport port;
     private Stage stage;
 
-    private Image bg;
-    private Label start;
-    private Label levels;
-    private Label quit;
+    private Image title;
+    private Image start;
+    private Image levels;
+    private Image quit;
 
 
     public NewMainMenu(MyGdxGame game) {
         this.game = game;
         setup();
-        drawBg();
+        drawImages();
 
     }
 
@@ -49,27 +50,30 @@ public class NewMainMenu implements Screen {
         stage = new Stage(port);
     }
 
-    private void drawBg() {
-        Texture bgTex = new Texture("tetriformMain.png");
-        Drawable bgDraw = new TextureRegionDrawable(new TextureRegion(bgTex));
-        bg = new Image(bgDraw);
+    private void drawImages() {
+        title = new Image(new Texture("tetriformButtonImages/tetriformTitle.png"));
+        title.setSize(title.getWidth()/1.7f, title.getHeight()/1.7f);
+        title.setPosition((port.getWorldWidth()/2)-(title.getWidth()/2), (port.getWorldHeight()/6)*5-(title.getHeight()/2));
+        stage.addActor(title);
 
-        bg.setSize(bg.getWidth()/1.7f, bg.getHeight()/1.7f);
-        bg.setPosition((port.getWorldWidth()/2) - (bg.getWidth()/2),
-                (port.getWorldHeight()/2) - (bg.getHeight()/2));
-        stage.addActor(bg);
+        start = new Image(new Texture("tetriformButtonImages/tetriformPlay.png"));
+        start.setSize(start.getWidth()/1.7f, start.getHeight()/1.7f);
+        start.setPosition((port.getWorldWidth()/2)-(start.getWidth()/2), (port.getWorldHeight()/6)*4-(start.getHeight()/2));
+
+
+        stage.addActor(start);
+
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
 
-        start = new Label("", MyGdxGame.gameSkin);
-        start.setSize(100, 50);
-        start.setPosition(160, 215);
+
 
         start.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                start.setSize(start.getWidth()*1.4);
                 return true;
 
             } public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -77,8 +81,6 @@ public class NewMainMenu implements Screen {
                 game.setScreen(game.playScreen);
             }
         });
-
-        stage.addActor(start);
     }
 
     @Override
