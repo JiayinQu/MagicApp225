@@ -79,7 +79,8 @@ public class PlayScreen implements Screen{
     private Boolean somethingOnScreen;
 
     private Image pauseImage;
-    final Label instruction = new Label("Touch anywhere to start", MyGdxGame.gameSkin);
+    private Image instructionImage;
+
     private boolean pauseTouched;
     private boolean moveAllowed;
     private boolean firstDraw;
@@ -162,16 +163,14 @@ public class PlayScreen implements Screen{
             }
         });
 
-        stage.addActor(pauseImage);
+        final Texture instruction = new Texture ("instruction.jpg");
+        Drawable instructionDrawable = new TextureRegionDrawable(new TextureRegion(instruction));
+        instructionImage = new Image(instructionDrawable);
+        instructionImage.setWidth(180);
+        instructionImage.setHeight(35);
+        instructionImage.setPosition(gamePort.getWorldWidth()/2 - instructionImage.getWidth()/2, gamePort.getWorldHeight()/2 - instructionImage.getHeight()/2);
 
-
-        instruction.setFontScale((float)1.5);
-        instruction.setColor(Color.BLUE);
-        instruction.setWidth(Gdx.graphics.getWidth()/10);
-        instruction.setPosition(200,200);
-        instruction.setAlignment(1);
-
-        stage.addActor(instruction);
+        stage.addActor(instructionImage);
 
     }
 
@@ -183,7 +182,7 @@ public class PlayScreen implements Screen{
 
 
         if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            instruction.remove();
+            instructionImage.remove();
             if(!currentLevel.levelComplete && ((bodyMap.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
                 somethingOnScreen = true;
                 Hud.minusBox();
@@ -307,6 +306,7 @@ public class PlayScreen implements Screen{
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+        stage.addActor(pauseImage);
         drawPlatform(game.batch);
         drawPivot(game.batch);
 
@@ -428,33 +428,33 @@ public class PlayScreen implements Screen{
      * The pop up screen used when users press "pause button")
      */
     private void pausePopUp(){
-        final Label resume = new Label("RESUME", MyGdxGame.gameSkin);
-        resume.setFontScale(1);
-        resume.setColor(Color.GREEN);
-        resume.setWidth(Gdx.graphics.getWidth()/10);
-        resume.setPosition(80,200);
-        resume.setAlignment(1);
+        final Texture resume = new Texture ("resumeButton.jpg");
+        Drawable resumeDrawable = new TextureRegionDrawable(new TextureRegion(resume));
+        final Image resumeImage = new Image(resumeDrawable);
+        resumeImage.setWidth(100);
+        resumeImage.setHeight(30);
+        resumeImage.setPosition(gamePort.getWorldWidth()/2 - resumeImage.getWidth()/2, gamePort.getWorldHeight()/2 - resumeImage.getHeight()/2 + 50);
+
+        final Texture BackToMenu = new Texture("backToMenu.jpg");
+        Drawable BackToMenuDrawable = new TextureRegionDrawable(new TextureRegion(BackToMenu));
+        final Image BackToMenuImage = new Image(BackToMenuDrawable);
+        BackToMenuImage.setWidth(170);
+        BackToMenuImage.setHeight(30);
+        BackToMenuImage.setPosition(gamePort.getWorldWidth()/2 - BackToMenuImage.getWidth()/2, gamePort.getWorldHeight()/2 - BackToMenuImage.getHeight()/2);
 
 
-        final Label BackToMenu = new Label("Back to Menu", MyGdxGame.gameSkin);
-        BackToMenu.setFontScale(1);
-        BackToMenu.setColor(Color.GREEN);
-        BackToMenu.setWidth(Gdx.graphics.getWidth()/10);
-        BackToMenu.setPosition(80,160);
-        BackToMenu.setAlignment(1);
-
-        resume.addListener(new InputListener() {
+        resumeImage.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log("resume", "Pressed");
                 return true;
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 pauseTouched = false;
-                resume.remove();
-                BackToMenu.remove();
+                resumeImage.remove();
+                BackToMenuImage.remove();
             }
         });
-        BackToMenu.addListener(new InputListener() {
+        BackToMenuImage.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log("backtomenu", "Pressed");
                 return true;
@@ -466,13 +466,13 @@ public class PlayScreen implements Screen{
                 hud.resetBox();
                 hud.resetLevel();
                 hud.resetTime();
-                resume.remove();
-                BackToMenu.remove();
+                resumeImage.remove();
+                BackToMenuImage.remove();
             }
         });
 
-        stage.addActor(resume);
-        stage.addActor(BackToMenu);
+        stage.addActor(resumeImage);
+        stage.addActor(BackToMenuImage);
     }
 
     void setCurrentLevel(Level currentLevel) {
