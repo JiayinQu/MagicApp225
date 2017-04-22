@@ -19,28 +19,25 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 
+import java.util.ArrayList;
+
 /**
  * Created by anselcolby on 4/17/2017.
  *
  */
 
 public class NewMainMenu implements Screen {
+
     private  MyGdxGame game;
     private OrthographicCamera camera;
     private Viewport port;
     private Stage stage;
-
-    private Image title;
-    private Image start;
-    private Image levels;
-    private Image quit;
-
+    private ArrayList<Image> imgList;
 
     public NewMainMenu(MyGdxGame game) {
         this.game = game;
         setup();
-        drawImages();
-
+        setupImg();
     }
 
     private void setup() {
@@ -48,39 +45,59 @@ public class NewMainMenu implements Screen {
         port = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT);
         camera.position.set(port.getWorldWidth(), port.getWorldHeight(), 0);
         stage = new Stage(port);
+
+
     }
 
-    private void drawImages() {
-        title = new Image(new Texture("tetriformButtonImages/tetriformTitle.png"));
-        title.setSize(title.getWidth()/1.7f, title.getHeight()/1.7f);
-        title.setPosition((port.getWorldWidth()/2)-(title.getWidth()/2), (port.getWorldHeight()/6)*5-(title.getHeight()/2));
-        stage.addActor(title);
+    private void setupImg() {
+        imgList = new ArrayList<Image>();
 
-        start = new Image(new Texture("tetriformButtonImages/tetriformPlay.png"));
-        start.setSize(start.getWidth()/1.7f, start.getHeight()/1.7f);
-        start.setPosition((port.getWorldWidth()/2)-(start.getWidth()/2), (port.getWorldHeight()/6)*4-(start.getHeight()/2));
-
-
-        stage.addActor(start);
-
+        imgList.add(new Image(new Texture("tetriformButtonImages/tetriformPlay.png")));
+        imgList.add(new Image(new Texture("tetriformButtonImages/tetriformLevelSelect.png")));
+        imgList.add(new Image(new Texture("tetriformButtonImages/tetriformQuit.png")));
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
 
+        Image titleIMG = new Image(new Texture("tetriformButtonImages/tetriformTitle.png"));
+        titleIMG.setSize(titleIMG.getWidth()/1.7f, titleIMG.getHeight()/1.7f);
+        titleIMG.setPosition((port.getWorldWidth()/2)-(titleIMG.getWidth()/2), (port.getWorldHeight()/6)*5-(titleIMG.getHeight()/2));
+        stage.addActor(titleIMG);
+
+        int multiplier = 4;
+        for (final Image img:
+             imgList) {
+
+            img.setSize(img.getWidth() / 1.7f, img.getHeight() / 1.7f);
+            img.setPosition((port.getWorldWidth() / 2) - (img.getWidth() / 2), (port.getWorldHeight() / 6) * multiplier - (img.getHeight() / 2));
+            multiplier--;
+
+            stage.addActor(img);
+
+            img.addListener(new InputListener() {
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    img.setColor(Color.BLUE);
+                    return true;
+                }
+
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    img.setColor(Color.WHITE);
+                    if (img == imgList.get(0))
+
+                        game.setScreen(game.playScreen);
+                    else if (img == imgList.get(1))
+                        game.setScreen(game.levelSelect);
+                    else if (img == imgList.get(2))
+                        Gdx.app.exit();
+                }
+            });
+        }
 
 
-        start.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                start.setSize(start.getWidth()*1.4);
-                return true;
 
-            } public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.log("START", "released");
-                game.setScreen(game.playScreen);
-            }
-        });
+
     }
 
     @Override
