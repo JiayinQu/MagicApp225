@@ -33,6 +33,7 @@ public class NewMainMenu implements Screen {
     private Viewport port;
     private Stage stage;
     private ArrayList<Image> imgList;
+    private boolean firstCall;
 
     public NewMainMenu(MyGdxGame game) {
         this.game = game;
@@ -45,7 +46,7 @@ public class NewMainMenu implements Screen {
         port = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT);
         camera.position.set(port.getWorldWidth(), port.getWorldHeight(), 0);
         stage = new Stage(port);
-
+        firstCall = true;
 
     }
 
@@ -70,9 +71,11 @@ public class NewMainMenu implements Screen {
         for (final Image img:
              imgList) {
 
-            img.setSize(img.getWidth() / 1.7f, img.getHeight() / 1.7f);
-            img.setPosition((port.getWorldWidth() / 2) - (img.getWidth() / 2), (port.getWorldHeight() / 6) * multiplier - (img.getHeight() / 2));
-            multiplier--;
+            if (firstCall) {
+                img.setSize(img.getWidth() / 1.7f, img.getHeight() / 1.7f);
+                img.setPosition((port.getWorldWidth() / 2) - (img.getWidth() / 2), (port.getWorldHeight() / 6) * multiplier - (img.getHeight() / 2));
+                multiplier--;
+            }
 
             stage.addActor(img);
 
@@ -84,12 +87,13 @@ public class NewMainMenu implements Screen {
 
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                     img.setColor(Color.WHITE);
-                    if (img == imgList.get(0))
-
+                    if (img == imgList.get(0)) {
+                        firstCall = false;
                         game.setScreen(game.playScreen);
-                    else if (img == imgList.get(1))
+                    } else if (img == imgList.get(1)) {
+                        firstCall = false;
                         game.setScreen(game.levelSelect);
-                    else if (img == imgList.get(2))
+                    } else if (img == imgList.get(2))
                         Gdx.app.exit();
                 }
             });
