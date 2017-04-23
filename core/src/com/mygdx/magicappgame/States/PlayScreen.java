@@ -79,6 +79,7 @@ public class PlayScreen implements Screen{
 
     private Image pauseImage;
     private Image instructionImage;
+    private Image upperLineImage;
 
     private boolean pauseTouched;
     private boolean moveAllowed;
@@ -162,14 +163,19 @@ public class PlayScreen implements Screen{
             }
         });
 
-        final Texture instruction = new Texture ("instruction.jpg");
+        final Texture upperLine = new Texture("lightening.jpg");
+        Drawable upperLineDrawable = new TextureRegionDrawable(new TextureRegion(upperLine));
+        upperLineImage = new Image(upperLineDrawable);
+        upperLineImage.setWidth(gamePort.getWorldWidth());
+        upperLineImage.setWidth(gamePort.getWorldHeight());
+        upperLineImage.setPosition(gamePort.getWorldWidth()/2 - upperLineImage.getWidth()/2, 310);
+
+        /*final Texture instruction = new Texture ("instruction.jpg");
         Drawable instructionDrawable = new TextureRegionDrawable(new TextureRegion(instruction));
         instructionImage = new Image(instructionDrawable);
         instructionImage.setWidth(180);
         instructionImage.setHeight(35);
-        instructionImage.setPosition(gamePort.getWorldWidth()/2 - instructionImage.getWidth()/2, gamePort.getWorldHeight()/2 - instructionImage.getHeight()/2);
-
-        stage.addActor(instructionImage);
+        instructionImage.setPosition(gamePort.getWorldWidth()/2 - instructionImage.getWidth()/2, gamePort.getWorldHeight()/2 - instructionImage.getHeight()/2);*/
 
     }
 
@@ -179,9 +185,8 @@ public class PlayScreen implements Screen{
      */
     private void handleInput(float dt){
 
-
         if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            instructionImage.remove();
+            hud.instructionDisappear();
             if(!currentLevel.levelComplete && ((bodyMap.size() == 0) || (somethingOnScreen && (currentBod.getLinearVelocity().y > -.5)))){
                 somethingOnScreen = true;
                 Hud.minusBox();
@@ -302,6 +307,7 @@ public class PlayScreen implements Screen{
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
         stage.addActor(pauseImage);
+        stage.addActor(upperLineImage);
         drawPlatform(game.batch);
         drawPivot(game.batch);
 
@@ -315,7 +321,7 @@ public class PlayScreen implements Screen{
         if(gameOver()){
             refresh();
             losingSound.play(1.0f);
-            Gdx.input.getTextInput(listener, "Player's Name", "", "Enter your name");
+            //Gdx.input.getTextInput(listener, "Player's Name", "", "Enter your name");
             game.setScreen(game.gameOverScreen);
         }
     }
@@ -328,7 +334,9 @@ public class PlayScreen implements Screen{
         for(Body aBody : bodyMap.keySet()) {
             if (aBody.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60)
                 return true;
-
+            else if (aBody.getWorldCenter().y > 300 && aBody.getWorldCenter().y < 350 && aBody.getLinearVelocity().y > - .5){
+                return true;
+            }
         }
         return false;
     }
@@ -455,13 +463,13 @@ public class PlayScreen implements Screen{
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 pauseTouched = false;
-                game.setScreen(game.newMainMenu);
                 refresh();
                 hud.resetBox();
                 hud.resetLevel();
                 hud.resetTime();
                 resumeImage.remove();
                 BackToMenuImage.remove();
+                game.setScreen(game.newMainMenu);
             }
         });
 

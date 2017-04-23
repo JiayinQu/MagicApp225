@@ -48,6 +48,8 @@ public class Hud {
     private Label countdownLabel;
     private Label timeLabel;
 
+    private Image instructionImage;
+
     public Hud(SpriteBatch sb) {
         worldTimer = 0;
         timeCount = 0;
@@ -79,6 +81,15 @@ public class Hud {
         table.setPosition(60, 160);
 
         stage.addActor(table);
+
+        final Texture instruction = new Texture ("instruction.jpg");
+        Drawable instructionDrawable = new TextureRegionDrawable(new TextureRegion(instruction));
+        instructionImage = new Image(instructionDrawable);
+        instructionImage.setWidth(180);
+        instructionImage.setHeight(35);
+        instructionImage.setPosition(viewport.getWorldWidth()/2 - instructionImage.getWidth()/2,200);
+
+        stage.addActor(instructionImage);
     }
 
 
@@ -114,6 +125,10 @@ public class Hud {
     public void resetBox(){
         boxLeft = 10;
         boxLabel.setText(String.format("%02d",boxLeft));
+    }
+
+    public void instructionDisappear(){
+        instructionImage.remove();
     }
 
     public Integer getTime(){

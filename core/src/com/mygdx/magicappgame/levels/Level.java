@@ -120,6 +120,10 @@ public class Level {
             return level1;
     }
 
+    public Level setLevelOne(){
+        return level1;
+    }
+
     public void setImage(Sprite sprite){
         bod.setUserData(sprite);
     }

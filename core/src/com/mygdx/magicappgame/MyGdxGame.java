@@ -8,6 +8,7 @@ import com.mygdx.magicappgame.States.GameOverScreen;
 import com.mygdx.magicappgame.States.Instructions;
 import com.mygdx.magicappgame.States.LevelSelect;
 import com.mygdx.magicappgame.States.MainMenu;
+import com.mygdx.magicappgame.States.NewGameOver;
 import com.mygdx.magicappgame.States.NewMainMenu;
 import com.mygdx.magicappgame.States.PlayScreen;
 import com.mygdx.magicappgame.screens.LoadingScreen;
@@ -24,7 +25,8 @@ public class MyGdxGame extends Game {
 
 	public PlayScreen playScreen;
 	public Instructions instructions;
-	public GameOverScreen gameOverScreen;
+	public NewGameOver gameOverScreen;
+	public GameOverScreen gameOver;
 	public MainMenu mainMenu;
 	public LevelSelect levelSelect;
 	public NewMainMenu newMainMenu;
@@ -49,7 +51,8 @@ public class MyGdxGame extends Game {
 
 	private void setupStates() {
 		instructions = new Instructions(this);
-		gameOverScreen = new GameOverScreen(this);
+		gameOver = new GameOverScreen(this);
+		gameOverScreen = new NewGameOver(this);
 		mainMenu = new MainMenu(this);
 		newMainMenu = new NewMainMenu(this);
 		levelSelect = new LevelSelect(this);
