@@ -36,6 +36,13 @@ public class Level {
     private Body bod;
     private MyGdxGame game;
 
+    private Level currentLevel;
+    private Level1 level1;
+    private Level2 level2;
+    private Level3 level3;
+    private Level4 level4;
+    private Level5 level5;
+
     private final static int NUM_BODIES = 10;
 
     Level (MyGdxGame game) {
@@ -50,6 +57,15 @@ public class Level {
         levelCoord = new ArrayList<Vector2>();
         count = 0;
         levelComplete = false;
+        currentLevel = game.playScreen.getCurrentLevel();
+    }
+
+    private void setUpTestLevels() {
+        level1 = new Level1(game);
+        level2 = new Level2(game);
+        level3 = new Level3(game);
+        level4 = new Level4(game);
+        level5 = new Level5(game);
     }
 
     /**
@@ -91,6 +107,19 @@ public class Level {
         return bod;
     }
 
+    public Level getNextLevel() {
+        if (currentLevel == level1)
+            return level2;
+        else if (currentLevel == level2)
+            return level3;
+        else if (currentLevel == level3)
+            return level4;
+        else if (currentLevel == level4)
+            return level5;
+        else
+            return level1;
+    }
+
     public void setImage(Sprite sprite){
         bod.setUserData(sprite);
     }
@@ -105,14 +134,12 @@ public class Level {
     }
 
     public float getWidth(){
-        float width = levelCoord.get(count-1).x;
-        return width;
+        return levelCoord.get(count-1).x;
 
     }
 
     public float getHeight(){
-        float height = levelCoord.get(count-1).y;
-        return height;
+        return levelCoord.get(count-1).y;
     }
 
 }

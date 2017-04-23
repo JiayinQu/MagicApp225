@@ -74,7 +74,6 @@ public class PlayScreen implements Screen{
     private ArrayList<Level> levels;
 
     private Level currentLevel;
-    private int levelCount;
 
     private Boolean somethingOnScreen;
 
@@ -219,11 +218,10 @@ public class PlayScreen implements Screen{
 
         if (currentLevel.levelComplete && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             currentLevel.clearLevel();
-            levelCount++;
             Hud.addLevel();
             hud.resetTime();
             hud.resetBox();
-            currentLevel = levels.get(levelCount - 1);
+            currentLevel = currentLevel.getNextLevel();
             moveAllowed = true;
             refresh();
         }
@@ -265,9 +263,6 @@ public class PlayScreen implements Screen{
         stage.clear();
         currentLevel.count = 0;
         firstDraw = true;
-        if (currentLevel.levelComplete) {
-            currentLevel = levels.get(levelCount - 1);
-        }
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
         plat = new BalancePlatform(world);
@@ -403,7 +398,6 @@ public class PlayScreen implements Screen{
      * Change Levels based on levelCount
      */
     public void setUpLevels() {
-        levelCount = 1;
 
         levels = new ArrayList<Level>();
 
@@ -485,6 +479,10 @@ public class PlayScreen implements Screen{
 
     public World getWorld() {
         return world;
+    }
+
+    public Level getCurrentLevel() {
+        return currentLevel;
     }
 
     /**
