@@ -37,18 +37,18 @@ public class Level {
     private MyGdxGame game;
 
     private Level currentLevel;
+    private int levelNum;
     private Level1 level1;
     private Level2 level2;
     private Level3 level3;
     private Level4 level4;
     private Level5 level5;
 
-    private final static int NUM_BODIES = 10;
+    private final static int NUM_BODIES = 2;
 
     Level (MyGdxGame game) {
         this.game = game;
         setup();
-        //isTouched = false;
     }
 
     private void setup() {
@@ -58,14 +58,7 @@ public class Level {
         count = 0;
         levelComplete = false;
         currentLevel = game.playScreen.getCurrentLevel();
-    }
-
-    private void setUpTestLevels() {
-        level1 = new Level1(game);
-        level2 = new Level2(game);
-        level3 = new Level3(game);
-        level4 = new Level4(game);
-        level5 = new Level5(game);
+        levelNum = 1;
     }
 
     /**
@@ -108,20 +101,24 @@ public class Level {
     }
 
     public Level getNextLevel() {
-        if (currentLevel == level1)
-            return level2;
-        else if (currentLevel == level2)
-            return level3;
-        else if (currentLevel == level3)
-            return level4;
-        else if (currentLevel == level4)
-            return level5;
+        if (levelNum == 1)
+            return new Level2(game);
+        if (levelNum == 2)
+            return new Level3(game);
+        if (levelNum == 3)
+            return new Level4(game);
+        if (levelNum == 4)
+            return new Level5(game);
         else
-            return level1;
+            return new Level1(game);
     }
 
-    public Level setLevelOne(){
-        return level1;
+    public void setLevelNum(int num) {
+        levelNum = num;
+    }
+
+    public void increaseLevelNum() {
+        levelNum++;
     }
 
     public void setImage(Sprite sprite){
@@ -139,7 +136,6 @@ public class Level {
 
     public float getWidth(){
         return levelCoord.get(count-1).x;
-
     }
 
     public float getHeight(){

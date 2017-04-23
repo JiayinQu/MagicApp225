@@ -227,6 +227,7 @@ public class PlayScreen implements Screen{
             hud.resetTime();
             hud.resetBox();
             currentLevel = currentLevel.getNextLevel();
+            currentLevel.increaseLevelNum();
             moveAllowed = true;
             refresh();
         }
