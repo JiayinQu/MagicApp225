@@ -54,39 +54,23 @@ public class PlayScreen implements Screen{
     private Hud hud;
     private Stage stage;
 
-    // Backgrounds
-    private TiledMap map;
-    private OrthogonalTiledMapRenderer renderer;
-    private ShapeRenderer shapeRenderer;
-
     private World world;
     private Box2DDebugRenderer b2dr;
-
-    private Long lifeTime;
-    private Long delay = 2000L;
 
     private BalancePlatform plat;
     private Vector2 screenPos;
     private Body currentBod;
     private HashMap<Body, Sprite> bodyMap;
 
-    // Level setups
-    private ArrayList<Level> levels;
-
     private Level currentLevel;
 
     private Boolean somethingOnScreen;
 
-    private Image pauseImage;
-    private Image instructionImage;
-    private Image upperLineImage;
+    private Image pauseImage, instructionImage, upperLineImage;
 
-    private boolean pauseTouched;
-    private boolean moveAllowed;
-    private boolean firstDraw;
+    private boolean pauseTouched, moveAllowed, firstDraw, levelSwitchAllowed;
 
-    private Sprite platformSprite;
-    private Sprite pivotSprite;
+    private Sprite platformSprite, pivotSprite;
 
     private Integer levelTime;
 
@@ -109,7 +93,6 @@ public class PlayScreen implements Screen{
         gamePort = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, gamecam);
         hud = new Hud(game.batch);
 
-        shapeRenderer = new ShapeRenderer();
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
         world = new World(new Vector2(0, -40f), true); //The game's gravity
@@ -130,8 +113,7 @@ public class PlayScreen implements Screen{
         somethingOnScreen = false;
         pauseTouched = false;
         moveAllowed = true;
-
-        lifeTime = System.currentTimeMillis();
+        levelSwitchAllowed = false;
 
         listener = new MyTextInputListener();
 
@@ -221,7 +203,7 @@ public class PlayScreen implements Screen{
             currentBod.applyForce(new Vector2(currentBod.getMass() * 125, 0), currentBod.getWorldCenter(), true);
         }
 
-        if (currentLevel.levelComplete && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        if (currentLevel.levelComplete && levelSwitchAllowed && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             currentLevel.clearLevel();
             Hud.addLevel();
             hud.resetTime();
@@ -245,6 +227,7 @@ public class PlayScreen implements Screen{
                 "in " + levelTime + " seconds\n"+
                 "Press ENTER to move on \n" +
                 "to the next level", MyGdxGame.gameSkin);
+        levelSwitchAllowed = true;
         nextLevel.setFontScale(1);
         nextLevel.setColor(Color.GREEN);
         nextLevel.setWidth(Gdx.graphics.getWidth() / 10);
@@ -272,6 +255,7 @@ public class PlayScreen implements Screen{
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
         plat = new BalancePlatform(world);
+        levelSwitchAllowed = false;
 
         startSound.dispose();
         hud.resetTime();
@@ -407,22 +391,7 @@ public class PlayScreen implements Screen{
      * Change Levels based on levelCount
      */
     public void setUpLevels() {
-
-        levels = new ArrayList<Level>();
-
-        Level1 level1 = new Level1(game);
-        Level2 level2 = new Level2(game);
-        Level3 level3 = new Level3(game);
-        Level4 level4 = new Level4(game);
-        Level5 level5 = new Level5(game);
-
-        levels.add(level1);
-        levels.add(level2);
-        levels.add(level3);
-        levels.add(level4);
-        levels.add(level5);
-
-        currentLevel = level1;
+        currentLevel = new Level1(game);
     }
 
 

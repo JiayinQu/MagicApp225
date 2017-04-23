@@ -56,6 +56,7 @@ public class MyGdxGame extends Game {
 		mainMenu = new MainMenu(this);
 		newMainMenu = new NewMainMenu(this);
 		levelSelect = new LevelSelect(this);
+
 		playScreen = new PlayScreen(this);
 		playScreen.setUpLevels();
 	}
