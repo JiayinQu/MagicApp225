@@ -245,18 +245,21 @@ public class PlayScreen implements Screen{
         for (Body key :bodyMap.keySet()) {
             world.destroyBody(key);
         }
-        bodyMap.clear();
-        stage.clear();
-        currentLevel.count = 0;
-        firstDraw = true;
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
         plat = new BalancePlatform(world);
 
+        bodyMap.clear();
+        stage.clear();
         startSound.dispose();
+
         hud.resetTime();
         hud.resetLevel();
         hud.resetBox();
+
+        currentLevel.count = 0;
+        firstDraw = true;
+        moveAllowed = true;
     }
 
     /**
