@@ -66,9 +66,9 @@ public class PlayScreen implements Screen{
 
     private Boolean somethingOnScreen;
 
-    private Image pauseImage, instructionImage, upperLineImage;
+    private Image pauseImage, upperLineImage, congratsImage, nextLevelImage;
 
-    private boolean pauseTouched, moveAllowed, firstDraw, levelSwitchAllowed;
+    private boolean pauseTouched, moveAllowed, firstDraw;
 
     private Sprite platformSprite, pivotSprite;
 
@@ -99,10 +99,6 @@ public class PlayScreen implements Screen{
         b2dr = new Box2DDebugRenderer();
         stage = new Stage(gamePort);
 
-        //world.setContactListener(new WorldContactListener());
-        //Gdx.input.setInputProcessor(newInputProcessor);
-
-
         plat = new BalancePlatform(world);
         platformSprite = drawPlatformTex();
         pivotSprite = drawPivot();
@@ -113,7 +109,6 @@ public class PlayScreen implements Screen{
         somethingOnScreen = false;
         pauseTouched = false;
         moveAllowed = true;
-        levelSwitchAllowed = false;
 
         listener = new MyTextInputListener();
 
@@ -151,13 +146,6 @@ public class PlayScreen implements Screen{
         upperLineImage.setWidth(gamePort.getWorldWidth());
         upperLineImage.setWidth(gamePort.getWorldHeight());
         upperLineImage.setPosition(gamePort.getWorldWidth()/2 - upperLineImage.getWidth()/2, 310);
-
-        /*final Texture instruction = new Texture ("instruction.jpg");
-        Drawable instructionDrawable = new TextureRegionDrawable(new TextureRegion(instruction));
-        instructionImage = new Image(instructionDrawable);
-        instructionImage.setWidth(180);
-        instructionImage.setHeight(35);
-        instructionImage.setPosition(gamePort.getWorldWidth()/2 - instructionImage.getWidth()/2, gamePort.getWorldHeight()/2 - instructionImage.getHeight()/2);*/
 
     }
 
@@ -203,18 +191,6 @@ public class PlayScreen implements Screen{
             currentBod.applyForce(new Vector2(currentBod.getMass() * 125, 0), currentBod.getWorldCenter(), true);
         }
 
-        if (currentLevel.levelComplete && levelSwitchAllowed && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            currentLevel.clearLevel();
-            Hud.addLevel();
-            hud.resetTime();
-            hud.resetBox();
-            currentLevel = currentLevel.getNextLevel();
-            currentLevel.increaseLevelNum();
-            moveAllowed = true;
-            refresh();
-        }
-
-
     }
 
     /**
@@ -222,18 +198,39 @@ public class PlayScreen implements Screen{
      * they beat the level and the key to press to advance to the next level
      */
     private void nextLevelLabel() {
-        Label nextLevel = new Label("CONGRATULATIONS!\n\n\n" +
-                "You beat the level!\n" +
-                "in " + levelTime + " seconds\n"+
-                "Press ENTER to move on \n" +
-                "to the next level", MyGdxGame.gameSkin);
-        levelSwitchAllowed = true;
-        nextLevel.setFontScale(1);
-        nextLevel.setColor(Color.GREEN);
-        nextLevel.setWidth(Gdx.graphics.getWidth() / 10);
-        nextLevel.setPosition(80, 300);
-        nextLevel.setAlignment(1);
-        stage.addActor(nextLevel);
+        final Texture congrats =  new Texture("congrats.png");
+        Drawable congratsDrawable = new TextureRegionDrawable(new TextureRegion(congrats));
+        congratsImage = new Image(congratsDrawable);
+        congratsImage.setSize(congratsImage.getWidth()/1.7f, congratsImage.getHeight()/1.7f);
+        congratsImage.setPosition((gamePort.getWorldWidth() / 2) - congratsImage.getWidth() / 2, gamePort.getWorldHeight()/2 - congratsImage.getHeight()/2 + 50);
+
+        final Texture nextLevelButton = new Texture("nextLevel.png");
+        Drawable nextLevelDrawable = new TextureRegionDrawable(new TextureRegion(nextLevelButton));
+        nextLevelImage = new Image(nextLevelDrawable);
+        nextLevelImage.setSize(nextLevelImage.getWidth()/1.3f, nextLevelImage.getHeight()/1.3f);
+        nextLevelImage.setPosition((gamePort.getWorldWidth() / 2) - nextLevelImage.getWidth() / 2, gamePort.getWorldHeight()/2 - nextLevelImage.getHeight());
+
+        nextLevelImage.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log("next Level", "Pressed");
+                return true;
+            }
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                currentLevel.clearLevel();
+                nextLevelImage.remove();
+                congratsImage.remove();
+                Hud.addLevel();
+                hud.resetTime();
+                hud.resetBox();
+                currentLevel = currentLevel.getNextLevel();
+                currentLevel.increaseLevelNum();
+                moveAllowed = true;
+                refresh();
+            }
+        });
+
+        stage.addActor(congratsImage);
+        stage.addActor(nextLevelImage);
     }
 
 
@@ -255,7 +252,6 @@ public class PlayScreen implements Screen{
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
         plat = new BalancePlatform(world);
-        levelSwitchAllowed = false;
 
         startSound.dispose();
         hud.resetTime();
