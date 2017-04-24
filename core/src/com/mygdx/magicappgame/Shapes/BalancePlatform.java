@@ -38,7 +38,7 @@ public class BalancePlatform extends Sprite{
     public BalancePlatform(World world){
         this.world = world;
         definePlatform(MyGdxGame.V_WIDTH / 2, 40);
-        definePivot(MyGdxGame.V_WIDTH / 2, 25, 15, 5);
+        definePivot((MyGdxGame.V_WIDTH / 2), 25, 12, 5);
     }
 
     /**

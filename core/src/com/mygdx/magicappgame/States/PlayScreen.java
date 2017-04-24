@@ -374,7 +374,7 @@ public class PlayScreen implements Screen{
 
     private void drawPivot(Batch batch){
         batch.begin();
-        pivotSprite.setSize(15 *2f,5 *2f);
+        pivotSprite.setSize(12 *2f,5 *2f);
         pivotSprite.setRotation((float)Math.toDegrees(plat.bod2.getAngle()));
         pivotSprite.setPosition(plat.bod2.getPosition().x-(pivotSprite.getWidth()/2),plat.bod2.getPosition().y - (pivotSprite.getHeight()/2));
         pivotSprite.setOriginCenter();

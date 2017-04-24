@@ -1,4 +1,4 @@
-package com.mygdx.magicappgame.screens;
+package com.mygdx.magicappgame.States;
 
 /**
  * Created by Fouad El Hamdouni on 01/03/2017.

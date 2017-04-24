@@ -11,9 +11,7 @@ import com.mygdx.magicappgame.States.MainMenu;
 import com.mygdx.magicappgame.States.NewGameOver;
 import com.mygdx.magicappgame.States.NewMainMenu;
 import com.mygdx.magicappgame.States.PlayScreen;
-import com.mygdx.magicappgame.screens.LoadingScreen;
-
-import java.util.ArrayList;
+import com.mygdx.magicappgame.States.LoadingScreen;
 
 public class MyGdxGame extends Game {
 
