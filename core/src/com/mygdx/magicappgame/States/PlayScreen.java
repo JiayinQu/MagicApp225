@@ -176,7 +176,6 @@ public class PlayScreen implements Screen{
             }
             else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
                 moveAllowed = false;
-                levelTime = hud.getTime();
                 winningSound.play(1.0f);
                 nextLevelLabel();
 
@@ -220,8 +219,6 @@ public class PlayScreen implements Screen{
                 currentLevel.clearLevel();
                 nextLevelImage.remove();
                 congratsImage.remove();
-                Hud.addLevel();
-                hud.resetTime();
                 hud.resetBox();
                 currentLevel = currentLevel.getNextLevel();
                 moveAllowed = true;
@@ -253,7 +250,6 @@ public class PlayScreen implements Screen{
         stage.clear();
         startSound.dispose();
 
-        hud.resetTime();
         hud.resetLevel();
         hud.resetBox();
 
@@ -271,7 +267,7 @@ public class PlayScreen implements Screen{
             handleInput(dt);
             world.step(1/60f, 6, 2);
 
-            hud.update(dt);
+            hud.getLevel(getLevelNum());
 
             gamecam.update();
             //renderer.setView(gamecam); // used for the background
@@ -436,7 +432,6 @@ public class PlayScreen implements Screen{
                 refresh();
                 hud.resetBox();
                 hud.resetLevel();
-                hud.resetTime();
                 resumeImage.remove();
                 BackToMenuImage.remove();
                 game.setScreen(game.newMainMenu);

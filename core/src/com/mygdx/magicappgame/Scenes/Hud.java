@@ -37,22 +37,16 @@ public class Hud {
 
     private static Integer level;
     private static Integer boxLeft;
-    private Integer worldTimer;
-    private float timeCount;
 
 
     private static Label levelLabel;
     private static Label boxLabel;
     private Label boxLeftLabel;
     private Label worldLabel;
-    private Label countdownLabel;
-    private Label timeLabel;
 
     private Image instructionImage;
 
     public Hud(SpriteBatch sb) {
-        worldTimer = 0;
-        timeCount = 0;
         level = 1;
         boxLeft = 10;
 
@@ -62,17 +56,12 @@ public class Hud {
         Table table = new Table();
         table.setFillParent(true);
 
-        countdownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         levelLabel = new Label(String.format("%02d", level), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         boxLabel = new Label(String.format("%02d", boxLeft), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
         worldLabel = new Label("LEVEL", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         boxLeftLabel = new Label("BOXES LEFT", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
 
         table.columnDefaults(0).width(150);
-        table.add(timeLabel);
-        table.add(countdownLabel).expandX();
-        table.row();
         table.add(worldLabel);
         table.add(levelLabel).expandX();
         table.row();
@@ -92,30 +81,31 @@ public class Hud {
         stage.addActor(instructionImage);
     }
 
-
-    public void update (float dt){
-        timeCount += dt;
-        if(timeCount >=1){
-            worldTimer ++;
-            countdownLabel.setText(String.format("%03d",worldTimer));
-            timeCount = 0;
+    public static void getLevel(int levelNum){
+        if(levelNum == 1){
+            level = 1;
         }
-    }
-
-    public static void addLevel(){
-        level ++;
+        if(levelNum == 2){
+            level = 2;
+        }
+        if(levelNum == 3){
+            level = 3;
+        }
+        if(levelNum == 4){
+            level = 4;
+        }
+        if(levelNum == 5){
+            level = 5;
+        }
         levelLabel.setText(String.format("%02d", level));
     }
+
 
     public static void minusBox(){
         boxLeft --;
         boxLabel.setText(String.format("%02d", boxLeft));
     }
 
-    public void resetTime(){
-        worldTimer = 0;
-        countdownLabel.setText(String.format("%03d",worldTimer));
-    }
 
     public void resetLevel(){
         level = 1;
@@ -131,8 +121,5 @@ public class Hud {
         instructionImage.remove();
     }
 
-    public Integer getTime(){
-        return worldTimer;
-    }
 
 }
