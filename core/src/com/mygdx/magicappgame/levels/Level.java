@@ -37,14 +37,8 @@ public class Level {
     private MyGdxGame game;
 
     private Level currentLevel;
-    private int levelNum;
-    private Level1 level1;
-    private Level2 level2;
-    private Level3 level3;
-    private Level4 level4;
-    private Level5 level5;
 
-    private final static int NUM_BODIES = 10;
+    private final static int NUM_BODIES = 2;
 
     Level (MyGdxGame game) {
         this.game = game;
@@ -58,7 +52,6 @@ public class Level {
         count = 0;
         levelComplete = false;
         currentLevel = game.playScreen.getCurrentLevel();
-        levelNum = 1;
     }
 
     /**
@@ -101,24 +94,22 @@ public class Level {
     }
 
     public Level getNextLevel() {
-        if (levelNum == 1)
+        if (game.playScreen.getLevelNum() == 1) {
+            game.playScreen.setLevelNum(2);
             return new Level2(game);
-        if (levelNum == 2)
+        } if (game.playScreen.getLevelNum() == 2) {
+            game.playScreen.setLevelNum(3);
             return new Level3(game);
-        if (levelNum == 3)
+        } if (game.playScreen.getLevelNum() == 3) {
+            game.playScreen.setLevelNum(4);
             return new Level4(game);
-        if (levelNum == 4)
+        } if (game.playScreen.getLevelNum() == 4) {
+            game.playScreen.setLevelNum(5);
             return new Level5(game);
-        else
+        } else {
+            game.playScreen.setLevelNum(1);
             return new Level1(game);
-    }
-
-    public void setLevelNum(int num) {
-        levelNum = num;
-    }
-
-    public void increaseLevelNum() {
-        levelNum++;
+        }
     }
 
     public void setImage(Sprite sprite){

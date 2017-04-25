@@ -73,6 +73,7 @@ public class PlayScreen implements Screen{
     private Sprite platformSprite, pivotSprite;
 
     private Integer levelTime;
+    private int levelNum;
 
     private Sound startSound, losingSound, winningSound;
     MyTextInputListener listener;
@@ -223,7 +224,6 @@ public class PlayScreen implements Screen{
                 hud.resetTime();
                 hud.resetBox();
                 currentLevel = currentLevel.getNextLevel();
-                currentLevel.increaseLevelNum();
                 moveAllowed = true;
                 refresh();
             }
@@ -391,6 +391,7 @@ public class PlayScreen implements Screen{
      */
     public void setUpLevels() {
         currentLevel = new Level1(game);
+        levelNum = 1;
     }
 
 
@@ -448,6 +449,14 @@ public class PlayScreen implements Screen{
 
     void setCurrentLevel(Level currentLevel) {
         this.currentLevel = currentLevel;
+    }
+
+    public int getLevelNum() {
+        return levelNum;
+    }
+
+    public void setLevelNum(int levelNum) {
+        this.levelNum = levelNum;
     }
 
     public Vector2 getScreenPos() {

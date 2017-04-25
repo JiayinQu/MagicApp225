@@ -96,18 +96,23 @@ public class LevelSelect implements Screen {
         private Level whichLevel() {
             Level returnLevel = null;
             if (selectedLevel != null) {
-                if (selectedLevel == levelList.get(4))
+                if (selectedLevel == levelList.get(4)) {
                     returnLevel = new Level1(game);
-                if (selectedLevel == levelList.get(3))
+                    game.playScreen.setLevelNum(1);
+                } else if (selectedLevel == levelList.get(3)) {
                     returnLevel = new Level2(game);
-                if (selectedLevel == levelList.get(2))
+                    game.playScreen.setLevelNum(2);
+                } else if (selectedLevel == levelList.get(2)) {
                     returnLevel = new Level3(game);
-                if (selectedLevel == levelList.get(1))
+                    game.playScreen.setLevelNum(3);
+                } else if (selectedLevel == levelList.get(1)) {
                     returnLevel = new Level4(game);
-                if (selectedLevel == levelList.get(0))
+                    game.playScreen.setLevelNum(4);
+                } else if (selectedLevel == levelList.get(0)) {
                     returnLevel = new Level5(game);
-            }
-            return returnLevel;
+                    game.playScreen.setLevelNum(5);
+                }
+            } return returnLevel;
         }
 
         @Override
