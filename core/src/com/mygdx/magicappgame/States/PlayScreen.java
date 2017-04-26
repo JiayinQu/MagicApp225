@@ -174,7 +174,7 @@ public class PlayScreen implements Screen{
                 bodyMap.get(currentBod).setColor(Color.WHITE);
 
             }
-            else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5)) {
+            else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5) && stabilization() == true) {
                 moveAllowed = false;
                 winningSound.play(1.0f);
                 nextLevelLabel();
@@ -315,6 +315,15 @@ public class PlayScreen implements Screen{
             if (aBody.getWorldCenter().y < plat.bod2.getWorldCenter().y - 60)
                 return true;
             else if (aBody.getWorldCenter().y > 300 && aBody.getWorldCenter().y < 350 && aBody.getLinearVelocity().y > - .5){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean stabilization(){
+        for (Body aBody : bodyMap.keySet()){
+            if(aBody.getLinearVelocity().y == 0 && aBody.getLinearVelocity().x == 0){
                 return true;
             }
         }

@@ -60,9 +60,7 @@ public class NewGameOver implements Screen {
         stage.addActor(titleIMG);
 
         int multiplier = 4;
-        for (final Image img:
-                imgList) {
-
+        for (final Image img: imgList) {
             if (firstCall) {
                 img.setSize(img.getWidth() / 1.3f, img.getHeight() / 1.3f);
                 img.setPosition((port.getWorldWidth() / 2) - (img.getWidth() / 2), (port.getWorldHeight() / 6) * multiplier - (img.getHeight() / 2));
@@ -85,8 +83,7 @@ public class NewGameOver implements Screen {
                     } else if (img == imgList.get(1)) {
                         firstCall = false;
                         game.setScreen(game.newMainMenu);
-                    } else if (img == imgList.get(2))
-                        Gdx.app.exit();
+                    }
                 }
             });
         }
