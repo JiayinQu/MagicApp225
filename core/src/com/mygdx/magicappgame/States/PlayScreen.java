@@ -141,12 +141,13 @@ public class PlayScreen implements Screen{
             }
         });
 
-        final Texture upperLine = new Texture("lightening.jpg");
+        final Texture upperLine = new Texture("whiteSquare.png");
         Drawable upperLineDrawable = new TextureRegionDrawable(new TextureRegion(upperLine));
         upperLineImage = new Image(upperLineDrawable);
         upperLineImage.setWidth(gamePort.getWorldWidth());
-        upperLineImage.setWidth(gamePort.getWorldHeight());
+        upperLineImage.setHeight(2);
         upperLineImage.setPosition(gamePort.getWorldWidth()/2 - upperLineImage.getWidth()/2, 310);
+        upperLineImage.setColor(Color.RED);
 
     }
 
@@ -336,16 +337,16 @@ public class PlayScreen implements Screen{
      * @return the Sprite
      */
     private Sprite drawSquareTex(){
-        return new Sprite(new Texture("BlueSquare.png"));
+        return new Sprite(new Texture("whiteSquare.png"));
 
     }
 
     private Sprite drawPlatformTex(){
-        return new Sprite(new Texture("Platform.jpg"));
+        return new Sprite(new Texture("whiteSquare.png"));
     }
 
     private Sprite drawPivot(){
-        return new Sprite(new Texture("Pivot.jpg"));
+        return new Sprite(new Texture("whiteSquare.png"));
     }
 
 
@@ -376,6 +377,7 @@ public class PlayScreen implements Screen{
         platformSprite.setRotation((float)Math.toDegrees(plat.bod1.getAngle()));
         platformSprite.setPosition(plat.bod1.getPosition().x-(platformSprite.getWidth()/2),plat.bod1.getPosition().y - (platformSprite.getHeight()/2));
         platformSprite.setOriginCenter();
+        platformSprite.setColor(Color.CYAN);
         platformSprite.draw(batch);
         batch.end();
     }
