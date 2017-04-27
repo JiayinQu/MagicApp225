@@ -38,6 +38,8 @@ import com.mygdx.magicappgame.levels.Level2;
 import com.mygdx.magicappgame.levels.Level3;
 import com.mygdx.magicappgame.levels.Level4;
 import com.mygdx.magicappgame.levels.Level5;
+import com.mygdx.magicappgame.levels.Level6;
+import com.mygdx.magicappgame.levels.Level7;
 
 
 import java.util.ArrayList;
@@ -399,7 +401,7 @@ public class PlayScreen implements Screen{
      * Change Levels based on levelCount
      */
     public void setUpLevels() {
-        currentLevel = new Level1(game);
+        currentLevel = new Level6(game);
         levelNum = 1;
     }
 
