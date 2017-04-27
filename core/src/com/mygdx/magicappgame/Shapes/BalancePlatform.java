@@ -23,9 +23,8 @@ public class BalancePlatform extends Sprite{
     private World world;
     public Body bod1; // The platform
     public Body bod2; // The Body the platform rotates around
-    private Vector2[] vectorList;
 
-    private Sprite platSprite;
+    private float pivotWidth;
 
     private static final float WIDTH = 80;
     private static final float HEIGHT = 10;
@@ -35,10 +34,20 @@ public class BalancePlatform extends Sprite{
      * the other functions to set up the platform, triangle, and joint.
      * @param world is the world passed from PlayScreen
      */
-    public BalancePlatform(World world){
+    public BalancePlatform(World world, int difficulty){
         this.world = world;
+        setPivotWidth(difficulty);
         definePlatform(MyGdxGame.V_WIDTH / 2, 40);
-        definePivot((MyGdxGame.V_WIDTH / 2), 25, 12, 5);
+        definePivot((MyGdxGame.V_WIDTH / 2), 25, pivotWidth, 5);
+    }
+
+    private void setPivotWidth(int difficulty) {
+        if (difficulty == 2)
+            pivotWidth = 10;
+        else if (difficulty == 3)
+            pivotWidth = 8;
+        else
+            pivotWidth = 12;
     }
 
     /**
@@ -84,13 +93,6 @@ public class BalancePlatform extends Sprite{
 
     public void hit(){
         System.out.println("I've been hit");
-    }
-
-    public void render(Batch batch) {
-        platSprite.setPosition(bod1.getPosition().x - (HEIGHT/2), bod1.getPosition().y - (HEIGHT/2));
-        platSprite.setRotation((float)Math.toDegrees(bod1.getAngle()));
-        platSprite.setOriginCenter();
-        platSprite.draw(batch);
     }
 
     public float getWidth(){
