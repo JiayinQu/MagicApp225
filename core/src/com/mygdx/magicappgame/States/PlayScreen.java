@@ -100,7 +100,7 @@ public class PlayScreen implements Screen{
         b2dr = new Box2DDebugRenderer();
         stage = new Stage(gamePort);
 
-        plat = new BalancePlatform(world);
+        plat = new BalancePlatform(world, 1);
         platformSprite = drawPlatformTex();
         pivotSprite = drawPivot();
         screenPos = new Vector2(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight());
@@ -245,7 +245,7 @@ public class PlayScreen implements Screen{
         }
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
-        plat = new BalancePlatform(world);
+        plat = new BalancePlatform(world, 1);
 
         bodyMap.clear();
         stage.clear();
