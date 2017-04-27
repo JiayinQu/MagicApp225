@@ -24,7 +24,7 @@ public class Level6 extends Level{
         levelCoord.add(new Vector2(40, 40));
         levelCoord.add(new Vector2(10, 50));
         levelCoord.add(new Vector2(30, 30));
-        levelCoord.add(new Vector2(20, 30));
+        levelCoord.add(new Vector2(20, 45));
         levelCoord.add(new Vector2(10, 10));
         levelCoord.add(new Vector2(40, 10));
         levelCoord.add(new Vector2(10, 10));
