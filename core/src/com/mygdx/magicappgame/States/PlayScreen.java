@@ -100,7 +100,7 @@ public class PlayScreen implements Screen{
         b2dr = new Box2DDebugRenderer();
         stage = new Stage(gamePort);
 
-        plat = new BalancePlatform(world, 1);
+        plat = new BalancePlatform(world, game.levelSelect.getDifficulty());
         platformSprite = drawPlatformTex();
         pivotSprite = drawPivot();
         screenPos = new Vector2(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight());
@@ -141,11 +141,11 @@ public class PlayScreen implements Screen{
             }
         });
 
-        final Texture upperLine = new Texture("whiteSquare.png");
+        final Texture upperLine = new Texture("lightening.jpg");
         Drawable upperLineDrawable = new TextureRegionDrawable(new TextureRegion(upperLine));
         upperLineImage = new Image(upperLineDrawable);
         upperLineImage.setWidth(gamePort.getWorldWidth());
-        upperLineImage.setHeight(2);
+        upperLineImage.setWidth(gamePort.getWorldHeight());
         upperLineImage.setPosition(gamePort.getWorldWidth()/2 - upperLineImage.getWidth()/2, 310);
         upperLineImage.setColor(Color.RED);
 
@@ -245,7 +245,7 @@ public class PlayScreen implements Screen{
         }
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
-        plat = new BalancePlatform(world, 1);
+        plat = new BalancePlatform(world, game.levelSelect.getDifficulty());
 
         bodyMap.clear();
         stage.clear();
@@ -337,16 +337,16 @@ public class PlayScreen implements Screen{
      * @return the Sprite
      */
     private Sprite drawSquareTex(){
-        return new Sprite(new Texture("whiteSquare.png"));
+        return new Sprite(new Texture("blueSquare.png"));
 
     }
 
     private Sprite drawPlatformTex(){
-        return new Sprite(new Texture("whiteSquare.png"));
+        return new Sprite(new Texture("Platform.jpg"));
     }
 
     private Sprite drawPivot(){
-        return new Sprite(new Texture("whiteSquare.png"));
+        return new Sprite(new Texture("Pivot.jpg"));
     }
 
 
@@ -383,8 +383,10 @@ public class PlayScreen implements Screen{
     }
 
     private void drawPivot(Batch batch){
+        int width = plat.setGetPivotWidth(game.levelSelect.getDifficulty());
+
         batch.begin();
-        pivotSprite.setSize(12 *2f,5 *2f);
+        pivotSprite.setSize(width *2f,5 *2f);
         pivotSprite.setRotation((float)Math.toDegrees(plat.bod2.getAngle()));
         pivotSprite.setPosition(plat.bod2.getPosition().x-(pivotSprite.getWidth()/2),plat.bod2.getPosition().y - (pivotSprite.getHeight()/2));
         pivotSprite.setOriginCenter();

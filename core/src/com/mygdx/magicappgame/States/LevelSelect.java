@@ -35,6 +35,8 @@ public class LevelSelect implements Screen {
     private int count;
     private Image selectedLevel;
 
+    private int difficulty;
+
     private OrthographicCamera camera;
     private Viewport viewport;
     private float xPos;
@@ -52,6 +54,7 @@ public class LevelSelect implements Screen {
         xPos = (viewport.getWorldWidth() / 2) - 25;
         yPos = viewport.getWorldHeight() / 7;
 
+        difficulty = 1;
         levelList = new ArrayList<Image>();
         setUpLevels();
         count = 1;
@@ -143,7 +146,11 @@ public class LevelSelect implements Screen {
             count = 5;
         }
 
-        @Override
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    @Override
         public void resize(int width, int height) {
             viewport.update(width, height);
         }

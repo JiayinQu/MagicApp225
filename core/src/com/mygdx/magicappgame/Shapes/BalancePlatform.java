@@ -36,18 +36,22 @@ public class BalancePlatform extends Sprite{
      */
     public BalancePlatform(World world, int difficulty){
         this.world = world;
-        setPivotWidth(difficulty);
+        setGetPivotWidth(difficulty);
         definePlatform(MyGdxGame.V_WIDTH / 2, 40);
         definePivot((MyGdxGame.V_WIDTH / 2), 25, pivotWidth, 5);
     }
 
-    private void setPivotWidth(int difficulty) {
-        if (difficulty == 2)
+    public int setGetPivotWidth(int difficulty) {
+        if (difficulty == 2) {
             pivotWidth = 10;
-        else if (difficulty == 3)
+            return 10;
+        } else if (difficulty == 3) {
             pivotWidth = 8;
-        else
+            return 8;
+        } else {
             pivotWidth = 12;
+            return 12;
+        }
     }
 
     /**
