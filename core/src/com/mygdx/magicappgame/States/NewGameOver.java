@@ -28,12 +28,19 @@ public class NewGameOver implements Screen {
     private ArrayList<Image> imgList;
     private boolean firstCall;
 
+    /**
+     * Constructor to initiate game over screen.
+     * @param game
+     */
     public NewGameOver(MyGdxGame game) {
         this.game = game;
         setup();
         setupImg();
     }
 
+    /**
+     * Set up the screen and fit the camera.
+     */
     private void setup() {
         camera = new OrthographicCamera();
         port = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT);
@@ -43,6 +50,9 @@ public class NewGameOver implements Screen {
 
     }
 
+    /**
+     * Set up a arraylist that hold all buttons.
+     */
     private void setupImg() {
         imgList = new ArrayList<Image>();
 
@@ -50,6 +60,9 @@ public class NewGameOver implements Screen {
         imgList.add(new Image(new Texture("tetriformButtonImages/backToMenu.png")));
     }
 
+    /**
+     * Show Game Over title and button on the screen. 
+     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
