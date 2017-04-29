@@ -102,7 +102,7 @@ public class PlayScreen implements Screen{
         b2dr = new Box2DDebugRenderer();
         stage = new Stage(gamePort);
 
-        plat = new BalancePlatform(world, game.levelSelect.getDifficulty());
+        plat = new BalancePlatform(world, game.difficultySelect.getDifficulty());
         platformSprite = drawPlatformTex();
         pivotSprite = drawPivot();
         screenPos = new Vector2(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight());
@@ -143,14 +143,12 @@ public class PlayScreen implements Screen{
             }
         });
 
-        final Texture upperLine = new Texture("whiteSquare.png");
+        final Texture upperLine = new Texture("lightening.png");
         Drawable upperLineDrawable = new TextureRegionDrawable(new TextureRegion(upperLine));
         upperLineImage = new Image(upperLineDrawable);
         upperLineImage.setWidth(gamePort.getWorldWidth());
-        upperLineImage.setHeight(2);
+        upperLineImage.setHeight(35);
         upperLineImage.setPosition(gamePort.getWorldWidth()/2 - upperLineImage.getWidth()/2, 310);
-        upperLineImage.setColor(Color.RED);
-
     }
 
     /**
@@ -247,7 +245,7 @@ public class PlayScreen implements Screen{
         }
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
-        plat = new BalancePlatform(world, game.levelSelect.getDifficulty());
+        plat = new BalancePlatform(world, game.difficultySelect.getDifficulty());
 
         bodyMap.clear();
         stage.clear();
@@ -385,7 +383,7 @@ public class PlayScreen implements Screen{
     }
 
     private void drawPivot(Batch batch){
-        int width = plat.setGetPivotWidth(game.levelSelect.getDifficulty());
+        int width = plat.setGetPivotWidth(game.difficultySelect.getDifficulty());
 
         batch.begin();
         pivotSprite.setSize(width *2f,5 *2f);
@@ -401,7 +399,7 @@ public class PlayScreen implements Screen{
      * Change Levels based on levelCount
      */
     public void setUpLevels() {
-        currentLevel = new Level6(game);
+        currentLevel = new Level1(game);
         levelNum = 1;
     }
 

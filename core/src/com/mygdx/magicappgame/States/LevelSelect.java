@@ -36,23 +36,17 @@ public class LevelSelect implements Screen {
     private Stage stage;
     private ArrayList <Image> oddLevelList;
     private ArrayList <Image> evenLevelList;
-    private ArrayList <Image> difficultyList;
+    //private ArrayList <Image> difficultyList;
 
-    private  int count;
+    //private  int count;
     private int countOdd;
     private int countEven;
     private Image selectedLevel;
-
-    private int difficulty;
 
     private OrthographicCamera camera;
     private Viewport viewport;
     private float xPos;
     private float yPos;
-
-    private int i;
-
-
 
     public LevelSelect(MyGdxGame game) {
         this.game = game;
@@ -64,12 +58,11 @@ public class LevelSelect implements Screen {
         xPos = (viewport.getWorldWidth() / 2) - 100;
         yPos = viewport.getWorldHeight() / 5;
 
-        difficulty = 1;
         oddLevelList = new ArrayList<Image>();
         evenLevelList = new ArrayList<Image>();
-        difficultyList = new ArrayList<Image>();
+        //difficultyList = new ArrayList<Image>();
         setUpLevels();
-        count = 1;
+        //count = 1;
         countOdd = 1;
         countEven = 1;
         selectedLevel = null;
@@ -138,7 +131,7 @@ public class LevelSelect implements Screen {
                 countEven++;
             }
 
-            Image normal = new Image(new Texture("tetriformButtonImages/normal.png"));
+            /*Image normal = new Image(new Texture("tetriformButtonImages/normal.png"));
             Image hard = new Image(new Texture("tetriformButtonImages/hard.png"));
             Image legendary = new Image(new Texture("tetriformButtonImages/legendary.png"));
 
@@ -163,41 +156,41 @@ public class LevelSelect implements Screen {
                     }
                 });
                 count++;
-            }
+            }*/
         }
 
 
         private Level whichLevel() {
             Level returnLevel = null;
             if (selectedLevel != null) {
-                if (selectedLevel == evenLevelList.get(4)) {
+                if (selectedLevel == oddLevelList.get(4)) {
                     returnLevel = new Level1(game);
                     game.playScreen.setLevelNum(1);
-                } else if (selectedLevel == oddLevelList.get(4)) {
+                } else if (selectedLevel == evenLevelList.get(4)) {
                     returnLevel = new Level2(game);
                     game.playScreen.setLevelNum(2);
-                } else if (selectedLevel == evenLevelList.get(3)) {
+                } else if (selectedLevel == oddLevelList.get(3)) {
                     returnLevel = new Level3(game);
                     game.playScreen.setLevelNum(3);
-                } else if (selectedLevel == oddLevelList.get(3)) {
+                } else if (selectedLevel == evenLevelList.get(3)) {
                     returnLevel = new Level4(game);
                     game.playScreen.setLevelNum(4);
-                } else if (selectedLevel == evenLevelList.get(2)) {
+                } else if (selectedLevel == oddLevelList.get(2)) {
                     returnLevel = new Level5(game);
                     game.playScreen.setLevelNum(5);
-                } else if (selectedLevel == oddLevelList.get(2)) {
+                } else if (selectedLevel == evenLevelList.get(2)) {
                     returnLevel = new Level6(game);
                     game.playScreen.setLevelNum(6);
-                }else if (selectedLevel == evenLevelList.get(1)) {
+                }else if (selectedLevel == oddLevelList.get(1)) {
                     returnLevel = new Level7(game);
                     game.playScreen.setLevelNum(7);
-                }else if (selectedLevel == oddLevelList.get(1)) {
+                }else if (selectedLevel == evenLevelList.get(1)) {
                     //returnLevel = new Level8(game);
                     game.playScreen.setLevelNum(8);
-                }else if (selectedLevel == evenLevelList.get(0)) {
+                }else if (selectedLevel == oddLevelList.get(0)) {
                     //returnLevel = new Level9(game);
                     game.playScreen.setLevelNum(9);
-                }else if (selectedLevel == oddLevelList.get(0)) {
+                }else if (selectedLevel == evenLevelList.get(0)) {
                     //returnLevel = new Level10(game);
                     game.playScreen.setLevelNum(10);
                 }
@@ -232,10 +225,6 @@ public class LevelSelect implements Screen {
             countOdd = 5;
             countEven = 5;
         }
-
-    public int getDifficulty() {
-        return difficulty;
-    }
 
     @Override
         public void resize(int width, int height) {

@@ -92,7 +92,7 @@ public class NewMainMenu implements Screen {
                         game.setScreen(game.playScreen);
                     } else if (img == imgList.get(1)) {
                         firstCall = false;
-                        game.setScreen(game.levelSelect);
+                        game.setScreen(game.difficultySelect);
                     } else if (img == imgList.get(2))
                         Gdx.app.exit();
                 }

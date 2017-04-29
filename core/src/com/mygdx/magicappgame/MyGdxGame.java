@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.mygdx.magicappgame.States.DifficultySelect;
 import com.mygdx.magicappgame.States.GameOverScreen;
 import com.mygdx.magicappgame.States.Instructions;
 import com.mygdx.magicappgame.States.LevelSelect;
@@ -27,6 +28,7 @@ public class MyGdxGame extends Game {
 	public GameOverScreen gameOver;
 	public MainMenu mainMenu;
 	public LevelSelect levelSelect;
+	public DifficultySelect difficultySelect;
 	public NewMainMenu newMainMenu;
 
 	static public Skin gameSkin;
@@ -54,6 +56,7 @@ public class MyGdxGame extends Game {
 		mainMenu = new MainMenu(this);
 		newMainMenu = new NewMainMenu(this);
 		levelSelect = new LevelSelect(this);
+		difficultySelect = new DifficultySelect(this);
 
 		playScreen = new PlayScreen(this);
 		playScreen.setUpLevels();

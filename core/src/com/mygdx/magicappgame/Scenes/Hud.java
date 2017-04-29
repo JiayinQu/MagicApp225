@@ -97,6 +97,21 @@ public class Hud {
         if(levelNum == 5){
             level = 5;
         }
+        if(levelNum == 6){
+            level = 6;
+        }
+        if(levelNum == 7){
+            level = 7;
+        }
+        if(levelNum == 8){
+            level = 8;
+        }
+        if(levelNum == 9){
+            level = 9;
+        }
+        if(levelNum == 10){
+            level = 10;
+        }
         levelLabel.setText(String.format("%02d", level));
     }
 
