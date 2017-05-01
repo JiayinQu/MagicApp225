@@ -28,7 +28,6 @@ public class MyGdxGame extends Game {
 	public GameOverScreen gameOver;
 	public MainMenu mainMenu;
 	public LevelSelect levelSelect;
-	public DifficultySelect difficultySelect;
 	public NewMainMenu newMainMenu;
 
 	static public Skin gameSkin;
@@ -56,7 +55,6 @@ public class MyGdxGame extends Game {
 		mainMenu = new MainMenu(this);
 		newMainMenu = new NewMainMenu(this);
 		levelSelect = new LevelSelect(this);
-		difficultySelect = new DifficultySelect(this);
 
 		playScreen = new PlayScreen(this);
 		playScreen.setUpLevels();

@@ -43,14 +43,14 @@ public class BalancePlatform extends Sprite{
 
     public int setGetPivotWidth(int difficulty) {
         if (difficulty == 2) {
-            pivotWidth = 10;
+            pivotWidth = 12;
             return 10;
         } else if (difficulty == 3) {
-            pivotWidth = 8;
+            pivotWidth = 10;
             return 8;
         } else {
-            pivotWidth = 12;
-            return 12;
+            pivotWidth = 14;
+            return 14;
         }
     }
 

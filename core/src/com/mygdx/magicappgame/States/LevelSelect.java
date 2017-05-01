@@ -17,12 +17,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.levels.Level;
 import com.mygdx.magicappgame.levels.Level1;
+import com.mygdx.magicappgame.levels.Level10;
 import com.mygdx.magicappgame.levels.Level2;
 import com.mygdx.magicappgame.levels.Level3;
 import com.mygdx.magicappgame.levels.Level4;
 import com.mygdx.magicappgame.levels.Level5;
 import com.mygdx.magicappgame.levels.Level6;
 import com.mygdx.magicappgame.levels.Level7;
+import com.mygdx.magicappgame.levels.Level8;
+import com.mygdx.magicappgame.levels.Level9;
 
 import java.util.ArrayList;
 
@@ -36,11 +39,9 @@ public class LevelSelect implements Screen {
     private Stage stage;
     private ArrayList <Image> oddLevelList;
     private ArrayList <Image> evenLevelList;
-    //private ArrayList <Image> difficultyList;
+    private ArrayList <Image> difficultyList;
 
-    //private  int count;
-    private int countOdd;
-    private int countEven;
+    private int count, countOdd, countEven, difficulty;
     private Image selectedLevel;
 
     private OrthographicCamera camera;
@@ -60,11 +61,12 @@ public class LevelSelect implements Screen {
 
         oddLevelList = new ArrayList<Image>();
         evenLevelList = new ArrayList<Image>();
-        //difficultyList = new ArrayList<Image>();
+        difficultyList = new ArrayList<Image>();
         setUpLevels();
-        //count = 1;
+        count = 1;
         countOdd = 1;
         countEven = 1;
+        difficulty = 1;
         selectedLevel = null;
     }
 
@@ -131,7 +133,8 @@ public class LevelSelect implements Screen {
                 countEven++;
             }
 
-            /*Image normal = new Image(new Texture("tetriformButtonImages/normal.png"));
+            Image normal = new Image(new Texture("tetriformButtonImages/normal.png"));
+            normal.setColor(Color.BLUE);
             Image hard = new Image(new Texture("tetriformButtonImages/hard.png"));
             Image legendary = new Image(new Texture("tetriformButtonImages/legendary.png"));
 
@@ -147,18 +150,33 @@ public class LevelSelect implements Screen {
 
                 challenge.addListener(new InputListener() {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        allWhite();
                         challenge.setColor(Color.BLUE);
                         return true;
                     }
 
                     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        challenge.setColor(Color.WHITE);
+                        whichDiff(challenge);
                     }
                 });
                 count++;
-            }*/
+            }
         }
 
+        private void whichDiff(Image image) {
+            if (image == difficultyList.get(0))
+                difficulty = 1;
+            else if (image == difficultyList.get(1))
+                difficulty = 2;
+            else if (image == difficultyList.get(2))
+                difficulty = 3;
+        }
+
+        private void allWhite() {
+            for (Image challenge : difficultyList) {
+                challenge.setColor(Color.WHITE);
+            }
+        }
 
         private Level whichLevel() {
             Level returnLevel = null;
@@ -185,13 +203,13 @@ public class LevelSelect implements Screen {
                     returnLevel = new Level7(game);
                     game.playScreen.setLevelNum(7);
                 }else if (selectedLevel == evenLevelList.get(1)) {
-                    //returnLevel = new Level8(game);
+                    returnLevel = new Level8(game);
                     game.playScreen.setLevelNum(8);
                 }else if (selectedLevel == oddLevelList.get(0)) {
-                    //returnLevel = new Level9(game);
+                    returnLevel = new Level9(game);
                     game.playScreen.setLevelNum(9);
                 }else if (selectedLevel == evenLevelList.get(0)) {
-                    //returnLevel = new Level10(game);
+                    returnLevel = new Level10(game);
                     game.playScreen.setLevelNum(10);
                 }
             } return returnLevel;
@@ -224,6 +242,10 @@ public class LevelSelect implements Screen {
             selectedLevel = null;
             countOdd = 5;
             countEven = 5;
+        }
+
+        public int getDifficulty() {
+            return difficulty;
         }
 
     @Override
