@@ -95,7 +95,14 @@ public class NewGameOver implements Screen {
                         game.setScreen(game.playScreen);
                     } else if (img == imgList.get(1)) {
                         firstCall = false;
+                        boolean speakerState = game.newMainMenu.getSpeaker();
                         game.setScreen(game.newMainMenu);
+                        game.newMainMenu.setSpeaker(speakerState);
+                        if(speakerState == false){
+                            game.newMainMenu.setSpeakerColor(Color.BLUE);
+                        }else if (speakerState == true){
+                            game.newMainMenu.setSpeakerColor(Color.WHITE);
+                        }
                     }
                 }
             });

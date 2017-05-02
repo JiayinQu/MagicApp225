@@ -77,7 +77,7 @@ public class PlayScreen implements Screen{
     private Integer levelTime;
     private int levelNum;
 
-    private Sound startSound, losingSound, winningSound;
+    private Sound losingSound, winningSound;
     MyTextInputListener listener;
 
     private MyInputProcessor newInputProcessor;
@@ -115,8 +115,6 @@ public class PlayScreen implements Screen{
 
         listener = new MyTextInputListener();
 
-        startSound = Gdx.audio.newSound(Gdx.files.internal("sound/TheStart.mp3"));
-        startSound.play(1.0f);
         losingSound = Gdx.audio.newSound(Gdx.files.internal("sound/FailSoundMix.mp3"));
         winningSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
     }
@@ -138,8 +136,10 @@ public class PlayScreen implements Screen{
                 return true;
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if(pauseTouched == false){
+                    pausePopUp();
+                }
                 pauseTouched = true;
-                pausePopUp();
             }
         });
 
@@ -177,7 +177,9 @@ public class PlayScreen implements Screen{
             }
             else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5) && stabilization() == true) {
                 moveAllowed = false;
-                winningSound.play(1.0f);
+                if(game.newMainMenu.getSpeaker() == false){
+                    winningSound.play(1.0f);
+                }
                 nextLevelLabel();
 
             }
@@ -249,7 +251,6 @@ public class PlayScreen implements Screen{
 
         bodyMap.clear();
         stage.clear();
-        startSound.dispose();
 
         hud.resetLevel();
         hud.resetBox();
@@ -302,7 +303,9 @@ public class PlayScreen implements Screen{
 
         if(gameOver()){
             refresh();
-            losingSound.play(1.0f);
+            if (game.newMainMenu.getSpeaker() == false) {
+                losingSound.play(1.0f);
+            }
             //Gdx.input.getTextInput(listener, "Player's Name", "", "Enter your name");
             game.setScreen(game.gameOverScreen);
         }
@@ -447,7 +450,14 @@ public class PlayScreen implements Screen{
                 hud.resetLevel();
                 resumeImage.remove();
                 BackToMenuImage.remove();
+                boolean speakerState = game.newMainMenu.getSpeaker();
                 game.setScreen(game.newMainMenu);
+                game.newMainMenu.setSpeaker(speakerState);
+                if(speakerState == false){
+                    game.newMainMenu.setSpeakerColor(Color.BLUE);
+                }else if (speakerState == true){
+                    game.newMainMenu.setSpeakerColor(Color.WHITE);
+                }
             }
         });
 

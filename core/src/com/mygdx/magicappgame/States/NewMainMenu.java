@@ -2,6 +2,7 @@ package com.mygdx.magicappgame.States;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -34,6 +35,9 @@ public class NewMainMenu implements Screen {
     private Stage stage;
     private ArrayList<Image> imgList;
     private boolean firstCall;
+    private boolean speakerOff;
+    private Image speakerImage;
+    public Sound startSound;
 
     public NewMainMenu(MyGdxGame game) {
         this.game = game;
@@ -47,6 +51,9 @@ public class NewMainMenu implements Screen {
         camera.position.set(port.getWorldWidth(), port.getWorldHeight(), 0);
         stage = new Stage(port);
         firstCall = true;
+        speakerOff = false;
+
+        startSound = Gdx.audio.newSound(Gdx.files.internal("sound/TheStart.mp3"));
 
     }
 
@@ -61,11 +68,42 @@ public class NewMainMenu implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        if(speakerOff == false){
+            startSound.play(1.0f);
+        }
 
         Image titleIMG = new Image(new Texture("tetriformButtonImages/tetriformTitle.png"));
         titleIMG.setSize(titleIMG.getWidth()/1.7f, titleIMG.getHeight()/1.7f);
         titleIMG.setPosition((port.getWorldWidth()/2)-(titleIMG.getWidth()/2), (port.getWorldHeight()/6)*5-(titleIMG.getHeight()/2));
         stage.addActor(titleIMG);
+
+        final Texture speakerButton =  new Texture("speaker.png");
+        Drawable speakerDrawable = new TextureRegionDrawable(new TextureRegion(speakerButton));
+        speakerImage = new Image(speakerDrawable);
+        speakerImage.setHeight(25);
+        speakerImage.setWidth(25);
+        speakerImage.setColor(Color.BLUE);
+        speakerImage.setPosition((port.getWorldWidth() / 2) - speakerImage.getWidth() / 2, 50);
+        stage.addActor(speakerImage);
+
+        speakerImage.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log("speaker", "Pressed");
+                return true;
+            }
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if(speakerOff == false){
+                    speakerImage.setColor(Color.WHITE);
+                    startSound.stop();
+                    speakerOff = true;
+                }else if(speakerOff == true){
+                    speakerImage.setColor(Color.BLUE);
+                    startSound.play(1.0f);
+                    speakerOff = false;
+                }
+
+            }
+        });
 
         int multiplier = 4;
         for (final Image img:
@@ -90,18 +128,16 @@ public class NewMainMenu implements Screen {
                     if (img == imgList.get(0)) {
                         firstCall = false;
                         game.setScreen(game.playScreen);
+                        startSound.stop();
                     } else if (img == imgList.get(1)) {
                         firstCall = false;
                         game.setScreen(game.levelSelect);
-                    } else if (img == imgList.get(2))
+                    } else if (img == imgList.get(2)) {
                         Gdx.app.exit();
+                    }
                 }
             });
         }
-
-
-
-
     }
 
     @Override
@@ -111,6 +147,18 @@ public class NewMainMenu implements Screen {
 
         stage.draw();
         camera.update();
+    }
+
+    public boolean getSpeaker(){
+        return speakerOff;
+    }
+
+    public void setSpeaker(boolean speakerState){
+        speakerOff = speakerState;
+    }
+
+    public void setSpeakerColor(Color color){
+        speakerImage.setColor(color);
     }
 
     @Override
@@ -135,6 +183,7 @@ public class NewMainMenu implements Screen {
 
     @Override
     public void dispose() {
+        startSound.dispose();
 
     }
 }
