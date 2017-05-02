@@ -8,15 +8,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -32,6 +31,7 @@ import com.mygdx.magicappgame.Scenes.Hud;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
 import com.mygdx.magicappgame.Tools.MyInputProcessor;
 import com.mygdx.magicappgame.Tools.MyTextInputListener;
+import com.mygdx.magicappgame.Tools.WorldContactListener;
 import com.mygdx.magicappgame.levels.Level;
 import com.mygdx.magicappgame.levels.Level1;
 import com.mygdx.magicappgame.levels.Level2;
@@ -84,6 +84,8 @@ public class PlayScreen implements Screen{
 
     final float PIXELS_TO_METERS = 100f;
 
+    private ParticleEffect flameEffect;
+
 
     /**
      * This constructor simply initializes everything.
@@ -117,6 +119,10 @@ public class PlayScreen implements Screen{
 
         losingSound = Gdx.audio.newSound(Gdx.files.internal("sound/FailSoundMix.mp3"));
         winningSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
+        new WorldContactListener();
+        flameEffect = new ParticleEffect();
+        flameEffect.load(Gdx.files.internal("Particle effect/Particle.Flame"), Gdx.files.internal(""));
+        flameEffect.getEmitters().first().setContinuous(true);
     }
 
     @Override
@@ -184,6 +190,24 @@ public class PlayScreen implements Screen{
 
             }
         }
+
+        for(Contact contact : world.getContactList()) {
+            if(contact.isTouching()) {
+                for(int i = 0; i < contact.getWorldManifold().getNumberOfContactPoints(); i++) {
+                    //maxSeparation = Math.max(maxSeparation, -contact.getWorldManifold().getSeparations()[i]);
+                    float separation = -contact.getWorldManifold().getSeparations()[i];
+                    float emissionThreshold = 0.1f;
+                    if(separation > emissionThreshold) {
+                        ParticleEmitter emitter = flameEffect.getEmitters().first();
+                        emitter.setPosition(contact.getWorldManifold().getPoints()[0].x, contact.getWorldManifold().getPoints()[0].y);
+                        emitter.addParticles((int) Math.ceil((separation - emissionThreshold) * 7));
+                        emitter.start();
+                    }
+                }
+            }
+        }
+
+
 
         // Moves the current falling shape to the left
         if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.LEFT)&& somethingOnScreen){
@@ -297,6 +321,11 @@ public class PlayScreen implements Screen{
         if(bodyMap.size()!=0){
             draw(game.batch);
         }
+
+        flameEffect.update(Gdx.graphics.getDeltaTime());
+        game.batch.begin();
+        flameEffect.draw(game.batch);
+        game.batch.end();
 
         //b2dr.render(world, gamecam.combined);
         stage.draw();
