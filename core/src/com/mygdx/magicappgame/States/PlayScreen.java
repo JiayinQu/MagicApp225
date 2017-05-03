@@ -66,18 +66,18 @@ public class PlayScreen implements Screen{
 
     private Level currentLevel;
 
-    private Boolean somethingOnScreen;
+    private Boolean somethingOnScreen, stable;
 
     private Image pauseImage, upperLineImage, congratsImage, nextLevelImage;
 
-    private boolean pauseTouched, moveAllowed, firstDraw;
+    private boolean pauseTouched, moveAllowed, firstDraw, winningSoundPlayed;
 
     private Sprite platformSprite, pivotSprite;
 
     private Integer levelTime;
     private int levelNum;
 
-    private Sound losingSound, winningSound;
+    private Sound losingSound, winningSound, bumpSound;
     MyTextInputListener listener;
 
     private MyInputProcessor newInputProcessor;
@@ -114,11 +114,14 @@ public class PlayScreen implements Screen{
         somethingOnScreen = false;
         pauseTouched = false;
         moveAllowed = true;
+        winningSoundPlayed = false;
 
         listener = new MyTextInputListener();
 
         losingSound = Gdx.audio.newSound(Gdx.files.internal("sound/FailSoundMix.mp3"));
         winningSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
+        bumpSound = Gdx.audio.newSound(Gdx.files.internal("sound/shrillBump.wav"));
+
         new WorldContactListener();
         flameEffect = new ParticleEffect();
         flameEffect.load(Gdx.files.internal("Particle effect/Particle.Flame"), Gdx.files.internal(""));
@@ -169,7 +172,7 @@ public class PlayScreen implements Screen{
                 somethingOnScreen = true;
                 Hud.minusBox();
                 if (!firstDraw)
-                    bodyMap.get(currentBod).setColor(Color.GRAY);
+                    bodyMap.get(currentBod).setColor(Color.BLUE);
                 else
                     firstDraw = false;
 
@@ -178,15 +181,7 @@ public class PlayScreen implements Screen{
                 Sprite squareSprite = drawSquareTex();
                 squareSprite.setSize(currentLevel.getWidth() * 2f, currentLevel.getHeight() * 2f);
                 bodyMap.put(currentBod, squareSprite);
-                bodyMap.get(currentBod).setColor(Color.WHITE);
-
-            }
-            else if (currentLevel.levelComplete && (currentBod.getLinearVelocity().y > -.5) && stabilization() == true) {
-                moveAllowed = false;
-                if(game.newMainMenu.getSpeaker() == false){
-                    winningSound.play(1.0f);
-                }
-                nextLevelLabel();
+                bodyMap.get(currentBod).setColor(Color.CYAN);
 
             }
         }
@@ -202,6 +197,8 @@ public class PlayScreen implements Screen{
                         emitter.setPosition(contact.getWorldManifold().getPoints()[0].x, contact.getWorldManifold().getPoints()[0].y);
                         emitter.addParticles((int) Math.ceil((separation - emissionThreshold) * 7));
                         emitter.start();
+                        if(!game.newMainMenu.getSpeaker()) bumpSound.play(separation*.8f);
+                        System.out.println(separation);
                     }
                 }
             }
@@ -272,6 +269,7 @@ public class PlayScreen implements Screen{
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
         plat = new BalancePlatform(world, game.levelSelect.getDifficulty());
+        pivotSprite.setColor(Color.WHITE);
 
         bodyMap.clear();
         stage.clear();
@@ -283,6 +281,7 @@ public class PlayScreen implements Screen{
         firstDraw = true;
         moveAllowed = true;
         currentLevel.levelComplete = false;
+        winningSoundPlayed = false;
     }
 
     /**
@@ -293,6 +292,9 @@ public class PlayScreen implements Screen{
         if(!pauseTouched){
             handleInput(dt);
             world.step(1/60f, 6, 2);
+
+            if(currentLevel.levelComplete)
+                stabilization();
 
             hud.getLevel(getLevelNum());
 
@@ -332,7 +334,7 @@ public class PlayScreen implements Screen{
 
         if(gameOver()){
             refresh();
-            if (game.newMainMenu.getSpeaker() == false) {
+            if (!game.newMainMenu.getSpeaker()) {
                 losingSound.play(1.0f);
             }
             //Gdx.input.getTextInput(listener, "Player's Name", "", "Enter your name");
@@ -355,12 +357,29 @@ public class PlayScreen implements Screen{
         return false;
     }
 
-    private boolean stabilization(){
+    private void stabilization(){
+        stable = true;
         for (Body aBody : bodyMap.keySet()){
-            if(! (aBody.getLinearVelocity().y > -.01 && (aBody.getLinearVelocity().x > -.01) && aBody.getLinearVelocity().x < .01) ){
-                return false;
+            if(! (aBody.getLinearVelocity().y > -.05 && (aBody.getLinearVelocity().x > -.05) && aBody.getLinearVelocity().x < .05) ){
+                stable = false;
+                bodyMap.get(aBody).setColor(Color.BLUE);
+                if (aBody == currentBod)
+                    bodyMap.get(aBody).setColor(Color.CYAN);
+            } else {
+                bodyMap.get(aBody).setColor(Color.GREEN);
             }
-        } return true;
+        } if (stable) {
+            advanceLevel();
+        }
+    }
+
+    private void advanceLevel() {
+        moveAllowed = false;
+        if(!game.newMainMenu.getSpeaker() && !winningSoundPlayed){
+            winningSound.play(1.0f);
+            winningSoundPlayed = true;
+        }
+        nextLevelLabel();
     }
 
 
@@ -409,7 +428,7 @@ public class PlayScreen implements Screen{
         platformSprite.setRotation((float)Math.toDegrees(plat.bod1.getAngle()));
         platformSprite.setPosition(plat.bod1.getPosition().x-(platformSprite.getWidth()/2),plat.bod1.getPosition().y - (platformSprite.getHeight()/2));
         platformSprite.setOriginCenter();
-        platformSprite.setColor(Color.CYAN);
+        platformSprite.setColor(Color.WHITE);
         platformSprite.draw(batch);
         batch.end();
     }
