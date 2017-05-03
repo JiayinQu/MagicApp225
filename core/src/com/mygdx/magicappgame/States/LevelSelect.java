@@ -49,6 +49,10 @@ public class LevelSelect implements Screen {
     private float xPos;
     private float yPos;
 
+    /**
+     * Constructor to initiate the level select screen.
+     * @param game
+     */
     public LevelSelect(MyGdxGame game) {
         this.game = game;
         camera = new OrthographicCamera();
@@ -70,209 +74,216 @@ public class LevelSelect implements Screen {
         selectedLevel = null;
     }
 
-        private void setUpLevels() {
-            Image level1 = new Image(new Texture("tetriformButtonImages/level1.png"));
-            Image level2 = new Image(new Texture("tetriformButtonImages/level2.png"));
-            Image level3 = new Image(new Texture("tetriformButtonImages/level3.png"));
-            Image level4 = new Image(new Texture("tetriformButtonImages/level4.png"));
-            Image level5 = new Image(new Texture("tetriformButtonImages/level5.png"));
-            Image level6 = new Image(new Texture("tetriformButtonImages/level6.png"));
-            Image level7 = new Image(new Texture("tetriformButtonImages/level7.png"));
-            Image level8 = new Image(new Texture("tetriformButtonImages/level8.png"));
-            Image level9 = new Image(new Texture("tetriformButtonImages/level9.png"));
-            Image level10 = new Image(new Texture("tetriformButtonImages/level10.png"));
+    private void setUpLevels() {
+        Image level1 = new Image(new Texture("tetriformButtonImages/level1.png"));
+        Image level2 = new Image(new Texture("tetriformButtonImages/level2.png"));
+        Image level3 = new Image(new Texture("tetriformButtonImages/level3.png"));
+        Image level4 = new Image(new Texture("tetriformButtonImages/level4.png"));
+        Image level5 = new Image(new Texture("tetriformButtonImages/level5.png"));
+        Image level6 = new Image(new Texture("tetriformButtonImages/level6.png"));
+        Image level7 = new Image(new Texture("tetriformButtonImages/level7.png"));
+        Image level8 = new Image(new Texture("tetriformButtonImages/level8.png"));
+        Image level9 = new Image(new Texture("tetriformButtonImages/level9.png"));
+        Image level10 = new Image(new Texture("tetriformButtonImages/level10.png"));
 
-            evenLevelList.add(level10);
-            oddLevelList.add(level9);
-            evenLevelList.add(level8);
-            oddLevelList.add(level7);
-            evenLevelList.add(level6);
-            oddLevelList.add(level5);
-            evenLevelList.add(level4);
-            oddLevelList.add(level3);
-            evenLevelList.add(level2);
-            oddLevelList.add(level1);
+        evenLevelList.add(level10);
+        oddLevelList.add(level9);
+        evenLevelList.add(level8);
+        oddLevelList.add(level7);
+        evenLevelList.add(level6);
+        oddLevelList.add(level5);
+        evenLevelList.add(level4);
+        oddLevelList.add(level3);
+        evenLevelList.add(level2);
+        oddLevelList.add(level1);
 
-            for (final Image level : oddLevelList) {
-                level.setPosition(xPos - level.getWidth() / 2 + 100, yPos * countOdd/2  + 150);
-                level.setWidth(level.getWidth() / 2.5f);
-                level.setHeight(level.getHeight() / 2.5f);
-                stage.addActor(level);
+        for (final Image level : oddLevelList) {
+            level.setPosition(xPos - level.getWidth() / 2 + 100, yPos * countOdd/2  + 150);
+            level.setWidth(level.getWidth() / 2.5f);
+            level.setHeight(level.getHeight() / 2.5f);
+            stage.addActor(level);
 
-                level.addListener(new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        level.setColor(Color.BLUE);
-                        return true;
-                    }
-
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        level.setColor(Color.WHITE);
-                        selectedLevel = level;
-                    }
-                });
-                countOdd++;
-            }
-
-            for (final Image level : evenLevelList) {
-                level.setPosition(xPos - level.getWidth() / 2 + 250, yPos * countEven/2  + 150);
-                level.setWidth(level.getWidth() / 2.5f);
-                level.setHeight(level.getHeight() / 2.5f);
-                stage.addActor(level);
-
-                level.addListener(new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        level.setColor(Color.BLUE);
-                        return true;
-                    }
-
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        level.setColor(Color.WHITE);
-                        selectedLevel = level;
-                    }
-                });
-                countEven++;
-            }
-
-            Image normal = new Image(new Texture("tetriformButtonImages/normal.png"));
-            normal.setColor(Color.BLUE);
-            Image hard = new Image(new Texture("tetriformButtonImages/hard.png"));
-            Image legendary = new Image(new Texture("tetriformButtonImages/legendary.png"));
-
-            difficultyList.add(normal);
-            difficultyList.add(hard);
-            difficultyList.add(legendary);
-
-            for (final Image challenge: difficultyList){
-                challenge.setPosition(xPos * count * (float) 1.2 +30, yPos);
-                challenge.setWidth(challenge.getWidth() / 2.5f);
-                challenge.setHeight(challenge.getHeight()/2.5f);
-                stage.addActor(challenge);
-
-                challenge.addListener(new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        allWhite();
-                        challenge.setColor(Color.BLUE);
-                        return true;
-                    }
-
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        whichDiff(challenge);
-                    }
-                });
-                count++;
-            }
-        }
-
-        private void whichDiff(Image image) {
-            if (image == difficultyList.get(0))
-                difficulty = 1;
-            else if (image == difficultyList.get(1))
-                difficulty = 2;
-            else if (image == difficultyList.get(2))
-                difficulty = 3;
-        }
-
-        private void allWhite() {
-            for (Image challenge : difficultyList) {
-                challenge.setColor(Color.WHITE);
-            }
-        }
-
-        private Level whichLevel() {
-            Level returnLevel = null;
-            if (selectedLevel != null) {
-                if (selectedLevel == oddLevelList.get(4)) {
-                    returnLevel = new Level1(game);
-                    game.playScreen.setLevelNum(1);
-                } else if (selectedLevel == evenLevelList.get(4)) {
-                    returnLevel = new Level2(game);
-                    game.playScreen.setLevelNum(2);
-                } else if (selectedLevel == oddLevelList.get(3)) {
-                    returnLevel = new Level3(game);
-                    game.playScreen.setLevelNum(3);
-                } else if (selectedLevel == evenLevelList.get(3)) {
-                    returnLevel = new Level4(game);
-                    game.playScreen.setLevelNum(4);
-                } else if (selectedLevel == oddLevelList.get(2)) {
-                    returnLevel = new Level5(game);
-                    game.playScreen.setLevelNum(5);
-                } else if (selectedLevel == evenLevelList.get(2)) {
-                    returnLevel = new Level6(game);
-                    game.playScreen.setLevelNum(6);
-                }else if (selectedLevel == oddLevelList.get(1)) {
-                    returnLevel = new Level7(game);
-                    game.playScreen.setLevelNum(7);
-                }else if (selectedLevel == evenLevelList.get(1)) {
-                    returnLevel = new Level8(game);
-                    game.playScreen.setLevelNum(8);
-                }else if (selectedLevel == oddLevelList.get(0)) {
-                    returnLevel = new Level9(game);
-                    game.playScreen.setLevelNum(9);
-                }else if (selectedLevel == evenLevelList.get(0)) {
-                    returnLevel = new Level10(game);
-                    game.playScreen.setLevelNum(10);
+            level.addListener(new InputListener() {
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    level.setColor(Color.BLUE);
+                    return true;
                 }
-            } return returnLevel;
+
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    level.setColor(Color.WHITE);
+                    selectedLevel = level;
+                }
+            });
+            countOdd++;
         }
 
-        @Override
-        public void show() {
-            Gdx.input.setInputProcessor(stage);
+        for (final Image level : evenLevelList) {
+            level.setPosition(xPos - level.getWidth() / 2 + 250, yPos * countEven/2  + 150);
+            level.setWidth(level.getWidth() / 2.5f);
+            level.setHeight(level.getHeight() / 2.5f);
+            stage.addActor(level);
+
+            level.addListener(new InputListener() {
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    level.setColor(Color.BLUE);
+                    return true;
+                }
+
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    level.setColor(Color.WHITE);
+                    selectedLevel = level;
+                }
+            });
+            countEven++;
         }
 
-        @Override
-        public void render(float delta) {
-            checkSwitch();
-            Gdx.gl.glClearColor(0,0,0,1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            stage.draw();
-            camera.update();
-        }
+        Image normal = new Image(new Texture("tetriformButtonImages/normal.png"));
+        normal.setColor(Color.BLUE);
+        Image hard = new Image(new Texture("tetriformButtonImages/hard.png"));
+        Image legendary = new Image(new Texture("tetriformButtonImages/legendary.png"));
 
-        private void checkSwitch() {
-            Level whichLevel = whichLevel();
-            if (whichLevel != null) {
-                refresh();
-                game.playScreen.setCurrentLevel(whichLevel);
-                game.setScreen(game.playScreen);
-                game.newMainMenu.startSound.stop();
+        difficultyList.add(normal);
+        difficultyList.add(hard);
+        difficultyList.add(legendary);
+
+        for (final Image challenge: difficultyList){
+            challenge.setPosition(xPos * count * (float) 1.2 +30, yPos);
+            challenge.setWidth(challenge.getWidth() / 2.5f);
+            challenge.setHeight(challenge.getHeight()/2.5f);
+            stage.addActor(challenge);
+
+            challenge.addListener(new InputListener() {
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    allWhite();
+                    challenge.setColor(Color.BLUE);
+                    return true;
+                }
+
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    whichDiff(challenge);
+                }
+            });
+            count++;
+        }
+    }
+
+    /**
+     * Check and switch levels and difficulties based on button selected.
+     * @param image
+     */
+    private void whichDiff(Image image) {
+        if (image == difficultyList.get(0))
+            difficulty = 1;
+        else if (image == difficultyList.get(1))
+            difficulty = 2;
+        else if (image == difficultyList.get(2))
+            difficulty = 3;
+    }
+
+    private void allWhite() {
+        for (Image challenge : difficultyList) {
+            challenge.setColor(Color.WHITE);
+        }
+    }
+
+    private Level whichLevel() {
+        Level returnLevel = null;
+        if (selectedLevel != null) {
+            if (selectedLevel == oddLevelList.get(4)) {
+                returnLevel = new Level1(game);
+                game.playScreen.setLevelNum(1);
+            } else if (selectedLevel == evenLevelList.get(4)) {
+                returnLevel = new Level2(game);
+                game.playScreen.setLevelNum(2);
+            } else if (selectedLevel == oddLevelList.get(3)) {
+                returnLevel = new Level3(game);
+                game.playScreen.setLevelNum(3);
+            } else if (selectedLevel == evenLevelList.get(3)) {
+                returnLevel = new Level4(game);
+                game.playScreen.setLevelNum(4);
+            } else if (selectedLevel == oddLevelList.get(2)) {
+                returnLevel = new Level5(game);
+                game.playScreen.setLevelNum(5);
+            } else if (selectedLevel == evenLevelList.get(2)) {
+                returnLevel = new Level6(game);
+                game.playScreen.setLevelNum(6);
+            }else if (selectedLevel == oddLevelList.get(1)) {
+                returnLevel = new Level7(game);
+                game.playScreen.setLevelNum(7);
+            }else if (selectedLevel == evenLevelList.get(1)) {
+                returnLevel = new Level8(game);
+                game.playScreen.setLevelNum(8);
+            }else if (selectedLevel == oddLevelList.get(0)) {
+                returnLevel = new Level9(game);
+                game.playScreen.setLevelNum(9);
+            }else if (selectedLevel == evenLevelList.get(0)) {
+                returnLevel = new Level10(game);
+                game.playScreen.setLevelNum(10);
             }
-        }
-
-        private void refresh() {
-            selectedLevel = null;
-            countOdd = 5;
-            countEven = 5;
-        }
-
-        public int getDifficulty() {
-            return difficulty;
-        }
+        } return returnLevel;
+    }
 
     @Override
-        public void resize(int width, int height) {
-            viewport.update(width, height);
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    public void render(float delta) {
+        checkSwitch();
+        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.draw();
+        camera.update();
+    }
+
+    /**
+     *Set up new play screen.
+     */
+    private void checkSwitch() {
+        Level whichLevel = whichLevel();
+        if (whichLevel != null) {
+            refresh();
+            game.playScreen.setCurrentLevel(whichLevel);
+            game.setScreen(game.playScreen);
+            game.newMainMenu.startSound.stop();
         }
+    }
 
-        @Override
-        public void pause() {
+    private void refresh() {
+        selectedLevel = null;
+        countOdd = 5;
+        countEven = 5;
+    }
 
-        }
+    public int getDifficulty() {
+        return difficulty;
+    }
 
-        @Override
-        public void resume() {
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+    }
 
-        }
+    @Override
+    public void pause() {
 
-        @Override
-        public void hide() {
+    }
 
-        }
+    @Override
+    public void resume() {
 
-        @Override
-        public void dispose() {
+    }
 
-        }
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+
+    }
 
 
 }

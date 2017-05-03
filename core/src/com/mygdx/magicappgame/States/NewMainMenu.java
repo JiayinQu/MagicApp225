@@ -39,12 +39,19 @@ public class NewMainMenu implements Screen {
     private Image speakerImage;
     public Sound startSound;
 
+    /**
+     * Constructor to initiate main menu screen
+     * @param game
+     */
     public NewMainMenu(MyGdxGame game) {
         this.game = game;
         setup();
         setupImg();
     }
 
+    /**
+     * Set up the screen and fit the camera.
+     */
     private void setup() {
         camera = new OrthographicCamera();
         port = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT);
@@ -57,6 +64,9 @@ public class NewMainMenu implements Screen {
 
     }
 
+    /**
+     * Set up an arraylist that hold all buttons.
+     */
     private void setupImg() {
         imgList = new ArrayList<Image>();
 
@@ -65,6 +75,9 @@ public class NewMainMenu implements Screen {
         imgList.add(new Image(new Texture("tetriformButtonImages/tetriformQuit.png")));
     }
 
+    /**
+     * Show the title and buttons on the screen.
+     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
@@ -72,11 +85,13 @@ public class NewMainMenu implements Screen {
             startSound.play(1.0f);
         }
 
+        //Add title Tetriform
         Image titleIMG = new Image(new Texture("tetriformButtonImages/tetriformTitle.png"));
         titleIMG.setSize(titleIMG.getWidth()/1.7f, titleIMG.getHeight()/1.7f);
         titleIMG.setPosition((port.getWorldWidth()/2)-(titleIMG.getWidth()/2), (port.getWorldHeight()/6)*5-(titleIMG.getHeight()/2));
         stage.addActor(titleIMG);
 
+        //Add a speaker button that can control whether to turn on the sound.
         final Texture speakerButton =  new Texture("speaker.png");
         Drawable speakerDrawable = new TextureRegionDrawable(new TextureRegion(speakerButton));
         speakerImage = new Image(speakerDrawable);
@@ -105,6 +120,7 @@ public class NewMainMenu implements Screen {
             }
         });
 
+        //Other buttons.
         int multiplier = 4;
         for (final Image img:
              imgList) {
@@ -149,6 +165,10 @@ public class NewMainMenu implements Screen {
         camera.update();
     }
 
+    /**
+     * Check speaker's state
+     * @return
+     */
     public boolean getSpeaker(){
         return speakerOff;
     }

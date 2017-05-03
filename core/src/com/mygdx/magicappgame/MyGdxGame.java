@@ -4,10 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.mygdx.magicappgame.States.GameOverScreen;
-import com.mygdx.magicappgame.States.Instructions;
 import com.mygdx.magicappgame.States.LevelSelect;
-import com.mygdx.magicappgame.States.MainMenu;
 import com.mygdx.magicappgame.States.NewGameOver;
 import com.mygdx.magicappgame.States.NewMainMenu;
 import com.mygdx.magicappgame.States.PlayScreen;
@@ -22,10 +19,7 @@ public class MyGdxGame extends Game {
     public AssetManager assets;
 
 	public PlayScreen playScreen;
-	public Instructions instructions;
 	public NewGameOver gameOverScreen;
-	public GameOverScreen gameOver;
-	public MainMenu mainMenu;
 	public LevelSelect levelSelect;
 	public NewMainMenu newMainMenu;
 
@@ -48,10 +42,7 @@ public class MyGdxGame extends Game {
 	}
 
 	private void setupStates() {
-		instructions = new Instructions(this);
-		gameOver = new GameOverScreen(this);
 		gameOverScreen = new NewGameOver(this);
-		mainMenu = new MainMenu(this);
 		newMainMenu = new NewMainMenu(this);
 		levelSelect = new LevelSelect(this);
 

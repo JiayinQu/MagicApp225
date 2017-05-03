@@ -107,10 +107,6 @@ public class NewGameOver implements Screen {
                 }
             });
         }
-
-
-
-
     }
 
     @Override

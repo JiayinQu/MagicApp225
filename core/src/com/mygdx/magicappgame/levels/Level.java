@@ -14,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
-import com.mygdx.magicappgame.States.MainMenu;
 import com.mygdx.magicappgame.States.PlayScreen;
 import com.mygdx.magicappgame.Tools.WorldContactListener;
 

@@ -46,6 +46,10 @@ public class Hud {
 
     private Image instructionImage;
 
+    /**
+     * Constructor to initiate a hud.
+     * @param sb
+     */
     public Hud(SpriteBatch sb) {
         level = 1;
         boxLeft = 10;
@@ -81,6 +85,10 @@ public class Hud {
         stage.addActor(instructionImage);
     }
 
+    /**
+     * Set level label to the current level
+     * @param levelNum
+     */
     public static void getLevel(int levelNum){
         if(levelNum == 1){
             level = 1;
@@ -116,17 +124,25 @@ public class Hud {
     }
 
 
+    /**
+     * Set box left label on the screen.
+     */
     public static void minusBox(){
         boxLeft --;
         boxLabel.setText(String.format("%02d", boxLeft));
     }
 
-
+    /**
+     * Reset level to level 1
+     */
     public void resetLevel(){
         level = 1;
         levelLabel.setText(String.format("%02d", level));
     }
 
+    /**
+     * Reset box left to 10
+     */
     public void resetBox(){
         boxLeft = 10;
         boxLabel.setText(String.format("%02d",boxLeft));

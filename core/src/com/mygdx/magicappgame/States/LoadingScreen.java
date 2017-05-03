@@ -14,7 +14,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.magicappgame.MyGdxGame;
-import com.mygdx.magicappgame.States.MainMenu;
 
 public class LoadingScreen implements Screen {
 

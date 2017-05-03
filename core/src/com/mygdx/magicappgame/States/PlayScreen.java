@@ -29,7 +29,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Scenes.Hud;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
-import com.mygdx.magicappgame.Tools.MyInputProcessor;
 import com.mygdx.magicappgame.Tools.MyTextInputListener;
 import com.mygdx.magicappgame.Tools.WorldContactListener;
 import com.mygdx.magicappgame.levels.Level;
@@ -79,8 +78,6 @@ public class PlayScreen implements Screen{
 
     private Sound losingSound, winningSound, bumpSound;
     MyTextInputListener listener;
-
-    private MyInputProcessor newInputProcessor;
 
     final float PIXELS_TO_METERS = 100f;
 
@@ -172,7 +169,7 @@ public class PlayScreen implements Screen{
                 somethingOnScreen = true;
                 Hud.minusBox();
                 if (!firstDraw)
-                    bodyMap.get(currentBod).setColor(Color.BLUE);
+                    bodyMap.get(currentBod).setColor(Color.GRAY);
                 else
                     firstDraw = false;
 
@@ -181,7 +178,7 @@ public class PlayScreen implements Screen{
                 Sprite squareSprite = drawSquareTex();
                 squareSprite.setSize(currentLevel.getWidth() * 2f, currentLevel.getHeight() * 2f);
                 bodyMap.put(currentBod, squareSprite);
-                bodyMap.get(currentBod).setColor(Color.CYAN);
+                bodyMap.get(currentBod).setColor(Color.BLUE);
 
             }
         }
@@ -197,7 +194,7 @@ public class PlayScreen implements Screen{
                         emitter.setPosition(contact.getWorldManifold().getPoints()[0].x, contact.getWorldManifold().getPoints()[0].y);
                         emitter.addParticles((int) Math.ceil((separation - emissionThreshold) * 7));
                         emitter.start();
-                        if(!game.newMainMenu.getSpeaker()) bumpSound.play(separation*.8f);
+                        if(!game.newMainMenu.getSpeaker()) bumpSound.play(separation*.5f);
                         System.out.println(separation);
                     }
                 }
@@ -362,11 +359,11 @@ public class PlayScreen implements Screen{
         for (Body aBody : bodyMap.keySet()){
             if(! (aBody.getLinearVelocity().y > -.05 && (aBody.getLinearVelocity().x > -.05) && aBody.getLinearVelocity().x < .05) ){
                 stable = false;
-                bodyMap.get(aBody).setColor(Color.BLUE);
+                bodyMap.get(aBody).setColor(Color.GRAY);
                 if (aBody == currentBod)
-                    bodyMap.get(aBody).setColor(Color.CYAN);
+                    bodyMap.get(aBody).setColor(Color.BLUE);
             } else {
-                bodyMap.get(aBody).setColor(Color.GREEN);
+                bodyMap.get(aBody).setColor(Color.WHITE);
             }
         } if (stable) {
             advanceLevel();
