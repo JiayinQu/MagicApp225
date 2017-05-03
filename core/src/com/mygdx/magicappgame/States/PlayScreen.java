@@ -9,9 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -21,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -29,20 +25,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
 import com.mygdx.magicappgame.Scenes.Hud;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
-import com.mygdx.magicappgame.Tools.MyTextInputListener;
 import com.mygdx.magicappgame.Tools.WorldContactListener;
 import com.mygdx.magicappgame.levels.Level;
 import com.mygdx.magicappgame.levels.Level1;
-import com.mygdx.magicappgame.levels.Level2;
-import com.mygdx.magicappgame.levels.Level3;
-import com.mygdx.magicappgame.levels.Level4;
-import com.mygdx.magicappgame.levels.Level5;
-import com.mygdx.magicappgame.levels.Level6;
-import com.mygdx.magicappgame.levels.Level7;
-
-
-import java.util.ArrayList;
 import java.util.HashMap;
+
+
 
 /**
  * Created by Jiayin Qu on 2017/2/11.
@@ -73,13 +61,9 @@ public class PlayScreen implements Screen{
 
     private Sprite platformSprite, pivotSprite;
 
-    private Integer levelTime;
     private int levelNum;
 
     private Sound losingSound, winningSound, bumpSound;
-    MyTextInputListener listener;
-
-    final float PIXELS_TO_METERS = 100f;
 
     private ParticleEffect flameEffect;
 
@@ -113,13 +97,13 @@ public class PlayScreen implements Screen{
         moveAllowed = true;
         winningSoundPlayed = false;
 
-        listener = new MyTextInputListener();
-
         losingSound = Gdx.audio.newSound(Gdx.files.internal("sound/FailSoundMix.mp3"));
         winningSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
         bumpSound = Gdx.audio.newSound(Gdx.files.internal("sound/shrillBump.wav"));
 
         new WorldContactListener();
+
+
         flameEffect = new ParticleEffect();
         flameEffect.load(Gdx.files.internal("Particle effect/Particle.Flame"), Gdx.files.internal(""));
         flameEffect.getEmitters().first().setContinuous(true);
@@ -202,7 +186,6 @@ public class PlayScreen implements Screen{
         }
 
 
-
         // Moves the current falling shape to the left
         if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.LEFT)&& somethingOnScreen){
             currentBod.applyForce(new Vector2(currentBod.getMass() * -125, 0), currentBod.getWorldCenter(), true);
@@ -211,7 +194,6 @@ public class PlayScreen implements Screen{
         if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.RIGHT)&& somethingOnScreen){
             currentBod.applyForce(new Vector2(currentBod.getMass() * 125, 0), currentBod.getWorldCenter(), true);
         }
-
     }
 
     /**
@@ -498,9 +480,9 @@ public class PlayScreen implements Screen{
                 boolean speakerState = game.newMainMenu.getSpeaker();
                 game.setScreen(game.newMainMenu);
                 game.newMainMenu.setSpeaker(speakerState);
-                if(speakerState == false){
+                if(!speakerState){
                     game.newMainMenu.setSpeakerColor(Color.BLUE);
-                }else if (speakerState == true){
+                }else if (speakerState){
                     game.newMainMenu.setSpeakerColor(Color.WHITE);
                 }
             }
