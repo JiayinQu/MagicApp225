@@ -154,7 +154,7 @@ public class PlayScreen implements Screen{
                 somethingOnScreen = true;
                 Hud.minusBox();
                 if (!firstDraw)
-                    bodyMap.get(currentBod).setColor(Color.GRAY);
+                    bodyMap.get(currentBod).setColor(Color.WHITE);
                 else
                     firstDraw = false;
 
@@ -163,7 +163,7 @@ public class PlayScreen implements Screen{
                 Sprite squareSprite = drawSquareTex();
                 squareSprite.setSize(currentLevel.getWidth() * 2f, currentLevel.getHeight() * 2f);
                 bodyMap.put(currentBod, squareSprite);
-                bodyMap.get(currentBod).setColor(Color.BLUE);
+                bodyMap.get(currentBod).setColor(Color.FIREBRICK);
 
             }
         }
@@ -346,9 +346,9 @@ public class PlayScreen implements Screen{
                 stable = false;
                 bodyMap.get(aBody).setColor(Color.GRAY);
                 if (aBody == currentBod)
-                    bodyMap.get(aBody).setColor(Color.BLUE);
+                    bodyMap.get(aBody).setColor(Color.FIREBRICK);
             } else {
-                bodyMap.get(aBody).setColor(Color.WHITE);
+                bodyMap.get(aBody).setColor(Color.FIREBRICK);
             }
         } if (stable) {
             advanceLevel();
