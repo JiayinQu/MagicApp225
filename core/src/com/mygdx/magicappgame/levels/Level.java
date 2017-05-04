@@ -37,7 +37,7 @@ public class Level {
 
     private Level currentLevel;
 
-    private final static int NUM_BODIES = 2;
+    private final static int NUM_BODIES = 4;
 
     Level (MyGdxGame game) {
         this.game = game;

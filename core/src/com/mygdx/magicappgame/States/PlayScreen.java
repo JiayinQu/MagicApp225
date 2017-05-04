@@ -63,7 +63,7 @@ public class PlayScreen implements Screen{
 
     private int levelNum;
 
-    private Sound losingSound, winningSound, bumpSound;
+    private Sound losingSound, winningSound;
 
     private ParticleEffect flameEffect;
 
@@ -99,7 +99,6 @@ public class PlayScreen implements Screen{
 
         losingSound = Gdx.audio.newSound(Gdx.files.internal("sound/FailSoundMix.mp3"));
         winningSound = Gdx.audio.newSound(Gdx.files.internal("sound/ShortTriumphal.mp3"));
-        bumpSound = Gdx.audio.newSound(Gdx.files.internal("sound/shrillBump.wav"));
 
         new WorldContactListener();
 
@@ -190,8 +189,6 @@ public class PlayScreen implements Screen{
                         emitter.setPosition(contact.getWorldManifold().getPoints()[0].x, contact.getWorldManifold().getPoints()[0].y);
                         emitter.addParticles((int) Math.ceil((separation - emissionThreshold) * 7));
                         emitter.start();
-                        if(!game.newMainMenu.getSpeaker()) bumpSound.play(separation*.5f);
-                        System.out.println(separation);
                     }
                 }
             }
@@ -250,7 +247,7 @@ public class PlayScreen implements Screen{
         world.destroyBody(plat.bod1);
         world.destroyBody(plat.bod2);
         plat = new BalancePlatform(world, game.levelSelect.getDifficulty());
-        pivotSprite.setColor(Color.WHITE);
+        pivotSprite.setColor(Color.LIGHT_GRAY);
 
         bodyMap.clear();
         stage.clear();
@@ -344,7 +341,7 @@ public class PlayScreen implements Screen{
         for (Body aBody : bodyMap.keySet()){
             if(! (aBody.getLinearVelocity().y > -.05 && (aBody.getLinearVelocity().x > -.05) && aBody.getLinearVelocity().x < .05) ){
                 stable = false;
-                bodyMap.get(aBody).setColor(Color.GRAY);
+                bodyMap.get(aBody).setColor(Color.WHITE);
                 if (aBody == currentBod)
                     bodyMap.get(aBody).setColor(Color.FIREBRICK);
             } else {
@@ -410,7 +407,7 @@ public class PlayScreen implements Screen{
         platformSprite.setRotation((float)Math.toDegrees(plat.bod1.getAngle()));
         platformSprite.setPosition(plat.bod1.getPosition().x-(platformSprite.getWidth()/2),plat.bod1.getPosition().y - (platformSprite.getHeight()/2));
         platformSprite.setOriginCenter();
-        platformSprite.setColor(Color.WHITE);
+        platformSprite.setColor(Color.LIGHT_GRAY);
         platformSprite.draw(batch);
         batch.end();
     }

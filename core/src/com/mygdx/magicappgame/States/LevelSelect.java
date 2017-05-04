@@ -246,7 +246,6 @@ public class LevelSelect implements Screen {
             refresh();
             game.playScreen.setCurrentLevel(whichLevel);
             game.setScreen(game.playScreen);
-            game.newMainMenu.startSound.stop();
         }
     }
 
