@@ -127,6 +127,7 @@ public class PlayScreen implements Screen{
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if(!pauseTouched){
                     pausePopUp();
+                    game.mainMenu.startSound.pause();
                 }
                 pauseTouched = true;
             }
@@ -312,6 +313,7 @@ public class PlayScreen implements Screen{
         if(gameOver()){
             refresh();
             if (!game.mainMenu.getSpeaker()) {
+                game.mainMenu.startSound.pause();
                 losingSound.play(1.0f);
             }
             //Gdx.input.getTextInput(listener, "Player's Name", "", "Enter your name");
@@ -336,17 +338,24 @@ public class PlayScreen implements Screen{
 
     private void stabilization(){
         Boolean stable = true;
-        for (Body aBody : bodyMap.keySet()){
-            if(! (aBody.getLinearVelocity().y > -.05 && (aBody.getLinearVelocity().x > -.05) && aBody.getLinearVelocity().x < .05) ){
-                stable = false;
-                bodyMap.get(aBody).setColor(Color.WHITE);
-                if (aBody == currentBod)
+        if (moveAllowed) {
+            for (Body aBody : bodyMap.keySet()) {
+                if (!(aBody.getLinearVelocity().y > -.05 && (aBody.getLinearVelocity().x > -.05) && aBody.getLinearVelocity().x < .05)) {
+                    stable = false;
+                    bodyMap.get(aBody).setColor(Color.WHITE);
+                    if (aBody == currentBod)
+                        bodyMap.get(aBody).setColor(Color.FIREBRICK);
+                } else {
                     bodyMap.get(aBody).setColor(Color.FIREBRICK);
-            } else {
-                bodyMap.get(aBody).setColor(Color.FIREBRICK);
+                }
             }
-        } if (stable) {
+        }
+
+        if (stable) {
             advanceLevel();
+            for (Sprite sprite : bodyMap.values()) {
+                sprite.setColor(Color.FIREBRICK);
+            }
         }
     }
 
@@ -461,6 +470,7 @@ public class PlayScreen implements Screen{
                 pauseTouched = false;
                 resumeImage.remove();
                 BackToMenuImage.remove();
+                game.mainMenu.loopHeartBeat();
             }
         });
         BackToMenuImage.addListener(new InputListener() {

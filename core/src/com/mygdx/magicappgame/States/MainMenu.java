@@ -35,7 +35,7 @@ public class MainMenu implements Screen {
     private boolean firstCall;
     private boolean speakerOff;
     private Image speakerImage;
-    private Sound startSound;
+    public Sound startSound;
 
     /**
      * Constructor to initiate main menu screen
@@ -79,10 +79,7 @@ public class MainMenu implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        if(!speakerOff){
-            startSound.play(1.0f);
-            startSound.loop();
-        }
+
 
         //Add title Tetriform
         Image titleIMG = new Image(new Texture("tetriformButtonImages/tetriformTitle.png"));
@@ -110,7 +107,7 @@ public class MainMenu implements Screen {
                     speakerImage.setColor(Color.WHITE);
                     startSound.stop();
                     speakerOff = true;
-                }else if(speakerOff){
+                }else {
                     speakerImage.setColor(Color.BLUE);
                     startSound.play(1.0f);
                     speakerOff = false;
@@ -142,8 +139,8 @@ public class MainMenu implements Screen {
                     img.setColor(Color.WHITE);
                     if (img == imgList.get(0)) {
                         firstCall = false;
+                        if (!speakerOff) startSound.loop();
                         game.setScreen(game.playScreen);
-                        //startSound.stop();
                     } else if (img == imgList.get(1)) {
                         firstCall = false;
                         game.setScreen(game.levelSelect);
@@ -169,6 +166,10 @@ public class MainMenu implements Screen {
      */
     boolean getSpeaker(){
         return speakerOff;
+    }
+
+    void loopHeartBeat() {
+        if (!speakerOff) startSound.loop();
     }
 
     void setSpeaker(boolean speakerState){

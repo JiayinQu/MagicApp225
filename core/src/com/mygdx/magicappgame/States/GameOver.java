@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Jiayin Qu on 2017/4/23.
+ *
  */
 
 public class GameOver implements Screen {
@@ -30,7 +31,7 @@ public class GameOver implements Screen {
 
     /**
      * Constructor to initiate game over screen.
-     * @param game
+     * @param game the initial game class
      */
     public GameOver(MyGdxGame game) {
         this.game = game;
@@ -92,15 +93,16 @@ public class GameOver implements Screen {
                     img.setColor(Color.WHITE);
                     if (img == imgList.get(0)) {
                         firstCall = false;
+                        game.mainMenu.loopHeartBeat();
                         game.setScreen(game.playScreen);
                     } else if (img == imgList.get(1)) {
                         firstCall = false;
                         boolean speakerState = game.mainMenu.getSpeaker();
                         game.setScreen(game.mainMenu);
                         game.mainMenu.setSpeaker(speakerState);
-                        if(speakerState == false){
+                        if(!speakerState){
                             game.mainMenu.setSpeakerColor(Color.BLUE);
-                        }else if (speakerState == true){
+                        }else {
                             game.mainMenu.setSpeakerColor(Color.WHITE);
                         }
                     }

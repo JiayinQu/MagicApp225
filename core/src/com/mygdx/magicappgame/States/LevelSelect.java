@@ -243,6 +243,7 @@ public class LevelSelect implements Screen {
         if (whichLevel != null) {
             refresh();
             game.playScreen.setCurrentLevel(whichLevel);
+            game.mainMenu.loopHeartBeat();
             game.setScreen(game.playScreen);
         }
     }
