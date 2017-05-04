@@ -22,7 +22,9 @@ import java.util.ArrayList;
 
 /**
  * Created by anselcolby on 4/17/2017.
- *
+ * Title: Human Heartbeat recorded by Daniel Simion
+ * License: Attribution 3.0
+ * http://soundbible.com/2162-Human-Heartbeat.html
  */
 
 public class MainMenu implements Screen {
