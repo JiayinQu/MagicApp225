@@ -168,6 +168,17 @@ public class PlayScreen implements Screen{
             }
         }
 
+        // Moves the current falling shape to the left
+        if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.LEFT)&& somethingOnScreen){
+            currentBod.applyForce(new Vector2(currentBod.getMass() * -125, 0), currentBod.getWorldCenter(), true);
+        }
+        // Moves the current falling shape to the right
+        if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.RIGHT)&& somethingOnScreen){
+            currentBod.applyForce(new Vector2(currentBod.getMass() * 125, 0), currentBod.getWorldCenter(), true);
+        }
+    }
+
+    private void handleContact() {
         for(Contact contact : world.getContactList()) {
             if(contact.isTouching()) {
                 for(int i = 0; i < contact.getWorldManifold().getNumberOfContactPoints(); i++) {
@@ -184,16 +195,6 @@ public class PlayScreen implements Screen{
                     }
                 }
             }
-        }
-
-
-        // Moves the current falling shape to the left
-        if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.LEFT)&& somethingOnScreen){
-            currentBod.applyForce(new Vector2(currentBod.getMass() * -125, 0), currentBod.getWorldCenter(), true);
-        }
-        // Moves the current falling shape to the right
-        if(moveAllowed && Gdx.input.isKeyPressed(Input.Keys.RIGHT)&& somethingOnScreen){
-            currentBod.applyForce(new Vector2(currentBod.getMass() * 125, 0), currentBod.getWorldCenter(), true);
         }
     }
 
@@ -271,6 +272,7 @@ public class PlayScreen implements Screen{
     private void update(float dt){
         if(!pauseTouched){
             handleInput(dt);
+            handleContact();
             world.step(1/60f, 6, 2);
 
             if(currentLevel.levelComplete)
