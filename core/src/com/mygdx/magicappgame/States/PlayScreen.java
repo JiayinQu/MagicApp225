@@ -53,7 +53,7 @@ public class PlayScreen implements Screen{
 
     private Level currentLevel;
 
-    private Boolean somethingOnScreen, stable;
+    private Boolean somethingOnScreen;
 
     private Image pauseImage, upperLineImage, congratsImage, nextLevelImage;
 
@@ -125,7 +125,7 @@ public class PlayScreen implements Screen{
                 return true;
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if(pauseTouched == false){
+                if(!pauseTouched){
                     pausePopUp();
                 }
                 pauseTouched = true;
@@ -143,9 +143,8 @@ public class PlayScreen implements Screen{
 
     /**
      * Handles all of the input for the game
-     * @param dt delta time
      */
-    private void handleInput(float dt){
+    private void handleInput(){
 
         if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             hud.instructionDisappear();
@@ -264,18 +263,17 @@ public class PlayScreen implements Screen{
 
     /**
      * Updating the game and "stepping"
-     * @param dt delta time
      */
-    private void update(float dt){
+    private void update(){
         if(!pauseTouched){
-            handleInput(dt);
+            handleInput();
             handleContact();
             world.step(1/60f, 6, 2);
 
             if(currentLevel.levelComplete)
                 stabilization();
 
-            hud.getLevel(getLevelNum());
+            Hud.getLevel(getLevelNum());
 
             gamecam.update();
             //renderer.setView(gamecam); // used for the background
@@ -288,7 +286,7 @@ public class PlayScreen implements Screen{
      */
     @Override
     public void render(float delta) {
-        update(delta);
+        update();
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -313,7 +311,7 @@ public class PlayScreen implements Screen{
 
         if(gameOver()){
             refresh();
-            if (!game.newMainMenu.getSpeaker()) {
+            if (!game.mainMenu.getSpeaker()) {
                 losingSound.play(1.0f);
             }
             //Gdx.input.getTextInput(listener, "Player's Name", "", "Enter your name");
@@ -337,7 +335,7 @@ public class PlayScreen implements Screen{
     }
 
     private void stabilization(){
-        stable = true;
+        Boolean stable = true;
         for (Body aBody : bodyMap.keySet()){
             if(! (aBody.getLinearVelocity().y > -.05 && (aBody.getLinearVelocity().x > -.05) && aBody.getLinearVelocity().x < .05) ){
                 stable = false;
@@ -354,7 +352,7 @@ public class PlayScreen implements Screen{
 
     private void advanceLevel() {
         moveAllowed = false;
-        if(!game.newMainMenu.getSpeaker() && !winningSoundPlayed){
+        if(!game.mainMenu.getSpeaker() && !winningSoundPlayed){
             winningSound.play(1.0f);
             winningSoundPlayed = true;
         }
@@ -477,13 +475,13 @@ public class PlayScreen implements Screen{
                 hud.resetLevel();
                 resumeImage.remove();
                 BackToMenuImage.remove();
-                boolean speakerState = game.newMainMenu.getSpeaker();
-                game.setScreen(game.newMainMenu);
-                game.newMainMenu.setSpeaker(speakerState);
+                boolean speakerState = game.mainMenu.getSpeaker();
+                game.setScreen(game.mainMenu);
+                game.mainMenu.setSpeaker(speakerState);
                 if(!speakerState){
-                    game.newMainMenu.setSpeakerColor(Color.BLUE);
-                }else if (speakerState){
-                    game.newMainMenu.setSpeakerColor(Color.WHITE);
+                    game.mainMenu.setSpeakerColor(Color.BLUE);
+                }else {
+                    game.mainMenu.setSpeakerColor(Color.WHITE);
                 }
             }
         });
@@ -512,9 +510,6 @@ public class PlayScreen implements Screen{
         return world;
     }
 
-    public Level getCurrentLevel() {
-        return currentLevel;
-    }
 
     /**
      * Resizes the window

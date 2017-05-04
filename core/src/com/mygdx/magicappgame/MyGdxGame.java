@@ -1,39 +1,27 @@
 package com.mygdx.magicappgame;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.magicappgame.States.LevelSelect;
-import com.mygdx.magicappgame.States.NewGameOver;
-import com.mygdx.magicappgame.States.NewMainMenu;
+import com.mygdx.magicappgame.States.GameOver;
+import com.mygdx.magicappgame.States.MainMenu;
 import com.mygdx.magicappgame.States.PlayScreen;
-import com.mygdx.magicappgame.States.LoadingScreen;
 
 public class MyGdxGame extends Game {
 
 	public SpriteBatch batch;
 	public static final int V_WIDTH = 416;
 	public static final int V_HEIGHT = 400;
-	public static final float PPM = 100;
-    public AssetManager assets;
 
 	public PlayScreen playScreen;
-	public NewGameOver gameOverScreen;
+	public GameOver gameOverScreen;
 	public LevelSelect levelSelect;
-	public NewMainMenu newMainMenu;
-
-	static public Skin gameSkin;
-	//skin licence: http://creativecommons.org/licenses/by/4.0/
+	public MainMenu mainMenu;
 
 	@Override
 	public void create () {
-		gameSkin = new Skin(Gdx.files.internal("skin/flat-earth-ui.json"));
-
-        assets = new AssetManager();
 		batch = new SpriteBatch();
 		setupStates();
-		setScreen(new LoadingScreen(this));
+		setScreen(mainMenu);
 	}
 
 	@Override
@@ -42,8 +30,8 @@ public class MyGdxGame extends Game {
 	}
 
 	private void setupStates() {
-		gameOverScreen = new NewGameOver(this);
-		newMainMenu = new NewMainMenu(this);
+		gameOverScreen = new GameOver(this);
+		mainMenu = new MainMenu(this);
 		levelSelect = new LevelSelect(this);
 
 		playScreen = new PlayScreen(this);

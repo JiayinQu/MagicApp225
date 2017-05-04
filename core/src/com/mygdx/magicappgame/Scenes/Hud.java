@@ -1,31 +1,20 @@
 package com.mygdx.magicappgame.Scenes;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
-
-import java.awt.TextField;
-
-import static com.badlogic.gdx.scenes.scene2d.InputEvent.Type.touchDown;
-import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.actor;
 
 /**
  * Created by Jiayin Qu on 2017/2/12.
@@ -41,14 +30,12 @@ public class Hud {
 
     private static Label levelLabel;
     private static Label boxLabel;
-    private Label boxLeftLabel;
-    private Label worldLabel;
 
     private Image instructionImage;
 
     /**
      * Constructor to initiate a hud.
-     * @param sb
+     * @param sb the spritebatch
      */
     public Hud(SpriteBatch sb) {
         level = 1;
@@ -62,8 +49,8 @@ public class Hud {
 
         levelLabel = new Label(String.format("%02d", level), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         boxLabel = new Label(String.format("%02d", boxLeft), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
-        worldLabel = new Label("LEVEL", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        boxLeftLabel = new Label("BOXES LEFT", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
+        Label worldLabel = new Label("LEVEL", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label boxLeftLabel = new Label("BOXES LEFT", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         table.columnDefaults(0).width(150);
         table.add(worldLabel);
@@ -87,7 +74,7 @@ public class Hud {
 
     /**
      * Set level label to the current level
-     * @param levelNum
+     * @param levelNum the level number
      */
     public static void getLevel(int levelNum){
         if(levelNum == 1){

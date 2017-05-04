@@ -10,8 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
@@ -51,7 +49,7 @@ public class LevelSelect implements Screen {
 
     /**
      * Constructor to initiate the level select screen.
-     * @param game
+     * @param game the intial game class
      */
     public LevelSelect(MyGdxGame game) {
         this.game = game;
@@ -169,7 +167,7 @@ public class LevelSelect implements Screen {
 
     /**
      * Check and switch levels and difficulties based on button selected.
-     * @param image
+     * @param image the image the user clicked
      */
     private void whichDiff(Image image) {
         if (image == difficultyList.get(0))
@@ -255,7 +253,7 @@ public class LevelSelect implements Screen {
         countEven = 5;
     }
 
-    public int getDifficulty() {
+    int getDifficulty() {
         return difficulty;
     }
 

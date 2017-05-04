@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * Created by Jiayin Qu on 2017/4/23.
  */
 
-public class NewGameOver implements Screen {
+public class GameOver implements Screen {
     private MyGdxGame game;
     private OrthographicCamera camera;
     private Viewport port;
@@ -32,7 +32,7 @@ public class NewGameOver implements Screen {
      * Constructor to initiate game over screen.
      * @param game
      */
-    public NewGameOver(MyGdxGame game) {
+    public GameOver(MyGdxGame game) {
         this.game = game;
         setup();
         setupImg();
@@ -95,13 +95,13 @@ public class NewGameOver implements Screen {
                         game.setScreen(game.playScreen);
                     } else if (img == imgList.get(1)) {
                         firstCall = false;
-                        boolean speakerState = game.newMainMenu.getSpeaker();
-                        game.setScreen(game.newMainMenu);
-                        game.newMainMenu.setSpeaker(speakerState);
+                        boolean speakerState = game.mainMenu.getSpeaker();
+                        game.setScreen(game.mainMenu);
+                        game.mainMenu.setSpeaker(speakerState);
                         if(speakerState == false){
-                            game.newMainMenu.setSpeakerColor(Color.BLUE);
+                            game.mainMenu.setSpeakerColor(Color.BLUE);
                         }else if (speakerState == true){
-                            game.newMainMenu.setSpeakerColor(Color.WHITE);
+                            game.mainMenu.setSpeakerColor(Color.WHITE);
                         }
                     }
                 }

@@ -1,21 +1,13 @@
 package com.mygdx.magicappgame.levels;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.mygdx.magicappgame.MyGdxGame;
-import com.mygdx.magicappgame.Shapes.BalancePlatform;
-import com.mygdx.magicappgame.States.PlayScreen;
-import com.mygdx.magicappgame.Tools.WorldContactListener;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -35,8 +27,6 @@ public class Level {
     private Body bod;
     private MyGdxGame game;
 
-    private Level currentLevel;
-
     private final static int NUM_BODIES = 4;
 
     Level (MyGdxGame game) {
@@ -50,7 +40,6 @@ public class Level {
         levelCoord = new ArrayList<Vector2>();
         count = 0;
         levelComplete = false;
-        currentLevel = game.playScreen.getCurrentLevel();
     }
 
     /**

@@ -1,17 +1,16 @@
 package com.mygdx.magicappgame.Tools;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.magicappgame.Shapes.BalancePlatform;
-import com.mygdx.magicappgame.States.PlayScreen;
 import com.mygdx.magicappgame.levels.Level;
 
 /**
  * Created by Jiayin Qu on 2017/3/20.
+ *
  */
 
 public class WorldContactListener implements ContactListener {
@@ -50,7 +49,7 @@ public class WorldContactListener implements ContactListener {
 
     }
 
-    public boolean isContacted(Fixture A, Fixture B) {
+    private boolean isContacted(Fixture A, Fixture B) {
         return (A.getUserData() instanceof Level || A.getUserData() instanceof BalancePlatform && B.getUserData() instanceof Level || B.getUserData() instanceof BalancePlatform);
     }
 }

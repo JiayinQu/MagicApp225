@@ -12,10 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.magicappgame.MyGdxGame;
@@ -27,7 +25,7 @@ import java.util.ArrayList;
  *
  */
 
-public class NewMainMenu implements Screen {
+public class MainMenu implements Screen {
 
     private  MyGdxGame game;
     private OrthographicCamera camera;
@@ -37,13 +35,13 @@ public class NewMainMenu implements Screen {
     private boolean firstCall;
     private boolean speakerOff;
     private Image speakerImage;
-    public Sound startSound;
+    private Sound startSound;
 
     /**
      * Constructor to initiate main menu screen
-     * @param game
+     * @param game the initial game class
      */
-    public NewMainMenu(MyGdxGame game) {
+    public MainMenu(MyGdxGame game) {
         this.game = game;
         setup();
         setupImg();
@@ -81,7 +79,7 @@ public class NewMainMenu implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        if(speakerOff == false){
+        if(!speakerOff){
             startSound.play(1.0f);
             startSound.loop();
         }
@@ -108,11 +106,11 @@ public class NewMainMenu implements Screen {
                 return true;
             }
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if(speakerOff == false){
+                if(!speakerOff){
                     speakerImage.setColor(Color.WHITE);
                     startSound.stop();
                     speakerOff = true;
-                }else if(speakerOff == true){
+                }else if(speakerOff){
                     speakerImage.setColor(Color.BLUE);
                     startSound.play(1.0f);
                     speakerOff = false;
@@ -167,18 +165,17 @@ public class NewMainMenu implements Screen {
     }
 
     /**
-     * Check speaker's state
-     * @return
+     * @return the state of the speaker
      */
-    public boolean getSpeaker(){
+    boolean getSpeaker(){
         return speakerOff;
     }
 
-    public void setSpeaker(boolean speakerState){
+    void setSpeaker(boolean speakerState){
         speakerOff = speakerState;
     }
 
-    public void setSpeakerColor(Color color){
+    void setSpeakerColor(Color color){
         speakerImage.setColor(color);
     }
 
