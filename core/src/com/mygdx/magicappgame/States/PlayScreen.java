@@ -133,11 +133,12 @@ public class PlayScreen implements Screen{
             }
         });
 
-        final Texture upperLine = new Texture("lightening.png");
+        final Texture upperLine = new Texture("whiteSquare.png");
         Drawable upperLineDrawable = new TextureRegionDrawable(new TextureRegion(upperLine));
         upperLineImage = new Image(upperLineDrawable);
         upperLineImage.setWidth(gamePort.getWorldWidth());
-        upperLineImage.setHeight(35);
+        upperLineImage.setHeight(2);
+        upperLineImage.setColor(Color.RED);
         upperLineImage.setPosition(gamePort.getWorldWidth()/2 - upperLineImage.getWidth()/2, 310);
     }
 
