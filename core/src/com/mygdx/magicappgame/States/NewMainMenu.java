@@ -60,7 +60,7 @@ public class NewMainMenu implements Screen {
         firstCall = true;
         speakerOff = false;
 
-        startSound = Gdx.audio.newSound(Gdx.files.internal("sound/TheStart.mp3"));
+        startSound = Gdx.audio.newSound(Gdx.files.internal("sound/Hearbeat.mp3"));
 
     }
 
@@ -83,6 +83,7 @@ public class NewMainMenu implements Screen {
         Gdx.input.setInputProcessor(stage);
         if(speakerOff == false){
             startSound.play(1.0f);
+            startSound.loop();
         }
 
         //Add title Tetriform
@@ -144,7 +145,7 @@ public class NewMainMenu implements Screen {
                     if (img == imgList.get(0)) {
                         firstCall = false;
                         game.setScreen(game.playScreen);
-                        startSound.stop();
+                        //startSound.stop();
                     } else if (img == imgList.get(1)) {
                         firstCall = false;
                         game.setScreen(game.levelSelect);
